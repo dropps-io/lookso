@@ -44,7 +44,7 @@ A string representing the name for the token collection.
 
 ```json
   {
-      "name": "LSPXXRegister",
+      "name": "LSPXXSocialRegister.json",
       "key": "0xdeba1e292f8ba88238e10ab3c7f88bd4be4fac56cad5194b6ecceaf653468af1",
       "keyType": "Singleton",
       "valueType": "bytes",
@@ -58,7 +58,7 @@ The linked JSON file SHOULD have the following format:
 
 ```json
 {
-  "LSPXXRegister": {
+  "LSPXXSocialRegister": {
     "profile_posts": [
       {
         "url": "ipfs://xxx",
@@ -95,7 +95,8 @@ The profile post JSON files should have the following format:
       "fileType": "string"
     }
   },
-  "SignedLSPXXProfilePost": "string"
+  "LSPXXProfilePostHash": "string",
+  "LSPXXProfilePostSignature": "string"
 }
 ```
 
