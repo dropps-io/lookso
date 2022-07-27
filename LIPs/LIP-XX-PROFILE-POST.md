@@ -61,14 +61,18 @@ The linked JSON file SHOULD have the following format:
   "LSPXXSocialRegister": {
     "profile_posts": [
       {
-        "url": "ipfs://xxx",
-        "hash": "fhsefsfesfsh"
+        "url": "string",
+        "hash": "string"
+      }
+    ],
+    "profile_comments": [
+      {
+        "url": "string",
+        "hash": "string"
       }
     ],
     "following": [
-      "0xxxxx1",
-      "0xxxxx2",
-      "0xxxxx3"
+      "string"
     ]
   }
 }
