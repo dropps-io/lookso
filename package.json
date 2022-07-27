@@ -1,0 +1,11 @@
+{
+  "name": "lookso",
+  "version": "1.0.0",
+  "description": "Lukso social media with integrated new generation blockchain explorer for general audience",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Outlier One,Lda",
+  "license": "ISC"
+}
