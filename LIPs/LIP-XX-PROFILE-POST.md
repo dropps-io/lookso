@@ -73,6 +73,9 @@ The linked JSON file SHOULD have the following format:
     ],
     "following": [
       "string"
+    ],
+    "likes": [
+      "string"
     ]
   }
 }
