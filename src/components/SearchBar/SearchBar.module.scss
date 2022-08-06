@@ -1,6 +1,7 @@
 .SearchBar {
   height: 44px;
   width: 100%;
+  min-width: 400px;
 
   img {
     position: relative;
@@ -22,5 +23,27 @@
   input::placeholder {
     font-size: 1.05em;
     color: var(--color-text-placeholder);
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .SearchBar {
+    height: 35px;
+    min-width: 350px;
+
+    img {
+      height: 17px;
+      right: -30px;
+      vertical-align: sub;
+    }
+
+    input {
+      font-size: 1em;
+      padding-left: 55px;
+    }
+
+    input::placeholder {
+      font-size: 1em;
+    }
   }
 }

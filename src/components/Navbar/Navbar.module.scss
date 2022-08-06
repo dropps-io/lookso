@@ -1,0 +1,75 @@
+.Navbar {
+  display: flex;
+  justify-content: space-between;
+
+  .Logo {
+    height: 50px;
+    margin-right: 60px;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .Search {
+    margin: auto 0;
+    width: 600px;
+  }
+
+  .Buttons {
+    color: var(--color-text-default);
+    margin: auto 0 auto 20px;
+    font-weight: 500;
+    font-size: 1.25em;
+
+    li {
+      padding: 20px 30px;
+      a {
+        cursor: pointer;
+      }
+    }
+
+    .ImportantBtn {
+      background-color: var(--color-highlight);
+      padding: 12px 25px 15px 25px;
+      margin-left: 10px;
+      border-radius: 60px;
+      cursor: pointer;
+    }
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+
+}
+
+@media only screen and (max-width: 1400px) {
+  .Navbar {
+
+    .Logo {
+      height: 40px;
+      margin-right: 60px;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    .Buttons {
+      font-weight: 500;
+      font-size: 1.1em;
+
+      li {
+        padding: 20px 30px;
+      }
+
+      .ImportantBtn {
+        background-color: var(--color-highlight);
+        padding: 10px 20px 13px 20px;
+        margin-left: 10px;
+        border-radius: 60px;
+        cursor: pointer;
+      }
+    }
+  }
+}

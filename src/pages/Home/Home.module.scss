@@ -1,0 +1,17 @@
+.Home {
+  padding: 30px 150px 0 150px;
+  min-height: 100vh;
+  background-color: var(--color-background-main);
+}
+
+@media only screen and (max-width: 1500px) {
+  .Home {
+    padding: 20px 100px 0 100px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .Home {
+    //padding: 20px 50px 0 50px;
+  }
+}
