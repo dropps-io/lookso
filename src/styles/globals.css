@@ -24,3 +24,10 @@ a {
 a, li, ul {
   all: unset;
 }
+
+.Home {
+  overflow: hidden;
+  padding: 30px 150px 0 150px;
+  min-height: 250vh;
+  background-color: var(--color-background-main);
+}
