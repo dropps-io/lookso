@@ -1,11 +1,13 @@
 .Home {
+  overflow:hidden;
   padding: 30px 150px 0 150px;
-  min-height: 150vh;
+  min-height: 250vh;
   background-color: var(--color-background-main);
 
   .MainSection {
     color: var(--color-text-default);
     padding-top: 150px;
+    min-height: 100vh;
 
     h1 {
       z-index: 1;
@@ -81,6 +83,67 @@
       z-index: 0;
 
       transform: rotate(-100.76deg);
+    }
+  }
+
+  .HeadlinesSection {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-top: 100px;
+
+    display: flex;
+    justify-content: space-around;
+    color: var(--color-text-default);
+    text-align: center;
+
+    .Headline {
+      padding: 80px 5%;
+
+      .HeadlineIcon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 40px auto;
+        border: solid 0.1px var(--color-border-semi-light);
+
+        background: linear-gradient(155.14deg, rgba(255, 255, 255, 0) -2.13%, rgba(255, 255, 255, 0.15) 136.58%);
+        filter: drop-shadow(0px 4.28214px 52.4562px rgba(0, 7, 72, 0.12));
+        backdrop-filter: blur(26.7634px);
+
+        border-radius: 100px;
+        transform: matrix(0.98, 0, -0.18, 1, 0, 0);
+        box-shadow: 0 0 165px var(--color-highlight);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 60%;
+          margin: auto;
+        }
+      }
+    }
+
+    .BoxHeadlines {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background: linear-gradient(178.2deg, rgba(255, 255, 255, 0.11) -16.49%, rgba(255, 255, 255, 0.11) 45.32%, rgba(255, 255, 255, 0) 103.19%);
+      -webkit-mask-image: -webkit-gradient(linear, left top, left bottom,
+              from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0)));
+      box-shadow: 0 10px 250px rgba(0, 0, 0, 0.25);
+      border-radius: 40px;
+      border: solid 1.5px var(--color-border-light);
+    }
+
+    .LayerHeadlines {
+      width: 100vw;
+      height: auto;
+      position: absolute;
+      top: -250px;
+      left: -120px;
+
+      transform: rotate(-9.78deg);
     }
   }
 }
