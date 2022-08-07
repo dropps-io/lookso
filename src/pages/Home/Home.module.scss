@@ -1,8 +1,11 @@
 .Home {
-  overflow:hidden;
-  padding: 30px 150px 0 150px;
   min-height: 250vh;
   background-color: var(--color-background-main);
+
+  .Content {
+    overflow:hidden;
+    padding: 30px 150px 0 150px;
+  }
 
   .MainSection {
     color: var(--color-text-default);
@@ -182,9 +185,8 @@
   }
 
   .FaqSection {
-    margin-top: 200px;
+    margin: 200px 0;
     width: 100%;
-    min-height: 100vh;
     color: var(--color-text-default);
 
     h2 {
@@ -274,7 +276,7 @@
 }
 
 @media only screen and (max-width: 1500px) {
-  .Home {
+  .Content {
     padding: 20px 100px 0 100px;
 
     .MainSection {
@@ -296,7 +298,9 @@
 }
 
 @media only screen and (max-width: 1400px) {
-  .Home {
+  .Content {
+    padding: 20px 50px 0 50px !important;
+
     .MainSection {
 
       h1 {
@@ -322,6 +326,11 @@
 
     .ThirdSection {
       margin-top: 100px;
+      .LeftPart {
+        h2 {
+          font-size: 2.4em !important;
+        }
+      }
     }
 
     .FaqSection {
@@ -343,13 +352,7 @@
 }
 
 @media only screen and (max-width: 1300px) {
-  .ThirdSection {
-    .LeftPart {
-      h2 {
-        font-size: 2.4em !important;
-      }
-    }
-  }
+
 
   .FaqSection {
     .Questions {
@@ -363,8 +366,7 @@
 }
 
 @media only screen and (max-width: 1200px) {
-  .Home {
-    padding: 20px 50px 0 50px;
+  .Content {
 
     .MainSection {
 
@@ -376,7 +378,7 @@
 }
 
 @media only screen and (max-width: 1100px) {
-  .Home {
+  .Content {
     .MainSection {
 
       h1 {
