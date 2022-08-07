@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styles from './Home.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import impactImage from "../../assets/images/impact-image.png";
+import impactImage2 from "../../assets/images/impact-image-2.png";
 import shape1 from "../../assets/images/shape1.png";
 import titleUnderline from "../../assets/images/title_underline.png";
 import layerHeadlines from "../../assets/images/layer-headlines.png";
@@ -55,6 +56,15 @@ const Home: FC<HomeProps> = () => (
         <h3>Explorer meets social</h3>
         <p>Besides traditional social media features (posts, followers etc) LOOKSO  also displays other on-chain activity associated with Universal Profiles in a user-friendly manner, such as contract interactions or value transfers </p>
       </div>
+    </section>
+
+    <section className={styles.ThirdSection}>
+      <div className={styles.LeftPart}>
+        <h2>Is LOOKSO live?</h2>
+        <p>The dApp’s current version is live only within the L16 testnet.
+          Once LUKSO’s mainnet goes live we will roll out the definitive version of our platform, along with a user-friendly interface for linking your testnet activity to your mainnet Universal Profile</p>
+      </div>
+      <img className={styles.RightPart} src={impactImage2.src}></img>
     </section>
   </div>
 );
