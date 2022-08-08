@@ -70,7 +70,7 @@ const Navbar: FC<NavbarProps> = () => {
                 </div>
                 <p className={styles.ProfileName}>@{username}<span>#{account.slice(2, 6)}</span></p>
                 <div className={styles.Balance}>
-                  <img src={miniLogoLukso.src} alt={}/>
+                  <img src={miniLogoLukso.src} alt={''}/>
                   <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
                 </div>
                 <div className={styles.DropdownButtons}>
