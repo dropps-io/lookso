@@ -11,7 +11,7 @@ const Footer: FC<FooterProps> = () => (
       <div></div>
       <div className={styles.Credentials}>
         <span>Ⓒ</span>
-        <span>Made by DROPPS,<br/>powered by LUKSO </span>
+        <span>Made by DROPPS,<br/>powered by LUKSO</span>
       </div>
       <img src={discordLogo.src} alt=""/>
     </div>
