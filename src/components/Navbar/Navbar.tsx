@@ -8,7 +8,9 @@ import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-re
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {shortenAddress} from "../../core/utils/address-formating";
-import {NATIVE_TOKEN} from "../../environment/endpoints";
+import {IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoints";
+import {formatUrl} from "../../core/utils/url-formating";
+import {setProfileInfo} from "../../store/profile-reducer";
 
 interface NavbarProps {}
 
@@ -17,6 +19,8 @@ const Navbar: FC<NavbarProps> = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const account: string = useSelector((state: RootState) => state.web3.account);
   const balance: string = useSelector((state: RootState) => state.web3.balance);
+  const username: string = useSelector((state: RootState) => state.profile.name);
+  const profileImage: string = useSelector((state: RootState) => state.profile.profileImage);
 
   async function connectToWeb3() {
     const web3Info = await connectWeb3();
@@ -26,6 +30,7 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setAccount(web3Info.account));
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
+      dispatch(setProfileInfo(web3Info.profileInfo));
     }
   }
 
@@ -44,18 +49,28 @@ const Navbar: FC<NavbarProps> = () => {
         {
           account ?
             <li className={styles.Profile}>
-              <img onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} src="https://preview.redd.it/v0caqchbtn741.jpg?auto=webp&s=c5d05662a039c031f50032e22a7c77dfcf1bfddc" alt=""/>
+              {
+                profileImage ?
+                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}></div>
+                  :
+                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
+              }
               <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
                 <div className={styles.DropdownHeader}>
-                  <img className={styles.ProfilePicMedium} src="https://preview.redd.it/v0caqchbtn741.jpg?auto=webp&s=c5d05662a039c031f50032e22a7c77dfcf1bfddc" alt=""/>
+                  {
+                    profileImage ?
+                      <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
+                      :
+                      <div className={styles.ProfilePicMedium}/>
+                  }
                   <div className={styles.ProfileContext}>
                     <strong>{ shortenAddress(account, 3) }</strong>
                     <span>L16 Testnet</span>
                   </div>
                 </div>
-                <p className={styles.ProfileName}>@samuel-v<span>#{account.slice(2, 6)}</span></p>
+                <p className={styles.ProfileName}>@{username}<span>#{account.slice(2, 6)}</span></p>
                 <div className={styles.Balance}>
-                  <img src={miniLogoLukso.src}/>
+                  <img src={miniLogoLukso.src} alt={}/>
                   <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
                 </div>
                 <div className={styles.DropdownButtons}>

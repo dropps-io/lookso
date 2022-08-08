@@ -4,6 +4,7 @@ import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {getWeb3Info} from "../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../store/web3-reducer";
+import {setProfileInfo} from "../store/profile-reducer";
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Index: NextPage = () => {
     dispatch(setAccount(web3Info.account));
     dispatch(setBalance(web3Info.balance));
     dispatch(setNetworkId(web3Info.networkId));
+    dispatch(setProfileInfo(web3Info.profileInfo));
   }
 
   return (

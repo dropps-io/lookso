@@ -1,4 +1,5 @@
 import Web3 from "web3";
+import {fetchProfileInfo} from "./api";
 
 declare const window: any;
 
@@ -20,11 +21,14 @@ export async function getWeb3Info() {
   // const networkId = await web3.eth.net.getId();
   const networkId = 0;
 
+  const profileInfo = await fetchProfileInfo(accounts[0]);
+
   return {
     web3,
     account: accounts[0],
     balance,
-    networkId
+    networkId,
+    profileInfo
   }
 }
 
