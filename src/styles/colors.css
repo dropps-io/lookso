@@ -2,6 +2,8 @@
     /* --Colors-- */
 
     --color-background-main: #07091C;
+    --color-background-main-l2: #10132D;
+    --color-background-main-l3: #19205A;
     --color-background-reverse: #ffffff;
     --color-background-reverse-darker: #F0F0EE;
 
@@ -11,6 +13,7 @@
 
     --color-text-placeholder: #D5D1CD;
     --color-text-default: #fff;
+    --color-text-default-light: #CFCCC6;
 
     --color-text-reverse: #101010;
     --color-text-reverse-light: #9F9F9F;
