@@ -2,6 +2,8 @@
     /* --Colors-- */
 
     --color-background-main: #07091C;
+    --color-background-reverse: #ffffff;
+    --color-background-reverse-darker: #F0F0EE;
 
     --color-border: #404040;
     --color-border-semi-light: #dadada;
@@ -10,5 +12,9 @@
     --color-text-placeholder: #D5D1CD;
     --color-text-default: #fff;
 
+    --color-text-reverse: #101010;
+    --color-text-reverse-light: #9F9F9F;
+
     --color-highlight: #0066FF;
+    --color-highlight-lighter: #2F80ED;
 }
