@@ -21,6 +21,7 @@ const Navbar: FC<NavbarProps> = () => {
   const balance: string = useSelector((state: RootState) => state.web3.balance);
   const username: string = useSelector((state: RootState) => state.profile.name);
   const profileImage: string = useSelector((state: RootState) => state.profile.profileImage);
+  const jwt: string = useSelector((state: RootState) => state.profile.jwt);
 
   async function connectToWeb3() {
     const web3Info = await connectWeb3();
@@ -32,8 +33,10 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
 
-      const jwt = await connectToAPI(web3Info.account, web3Info.web3);
-      if (jwt) dispatch(setProfileJwt(jwt));
+      if (!jwt) {
+        const resJWT = await connectToAPI(web3Info.account, web3Info.web3);
+        if (resJWT) dispatch(setProfileJwt(jwt));
+      }
     }
   }
 
