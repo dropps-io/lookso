@@ -1,13 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import {ReactNode, useEffect} from "react";
-import {connectToAPI, getWeb3Info, listenChanges} from "../core/web3";
+import {getWeb3Info, listenChanges} from "../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../store/web3-reducer";
-import {setProfileInfo, setProfileJwt} from "../store/profile-reducer";
+import {setProfileInfo} from "../store/profile-reducer";
 import {RootState} from "../store/store";
 
 const InitProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
-  const jwt: string = useSelector((state: RootState) => state.profile.jwt);
   let initializing = false;
 
   useEffect( () => {
@@ -25,10 +24,10 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
     dispatch(setNetworkId(web3Info.networkId));
     dispatch(setProfileInfo(web3Info.profileInfo));
     await listenChanges();
-    if (!jwt) {
-      const resJWT = await connectToAPI(web3Info.account, web3Info.web3);
-      if (resJWT) dispatch(setProfileJwt(jwt));
-    }
+    // if (!jwt) {
+    //   const resJWT = await connectToAPI(web3Info.account, web3Info.web3);
+    //   if (resJWT) dispatch(setProfileJwt(jwt));
+    // }
   }
 
   return (<>{children}</>

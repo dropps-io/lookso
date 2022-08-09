@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Profile.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
 import {IPFS_GATEWAY} from "../../environment/endpoints";
@@ -13,19 +13,25 @@ import repostIcon from '../../assets/icons/repost.svg';
 import externalLinkIcon from '../../assets/icons/external-link.svg';
 import executedEventIcon from '../../assets/icons/events/executed.png';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {fetchIsProfileFollower, fetchProfileFollowersCount, fetchProfileFollowingCount, fetchProfileInfo} from "../../core/api";
+import {fetchIsProfileFollower, fetchProfileFollowersCount, fetchProfileFollowingCount, fetchProfileInfo, insertFollow, insertUnfollow} from "../../core/api";
+import {connectToAPI} from "../../core/web3";
+import {setProfileJwt} from "../../store/profile-reducer";
 
 interface ProfileProps {
   address: string
 }
 
 const Profile: FC<ProfileProps> = (props) => {
+  const dispatch = useDispatch();
   const connected = {
     account: useSelector((state: RootState) => state.web3.account),
     username: useSelector((state: RootState) => state.profile.name),
     profileImage: useSelector((state: RootState) => state.profile.profileImage),
     backgroundImage: useSelector((state: RootState) => state.profile.backgroundImage),
   }
+  const jwt = useSelector((state: RootState) => state.profile.jwt);
+  const web3 = useSelector((state: RootState) => state.web3.web3);
+
   const [account, setAccount] = useState('');
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState('');
@@ -34,39 +40,85 @@ const Profile: FC<ProfileProps> = (props) => {
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function initPageData() {
+      setFollowing(await fetchProfileFollowingCount(props.address));
+      setFollowers(await fetchProfileFollowersCount(props.address));
+
+      if (connected.account === props.address) {
+        await initConnectedAccount();
+        setLoading(false);
+      } else if (props.address && props.address.length === 42) {
+        await initProfile();
+        setLoading(false);
+      } else {
+        setError(true);
+        setLoading(false);
+      }
+    }
+
+    async function initProfile() {
+      setAccount(props.address);
+      const profileData = await fetchProfileInfo(props.address);
+      setUsername(profileData.name);
+      setProfileImage(profileData.profileImage);
+      setBackgroundImage(profileData.backgroundImage);
+      setIsFollowing(await fetchIsProfileFollower(props.address, connected.account));
+    }
+
+    async function initConnectedAccount() {
+      setAccount(connected.account);
+      setUsername(connected.username);
+      setProfileImage(connected.profileImage);
+      setBackgroundImage(connected.backgroundImage);
+    }
+
     initPageData();
-  });
+  }, [props.address,connected.account]);
 
-  async function initPageData() {
-    setFollowing(await fetchProfileFollowingCount(account));
-    setFollowers(await fetchProfileFollowersCount(account));
-
-    if (connected.account === props.address) {
-      await initConnectedAccount();
-    } else if (props.address && props.address.length === 42) {
-      await initProfile();
-    } else {
-      setError(true);
+  async function requestJWT() {
+    const resJWT = await connectToAPI(connected.account, web3);
+    if (resJWT) {
+      dispatch(setProfileJwt(resJWT));
+      return resJWT;
+    }
+    else {
+      throw 'Failed to connect';
     }
   }
 
-  async function initProfile() {
-    setAccount(props.address);
-    const profileData = await fetchProfileInfo(props.address);
-    setUsername(profileData.name);
-    setProfileImage(profileData.profileImage);
-    setBackgroundImage(profileData.backgroundImage);
-
-    setIsFollowing(await fetchIsProfileFollower(props.address, connected.account));
+  async function followUser() {
+    setIsFollowing(true);
+    setFollowers(existing => existing + 1);
+    try {
+      let headersJWT = jwt;
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+      await insertFollow(connected.account, account, headersJWT);
+    }
+    catch (e) {
+      console.error(e);
+      setIsFollowing(false);
+    }
   }
 
-  async function initConnectedAccount() {
-    setAccount(connected.account);
-    setUsername(connected.username);
-    setProfileImage(connected.profileImage);
-    setBackgroundImage(connected.backgroundImage);
+  async function unfollowUser() {
+    setIsFollowing(false);
+    setFollowers(existing => existing - 1);
+    try {
+      let headersJWT = jwt;
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+      await insertUnfollow(connected.account, account, headersJWT);
+    }
+    catch (e) {
+      console.error(e);
+      setIsFollowing(true);
+    }
   }
 
   return (
@@ -100,9 +152,9 @@ const Profile: FC<ProfileProps> = (props) => {
              <div className={styles.ProfileButtons}>
                {
                  isFollowing ?
-                   <button className={'btn btn-secondary-no-fill'}>Following</button>
+                   <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
                    :
-                   <button className={'btn btn-secondary'}>Follow</button>
+                   <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
                }
                <button className={'btn btn-secondary-no-fill'}>...</button>
              </div>
