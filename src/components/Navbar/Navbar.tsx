@@ -8,9 +8,10 @@ import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-re
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {shortenAddress} from "../../core/utils/address-formating";
-import {IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoints";
+import {EXPLORER_URL, IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoints";
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
+import Link from "next/link";
 
 interface NavbarProps {}
 
@@ -42,9 +43,11 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <div className={styles.Navbar} data-testid="Navbar">
-      <div className={styles.Logo}>
-        <img src={logo.src} alt="Logo"/>
-      </div>
+      <Link href='/'>
+        <div className={styles.Logo}>
+          <img src={logo.src} alt="Logo"/>
+        </div>
+      </Link>
       <div className={styles.Search}>
         <SearchBar></SearchBar>
       </div>
@@ -63,16 +66,20 @@ const Navbar: FC<NavbarProps> = () => {
               }
               <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
                 <div className={styles.DropdownHeader}>
+                  <Link href={`/Profile/${account}`}>
                   {
                     profileImage ?
                       <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
                       :
                       <div className={styles.ProfilePicMedium}/>
                   }
+                  </Link>
+                  <Link href={`/Profile/${account}`}>
                   <div className={styles.ProfileContext}>
                     <strong>{ shortenAddress(account, 3) }</strong>
                     <span>L16 Testnet</span>
                   </div>
+                  </Link>
                 </div>
                 <p className={styles.ProfileName}>@{username}<span>#{account.slice(2, 6)}</span></p>
                 <div className={styles.Balance}>
@@ -81,7 +88,7 @@ const Navbar: FC<NavbarProps> = () => {
                 </div>
                 <div className={styles.DropdownButtons}>
                   <div className={styles.TopButtons}>
-                    <button className={'btn btn-secondary'}>Explorer</button>
+                    <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank'>Explorer</a></button>
                     <button className={'btn btn-secondary'}>UP.cloud</button>
                   </div>
                   <button className={'btn btn-main'}>Disconnect</button>

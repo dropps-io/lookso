@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import styles from './Feed.module.scss';
 import {FeedPost} from "../../models/post";
 import {formatUrl} from "../../core/utils/url-formating";
-import {IPFS_GATEWAY} from "../../environment/endpoints";
+import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
 import externalLinkIcon from "../../assets/icons/external-link.svg";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import commentIcon from "../../assets/icons/comment.svg";
@@ -34,7 +34,9 @@ const Feed: FC<FeedProps> = (props) => {
                 </div>
                 <div className={styles.RightPart}>
                   <span>{dateDifference(new Date(Date.now()), new Date(post.date))} Ago</span>
-                  <img src={externalLinkIcon.src} alt=""/>
+                  <a href={EXPLORER_URL + 'tx/' + post.transactionHash} target='_blank'>
+                    <img src={externalLinkIcon.src} alt=""/>
+                  </a>
                 </div>
               </div>
               <div className={styles.PostTags}>
