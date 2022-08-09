@@ -18,7 +18,7 @@ import {
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {FeedPost} from "../../models/post";
-import Feed from "../../components/Feed/Feed";
+import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 
 interface ProfileProps {
@@ -165,7 +165,7 @@ const Profile: FC<ProfileProps> = (props) => {
              :
              <></>
          }
-         <Feed feed={feed}></Feed>
+         <Activity feed={feed}></Activity>
        </div>
       <Footer/>
     </div>

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from './Feed.module.scss';
+import styles from './Activity.module.scss';
 import {FeedPost} from "../../models/post";
 import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
@@ -12,11 +12,11 @@ import shareIcon from "../../assets/icons/share.svg";
 import {constructPostContent} from "./construct-post-content";
 import {dateDifference} from "../../core/utils/date-difference";
 
-interface FeedProps {
+interface ActivityProps {
   feed: FeedPost[]
 }
 
-const Feed: FC<FeedProps> = (props) => {
+const Activity: FC<ActivityProps> = (props) => {
 
   return (
     <div className={styles.Feed}>
@@ -90,4 +90,4 @@ const Feed: FC<FeedProps> = (props) => {
   );
 }
 
-export default Feed;
+export default Activity;
