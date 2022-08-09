@@ -57,6 +57,38 @@ export async function insertUnfollow(followerAddress: string, followingAddress: 
   });
 }
 
+export async function insertLike(address: string, postHash: string, jwt: string): Promise<void> {
+  const content = {
+    sender: address,
+    postHash
+  };
+
+  await fetch(API_URL + '/lookso/like', {
+    method: 'POST',
+    body: JSON.stringify(content),
+    headers: headersWithJWT(jwt)
+  });
+}
+
+export async function deleteLike(address: string, postHash: string, jwt: string): Promise<void> {
+  const content = {
+    sender: address,
+    postHash
+  };
+
+  await fetch(API_URL + '/lookso/like', {
+    method: 'DELETE',
+    body: JSON.stringify(content),
+    headers: headersWithJWT(jwt)
+  });
+}
+
+export async function FetchIsLikedPost(sender: string, postHash: string) {
+  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json()).followers;
+  return likes && likes.length > 0;
+}
+
+
 export async function fetchProfileInfo(address: string) {
   return await (await fetch(API_URL + '/lookso/profile/' + address + '/info')).json();
 }
