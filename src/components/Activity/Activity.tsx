@@ -11,12 +11,15 @@ import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import {constructPostContent} from "./construct-post-content";
 import {dateDifference} from "../../core/utils/date-difference";
+import Link from "next/link";
 
 interface ActivityProps {
   feed: FeedPost[]
 }
 
 const Activity: FC<ActivityProps> = (props) => {
+
+  console.log(props.feed);
 
   return (
     <div className={styles.Feed}>
@@ -29,8 +32,12 @@ const Activity: FC<ActivityProps> = (props) => {
             <div className={styles.FeedPost}>
               <div className={styles.PostHeader}>
                 <div className={styles.LeftPart}>
-                  <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(post.author.image, IPFS_GATEWAY)})`}}></div>
-                  <div className={styles.UserTag}>@{post.author.name}<span>#{post.author.address.slice(2, 6)}</span></div>
+                  <Link href={`/Profile/${post.author.address}`}>
+                    <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(post.author.image, IPFS_GATEWAY)})`}}></div>
+                  </Link>
+                  <Link href={`/Profile/${post.author.address}`}>
+                    <div className={styles.UserTag}>@{post.author.name}<span>#{post.author.address.slice(2, 6)}</span></div>
+                  </Link>
                 </div>
                 <div className={styles.RightPart}>
                   <span>{dateDifference(new Date(Date.now()), new Date(post.date))} Ago</span>

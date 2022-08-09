@@ -54,7 +54,7 @@ const Navbar: FC<NavbarProps> = () => {
       <ul className={styles.Buttons}>
         <li><a href="">Discord</a></li>
         <li><a href="">F.A.Q</a></li>
-        <li><a href="">Feed</a></li>
+        <li><Link href='/feed'><a href="">Feed</a></Link></li>
         {
           account ?
             <li className={styles.Profile}>

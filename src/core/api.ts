@@ -77,3 +77,7 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
 export async function fetchProfileActivity(address: string, limit: number, offset: number): Promise<FeedPost[]> {
   return await (await fetch(API_URL + '/lookso/profile/' + address + '/activity?limit=' + limit + '&offset=' + offset)).json();
 }
+
+export async function fetchProfileFeed(address: string, limit: number, offset: number): Promise<FeedPost[]> {
+  return await (await fetch(API_URL + '/lookso/profile/' + address + '/feed?limit=' + limit + '&offset=' + offset)).json();
+}
