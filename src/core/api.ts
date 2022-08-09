@@ -1,4 +1,5 @@
 import {API_URL} from "../environment/endpoints";
+import {FeedPost} from "../models/post";
 
 const headers = {
   Accept: 'application/json',
@@ -69,8 +70,10 @@ export async function fetchProfileFollowersCount(address: string): Promise<numbe
 }
 
 export async function fetchIsProfileFollower(followingAddress: string, followerAddress: string): Promise<boolean> {
-  console.log(followingAddress)
-  console.log(followerAddress)
   const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json()).followers;
   return followers && followers.length > 0;
+}
+
+export async function fetchProfileActivity(address: string, limit: number, offset: number): Promise<FeedPost[]> {
+  return await (await fetch(API_URL + '/lookso/profile/' + address + '/activity?limit=' + limit + '&offset=' + offset)).json();
 }

@@ -6,16 +6,20 @@ import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
 import {IPFS_GATEWAY} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
-import heartIcon from '../../assets/icons/heart.svg';
-import commentIcon from '../../assets/icons/comment.svg';
-import shareIcon from '../../assets/icons/share.svg';
-import repostIcon from '../../assets/icons/repost.svg';
-import externalLinkIcon from '../../assets/icons/external-link.svg';
-import executedEventIcon from '../../assets/icons/events/executed.png';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {fetchIsProfileFollower, fetchProfileFollowersCount, fetchProfileFollowingCount, fetchProfileInfo, insertFollow, insertUnfollow} from "../../core/api";
+import {
+  fetchIsProfileFollower, fetchProfileActivity,
+  fetchProfileFollowersCount,
+  fetchProfileFollowingCount,
+  fetchProfileInfo,
+  insertFollow,
+  insertUnfollow
+} from "../../core/api";
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
+import {FeedPost} from "../../models/post";
+import Feed from "../../components/Feed/Feed";
+import Footer from "../../components/Footer/Footer";
 
 interface ProfileProps {
   address: string
@@ -39,6 +43,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [following, setFollowing] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [feed, setFeed]: [FeedPost[], any] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -49,14 +54,13 @@ const Profile: FC<ProfileProps> = (props) => {
 
       if (connected.account === props.address) {
         await initConnectedAccount();
-        setLoading(false);
       } else if (props.address && props.address.length === 42) {
         await initProfile();
-        setLoading(false);
       } else {
         setError(true);
-        setLoading(false);
       }
+      setFeed(await fetchProfileActivity(props.address, 30, 0));
+      setLoading(false);
     }
 
     async function initProfile() {
@@ -161,57 +165,9 @@ const Profile: FC<ProfileProps> = (props) => {
              :
              <></>
          }
-         <div className={styles.Feed}>
-           <div className={styles.FeedHeader}>
-             <h5>Activity</h5>
-           </div>
-           <div className={styles.FeedPosts}>
-             <div className={styles.FeedPost}>
-               <div className={styles.PostHeader}>
-                 <div className={styles.LeftPart}>
-                   <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}></div>
-                   <div className={styles.UserTag}>@samuel-v<span>#0101</span></div>
-                 </div>
-                 <div className={styles.RightPart}>
-                   <span>2h Ago</span>
-                   <img src={externalLinkIcon.src} alt=""/>
-                 </div>
-               </div>
-               <div className={styles.PostTags}>
-                 <div className={styles.PostTag}>LSP7</div>
-                 <div className={styles.PostTag}>Token</div>
-                 {/*TODO add copies tag*/}
-                 {/*<div className={styles.PostTag}>*/}
-                 {/*  <img src="" alt=""/>*/}
-                 {/*  <span>20</span>*/}
-                 {/*</div>*/}
-               </div>
-               <div className={styles.PostContent}>
-                 <img src={executedEventIcon.src} alt="Executed Event"/>
-                 <p>Executed an unknown function</p>
-               </div>
-               <div className={styles.PostFooter}>
-                 <div></div>
-                 <div className={styles.PostActions}>
-                   <div className={styles.IconNumber}>
-                     <img src={commentIcon.src} alt=""/>
-                     <span>132</span>
-                   </div>
-                   <div className={styles.IconNumber}>
-                     <img src={repostIcon.src} alt=""/>
-                     <span>132</span>
-                   </div>
-                   <div className={styles.IconNumber}>
-                     <img src={heartIcon.src} alt=""/>
-                     <span>132</span>
-                   </div>
-                 </div>
-                 <img className={styles.PostShare} src={shareIcon.src} alt=""/>
-               </div>
-             </div>
-           </div>
-         </div>
+         <Feed feed={feed}></Feed>
        </div>
+      <Footer/>
     </div>
   );
 }
