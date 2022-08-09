@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import {fetchProfileInfo} from "./api";
+import {fetchProfileAuthJwtToken, fetchProfileAuthNonce, fetchProfileInfo} from "./api";
 
 declare const window: any;
 
@@ -36,4 +36,17 @@ export async function connectWeb3() {
   const web3 = new Web3(window.ethereum);
   const accounts: string[] = await web3.eth.requestAccounts();
   if (accounts.length > 0) return await getWeb3Info();
+}
+
+export async function connectToAPI(address: string, web3: Web3) {
+  const nonce = await fetchProfileAuthNonce(address);
+  if (nonce) {
+    const signed = await signMessage(address, nonce, web3);
+    return (await fetchProfileAuthJwtToken(address, signed)).token;
+  }
+}
+
+async function signMessage(address: string, data: string, web3: Web3) {
+  const res = await web3.eth.sign(data, address);
+  return JSON.parse(JSON.stringify(res)).signature;
 }

@@ -6,7 +6,6 @@ import InitProvider from "./init";
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-
   return (
     <Provider store={store}>
       <InitProvider>
