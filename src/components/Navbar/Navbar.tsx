@@ -75,10 +75,10 @@ const Navbar: FC<NavbarProps> = () => {
                 </div>
                 <div className={styles.DropdownButtons}>
                   <div className={styles.TopButtons}>
-                    <button className={styles.Btn + ' ' + styles.BtnSecondary}>Explorer</button>
-                    <button className={styles.Btn + ' ' + styles.BtnSecondary}>UP.cloud</button>
+                    <button className={'btn btn-secondary'}>Explorer</button>
+                    <button className={'btn btn-secondary'}>UP.cloud</button>
                   </div>
-                  <button className={styles.Btn + ' ' + styles.BtnMain}>Disconnect</button>
+                  <button className={'btn btn-main'}>Disconnect</button>
                 </div>
               </div>
             </li>

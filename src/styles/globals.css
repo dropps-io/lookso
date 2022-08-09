@@ -1,5 +1,6 @@
 @import './variables.css';
 @import './colors.css';
+@import 'components.css';
 
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 @import url('http://fonts.cdnfonts.com/css/clash-display');
@@ -36,3 +37,4 @@ a, li, ul {
   min-height: 250vh;
   background-color: var(--color-background-main);
 }
+

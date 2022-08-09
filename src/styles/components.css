@@ -1,0 +1,30 @@
+.btn {
+  border: none;
+  width: 100%;
+  height: 40px;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  border-radius: 100px;
+}
+
+.btn:hover {
+   cursor: pointer;
+}
+
+.btn-main {
+  background-color: var(--color-highlight-lighter);
+  color: var(--color-text-default);
+}
+
+.btn-secondary {
+  border: 1px solid var(--color-border-semi-light);
+  background-color: var(--color-background-reverse);
+  color: var(--color-text-reverse);
+}
+
+.btn-secondary-no-fill {
+  border: 1px solid var(--color-border-light);
+  background: none;
+  color: var(--color-text-default);
+}
