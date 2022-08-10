@@ -1,0 +1,51 @@
+.BoxTop {
+
+  display: flex;
+
+  .ProfileImgSmall {
+    border: 3px solid var(--color-border-light);
+    border-radius: 40px;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+
+    background-position: center;
+    background-size: cover;
+  }
+
+  .PostInput {
+    margin-left: 15px;
+    background: none;
+    border: none;
+    font-size: 1.25em;
+    color: var(--color-text-default);
+    width: 100%;
+    outline: none;
+    font-family: 'Poppins';
+    overflow: hidden;
+    resize: none;
+
+    &::placeholder {
+      font-size: 1.25em;
+      color: var(--color-text-default-light);
+    }
+  }
+}
+
+.BoxBottom {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+
+  span {
+    height: max-content;
+    font-size: 0.7em;
+  }
+
+  button {
+    width: max-content;
+    padding: 5px 20px;
+    font-size: 1em;
+  }
+}
