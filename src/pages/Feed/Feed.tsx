@@ -5,7 +5,7 @@ import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import {FeedPost} from "../../models/post";
+import {FeedPost} from "../../models/feed-post";
 import {fetchProfileFeed} from "../../core/api";
 
 interface FeedProps {}

@@ -1,5 +1,5 @@
 import {API_URL} from "../environment/endpoints";
-import {FeedPost} from "../models/post";
+import {FeedPost} from "../models/feed-post";
 
 const headers = {
   Accept: 'application/json',

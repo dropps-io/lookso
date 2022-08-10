@@ -17,7 +17,7 @@ import {
 } from "../../core/api";
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
-import {FeedPost} from "../../models/post";
+import {FeedPost} from "../../models/feed-post";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 
