@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
 import styles from './Activity.module.scss';
 
-import Post from "../Post/Post";
+import Post, {FeedPost} from "../Post/Post";
 
 interface ActivityProps {
-  feed: []
+  feed: FeedPost[]
 }
 
 const Activity: FC<ActivityProps> = (props) => {
