@@ -18,4 +18,96 @@
     padding: 0 30px;
     color: var(--color-text-default);
   }
+
+  .FeedHeader {
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--color-border);
+
+    display: flex;
+    justify-content: space-between;
+
+    .Filters {
+      display: flex;
+      align-items: end;
+      padding: 10px 0;
+
+      span {
+        margin-left: 10px;
+        font-size: 0.7em;
+        height: max-content;
+        padding: 5px 10px;
+        border: 1px solid var(--color-border-light);
+        border-radius: 100px;
+        cursor: pointer;
+
+        &.ActiveFilter {
+          border: 1px solid var(--color-highlight);
+          background-color: var(--color-highlight);
+        }
+      }
+    }
+  }
+
+  .PostWritingBox {
+    background-color: var(--color-background-main-l2);
+    width: 95%;
+    max-width: 700px;
+    margin: 20px auto;
+    border-radius: 24px;
+    padding: 25px;
+
+    .BoxTop {
+
+      display: flex;
+
+      .ProfileImgSmall {
+        border: 3px solid var(--color-border-light);
+        border-radius: 40px;
+        height: 40px;
+        width: 40px;
+        min-width: 40px;
+
+        background-position: center;
+        background-size: cover;
+      }
+
+      .PostInput {
+        margin-left: 15px;
+        background: none;
+        border: none;
+        font-size: 1.25em;
+        color: var(--color-text-default);
+        width: 100%;
+        outline: none;
+        font-family: 'Poppins';
+        overflow: hidden;
+        resize: none;
+
+        &::placeholder {
+          font-size: 1.25em;
+          color: var(--color-text-default-light);
+        }
+      }
+    }
+
+    .BoxBottom {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+
+      span {
+        height: max-content;
+        font-size: 0.7em;
+      }
+
+      button {
+        width: max-content;
+        padding: 5px 20px;
+        font-size: 1em;
+      }
+    }
+  }
 }

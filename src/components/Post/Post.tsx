@@ -94,8 +94,9 @@ const Post: FC<PostProps> = (props) => {
   }
 
   async function likeOrUnlikePost() {
-    setLikes(!isLiked ? likes + 1 : likes - 1);
-    setIsLiked(!isLiked);
+    const newLikes = !isLiked ? 1 : - 1;
+    setLikes(existing => existing + newLikes);
+    setIsLiked(newLikes > 0);
 
     try {
       let headersJWT = jwt;
@@ -107,8 +108,9 @@ const Post: FC<PostProps> = (props) => {
     }
 
     catch (e) {
-      setLikes(!isLiked ? likes + 1 : likes - 1);
-      setIsLiked(!isLiked);
+      console.log('error')
+      setLikes(existing => existing - newLikes);
+      setIsLiked(newLikes < 0);
     }
   }
 
