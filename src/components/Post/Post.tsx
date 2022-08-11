@@ -17,6 +17,7 @@ import {setProfileJwt} from "../../store/profile-reducer";
 import {insertLike} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
+import PostInput from "../PostInput/PostInput";
 
 export interface FeedPost {
   hash: string,
@@ -81,6 +82,7 @@ const Post: FC<PostProps> = (props) => {
   const [comments, setComments] = useState(0);
   const [reposts, setReposts] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [commenting, setCommenting] = useState(false);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account, web3);
@@ -114,6 +116,10 @@ const Post: FC<PostProps> = (props) => {
     }
   }
 
+  function toggleCommentPopUp() {
+    setCommenting(!commenting);
+  }
+
   useEffect(() => {
     setHash(props.post.hash);
     setAuthorAddress(props.post.author.address);
@@ -130,57 +136,124 @@ const Post: FC<PostProps> = (props) => {
     setIsLiked(props.post.isLiked);
   }, []);
 
-  return (<div key={hash} className={styles.FeedPost}>
-      <div className={styles.PostHeader}>
-        <div className={styles.LeftPart}>
-          <Link href={`/Profile/${authorAddress}`}>
-            <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(authorImage, IPFS_GATEWAY)})`}}></div>
-          </Link>
-          <Link href={`/Profile/${authorAddress}`}>
-            <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
-          </Link>
-        </div>
-        <div className={styles.RightPart}>
-          <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
-          <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank'>
-            <img src={externalLinkIcon.src} alt=""/>
-          </a>
-        </div>
-      </div>
-      <div className={styles.PostTags}>
-        {display.tags.standard ? <>
-          <div className={styles.PostTag}>{display.tags.standard}</div>
-          <div className={styles.PostTag}>{display.tags.standardType}</div>
-        </> : <></>}
-        {/*TODO add copies tag*/}
-        {/*<div className={styles.PostTag}>*/}
-        {/*  <img src="" alt=""/>*/}
-        {/*  <span>20</span>*/}
-        {/*</div>*/}
-      </div>
-      <div className={styles.PostContent}>
-        <img src={executedEventIcon.src} alt="Executed Event"/>
-        {display.text ? constructPostContent(display.text, display.params) : <p>Event: {name}</p>}
-      </div>
-      <div className={styles.PostFooter}>
-        <div></div>
-        <div className={styles.PostActions}>
-          <div className={styles.IconNumber}>
-            <img src={commentIcon.src} alt=""/>
-            <span>{comments}</span>
+  return (
+    <>
+      {
+        commenting ?
+          <>
+            <div onClick={toggleCommentPopUp} style={{top: `${document.documentElement.scrollTop || document.body.scrollTop}px`}} className={styles.Popup}/>
+            <div style={{top: `${document.documentElement.scrollTop || document.body.scrollTop}px`}} className={styles.Container}>
+              <div className={`${styles.FeedPost}`}>
+                <div className={styles.PostHeader}>
+                  <div className={styles.LeftPart}>
+                    <Link href={`/Profile/${authorAddress}`}>
+                      <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(authorImage, IPFS_GATEWAY)})`}}></div>
+                    </Link>
+                    <Link href={`/Profile/${authorAddress}`}>
+                      <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
+                    </Link>
+                  </div>
+                  <div className={styles.RightPart}>
+                    <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
+                    <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank'>
+                      <img src={externalLinkIcon.src} alt=""/>
+                    </a>
+                  </div>
+                </div>
+                <div className={styles.PostTags}>
+                  {display.tags.standard ? <>
+                    <div className={styles.PostTag}>{display.tags.standard}</div>
+                    <div className={styles.PostTag}>{display.tags.standardType}</div>
+                  </> : <></>}
+                  {/*TODO add copies tag*/}
+                  {/*<div className={styles.PostTag}>*/}
+                  {/*  <img src="" alt=""/>*/}
+                  {/*  <span>20</span>*/}
+                  {/*</div>*/}
+                </div>
+                <div className={styles.PostContent}>
+                  <img src={executedEventIcon.src} alt="Executed Event"/>
+                  {display.text ? constructPostContent(display.text, display.params) : <p>Event: {name}</p>}
+                </div>
+                <div className={styles.PostFooter}>
+                  <div></div>
+                  <div className={styles.PostActions}>
+                    <div className={styles.IconNumber} onClick={toggleCommentPopUp}>
+                      <img src={commentIcon.src} alt=""/>
+                      <span>{comments}</span>
+                    </div>
+                    <div className={styles.IconNumber}>
+                      <img src={repostIcon.src} alt=""/>
+                      <span>{reposts}</span>
+                    </div>
+                    <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
+                      {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
+                      <span>{likes}</span>
+                    </div>
+                  </div>
+                  <img className={styles.PostShare} src={shareIcon.src} alt=""/>
+                </div>
+                <div className={styles.Separator}></div>
+                <PostInput parentHash={hash}/>
+              </div>
+            </div>
+          </>
+        :
+        <></>
+      }
+      <div className={`${styles.FeedPost}`}>
+        <div className={styles.PostHeader}>
+          <div className={styles.LeftPart}>
+            <Link href={`/Profile/${authorAddress}`}>
+              <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(authorImage, IPFS_GATEWAY)})`}}></div>
+            </Link>
+            <Link href={`/Profile/${authorAddress}`}>
+              <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
+            </Link>
           </div>
-          <div className={styles.IconNumber}>
-            <img src={repostIcon.src} alt=""/>
-            <span>{reposts}</span>
-          </div>
-          <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
-            {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
-            <span>{likes}</span>
+          <div className={styles.RightPart}>
+            <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
+            <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank'>
+              <img src={externalLinkIcon.src} alt=""/>
+            </a>
           </div>
         </div>
-        <img className={styles.PostShare} src={shareIcon.src} alt=""/>
+        <div className={styles.PostTags}>
+          {display.tags.standard ? <>
+            <div className={styles.PostTag}>{display.tags.standard}</div>
+            <div className={styles.PostTag}>{display.tags.standardType}</div>
+          </> : <></>}
+          {/*TODO add copies tag*/}
+          {/*<div className={styles.PostTag}>*/}
+          {/*  <img src="" alt=""/>*/}
+          {/*  <span>20</span>*/}
+          {/*</div>*/}
+        </div>
+        <div className={styles.PostContent}>
+          <img src={executedEventIcon.src} alt="Executed Event"/>
+          {display.text ? constructPostContent(display.text, display.params) : <p>Event: {name}</p>}
+        </div>
+        <div className={styles.PostFooter}>
+          <div></div>
+          <div className={styles.PostActions}>
+            <div className={styles.IconNumber} onClick={toggleCommentPopUp}>
+              <img src={commentIcon.src} alt=""/>
+              <span>{comments}</span>
+            </div>
+            <div className={styles.IconNumber}>
+              <img src={repostIcon.src} alt=""/>
+              <span>{reposts}</span>
+            </div>
+            <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
+              {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
+              <span>{likes}</span>
+            </div>
+          </div>
+          <img className={styles.PostShare} src={shareIcon.src} alt=""/>
+        </div>
       </div>
-    </div>);
+    </>
+);
 }
 
 export default Post;

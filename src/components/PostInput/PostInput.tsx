@@ -5,9 +5,11 @@ import {IPFS_GATEWAY} from "../../environment/endpoints";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 
-interface PostInputProps {}
+interface PostInputProps {
+  parentHash?: string;
+}
 
-const PostInput: FC<PostInputProps> = () => {
+const PostInput: FC<PostInputProps> = (props) => {
 
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const [inputHeight, setInputHeight] = useState(70);
@@ -24,16 +26,16 @@ const PostInput: FC<PostInputProps> = () => {
   }
 
   return (
-    <>
-      <div className={styles.BoxTop}>
+    <div className={`${props.parentHash ? styles.Comment : ''}`}>
+      <div className={`${styles.BoxTop}`}>
         <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
         <textarea maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
       </div>
       <div className={styles.BoxBottom}>
         <span>{inputValue.length} / 256</span>
-        <button className='btn btn-secondary'>Post</button>
+        <button className='btn btn-secondary'>{props.parentHash ? 'Reply' : 'Post'}</button>
       </div>
-    </>
+    </div>
   );
 }
 

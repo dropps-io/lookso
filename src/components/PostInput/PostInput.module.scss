@@ -49,3 +49,16 @@
     font-size: 1em;
   }
 }
+
+.Comment {
+  .BoxTop {
+    .PostInput {
+      font-size: 1em;
+
+      &::placeholder {
+        font-size: 1em;
+      }
+    }
+
+  }
+}
