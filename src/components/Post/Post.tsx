@@ -155,7 +155,7 @@ const Post: FC<PostProps> = (props) => {
                   </div>
                   <div className={styles.RightPart}>
                     <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
-                    <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank'>
+                    <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' title={'Explorer'}>
                       <img src={externalLinkIcon.src} alt=""/>
                     </a>
                   </div>

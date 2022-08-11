@@ -129,3 +129,11 @@
     }
   }
 }
+
+.AddressParameter {
+  cursor: pointer;
+  font-size: 0.8em;
+  background-color: var(--color-highlight-lighter);
+  border-radius: 6px;
+  padding: 2px 4px;
+}

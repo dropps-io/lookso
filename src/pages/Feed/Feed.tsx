@@ -21,7 +21,7 @@ const Feed: FC<FeedProps> = () => {
   useEffect(() => {
     async function initPageData() {
       if (account) {
-        setFeed(await fetchProfileFeed(account, 30, 0));
+        setFeed(await fetchProfileFeed(account, 300, 0));
       }
     }
 
