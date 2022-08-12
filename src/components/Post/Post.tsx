@@ -6,7 +6,6 @@ import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import externalLinkIcon from "../../assets/icons/external-link.svg";
 import executedEventIcon from "../../assets/icons/events/executed.png";
-import {constructPostContent} from "./construct-post-content";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
 import heartFullIcon from "../../assets/icons/heart-full.svg";
@@ -18,6 +17,7 @@ import {insertLike} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostInput from "../PostInput/PostInput";
+import PostContent from "./construct-post-content";
 
 export interface FeedPost {
   hash: string,
@@ -155,7 +155,7 @@ const Post: FC<PostProps> = (props) => {
                   </div>
                   <div className={styles.RightPart}>
                     <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
-                    <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' title={'Explorer'}>
+                    <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' title={'Explorer'} rel="noopener noreferrer">
                       <img src={externalLinkIcon.src} alt=""/>
                     </a>
                   </div>
@@ -173,7 +173,7 @@ const Post: FC<PostProps> = (props) => {
                 </div>
                 <div className={styles.PostContent}>
                   <img src={executedEventIcon.src} alt="Executed Event"/>
-                  {display.text ? constructPostContent(display.text, display.params) : <p>Event: {name}</p>}
+                  {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
                 </div>
                 <div className={styles.PostFooter}>
                   <div></div>
@@ -213,7 +213,7 @@ const Post: FC<PostProps> = (props) => {
           </div>
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
-            <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank'>
+            <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' rel="noopener noreferrer">
               <img src={externalLinkIcon.src} alt=""/>
             </a>
           </div>
@@ -231,7 +231,7 @@ const Post: FC<PostProps> = (props) => {
         </div>
         <div className={styles.PostContent}>
           <img src={executedEventIcon.src} alt="Executed Event"/>
-          {display.text ? constructPostContent(display.text, display.params) : <p>Event: {name}</p>}
+          {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
         </div>
         <div className={styles.PostFooter}>
           <div></div>

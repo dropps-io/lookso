@@ -88,7 +88,7 @@ const Navbar: FC<NavbarProps> = () => {
                 </div>
                 <div className={styles.DropdownButtons}>
                   <div className={styles.TopButtons}>
-                    <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank'>Explorer</a></button>
+                    <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
                     <button className={'btn btn-secondary'}>UP.cloud</button>
                   </div>
                   <button className={'btn btn-main'}>Disconnect</button>

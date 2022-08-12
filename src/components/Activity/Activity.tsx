@@ -14,13 +14,18 @@ const Activity: FC<ActivityProps> = (props) => {
       <div className={styles.FeedHeader}>
         <h5>Activity</h5>
       </div>
-      <div className={styles.FeedPosts}>
-        {
-          props.feed.map((post, index) =>
-            <Post key={index} post={post}/>
-          )
-        }
-      </div>
+      {
+        props.feed ?
+          <div className={styles.FeedPosts}>
+            {
+              props.feed.map((post, index) =>
+                <Post key={index} post={post}/>
+              )
+            }
+          </div>
+          :
+          <></>
+      }
     </div>
   );
 }

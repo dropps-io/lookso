@@ -133,7 +133,15 @@
 .AddressParameter {
   cursor: pointer;
   font-size: 0.8em;
-  background-color: var(--color-highlight-lighter);
+  background-color: var(--color-asset);
   border-radius: 6px;
   padding: 2px 4px;
+
+  span {
+    color: var(--color-text-default-light)
+  }
+}
+
+.ProfileParam {
+  background-color: var(--color-highlight-lighter);
 }
