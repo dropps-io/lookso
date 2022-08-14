@@ -117,6 +117,7 @@ const Post: FC<PostProps> = (props) => {
   }
 
   function toggleCommentPopUp() {
+    document.body.style.overflowY = commenting ? 'scroll' : 'hidden';
     setCommenting(!commenting);
   }
 
