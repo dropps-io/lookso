@@ -5,10 +5,8 @@ import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import {fetchProfileFeed} from "../../core/api";
+import {fetchAllFeed, fetchProfileFeed} from "../../core/api";
 import {FeedPost} from "../../components/Post/Post";
-import {formatUrl} from "../../core/utils/url-formating";
-import {IPFS_GATEWAY} from "../../environment/endpoints";
 import PostInput from "../../components/PostInput/PostInput";
 
 interface FeedProps {}
@@ -26,6 +24,8 @@ const Feed: FC<FeedProps> = () => {
     async function initPageData() {
       if (account) {
         setFeed(await fetchProfileFeed(account, 30, 0));
+      } else {
+        setFeed(await fetchAllFeed(30, 0));
       }
     }
 
@@ -39,7 +39,12 @@ const Feed: FC<FeedProps> = () => {
 
   async function fetchFeed(type?: 'post' | 'event') {
     setFeed([]);
-    setFeed(await fetchProfileFeed(account, 30, 0, type));
+    if (account) {
+      setFeed(await fetchProfileFeed(account, 30, 0, type));
+    } else {
+      setFeed(await fetchAllFeed(30, 0, type));
+    }
+
   }
 
   return (
@@ -58,9 +63,14 @@ const Feed: FC<FeedProps> = () => {
             }
           </div>
         </div>
-        <div className={styles.PostWritingBox}>
-          <PostInput/>
-        </div>
+        {
+          account ?
+            <div className={styles.PostWritingBox}>
+              <PostInput/>
+            </div>
+            :
+            <></>
+        }
         <Activity feed={feed}></Activity>
       </div>
       <Footer/>

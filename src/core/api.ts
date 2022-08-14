@@ -117,3 +117,9 @@ export async function fetchProfileFeed(address: string, limit: number, offset: n
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }
+
+export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/feed?limit=' + limit + '&offset=' + offset;
+  if (type) url +=  '&postType=' + type;
+  return await (await fetch(url)).json();
+}
