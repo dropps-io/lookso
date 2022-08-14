@@ -16,20 +16,30 @@ interface FeedProps {}
 const Feed: FC<FeedProps> = () => {
   const account = useSelector((state: RootState) => state.web3.account);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
-  const [filters, setFilters]: [{display: string, active: boolean}[], any] = useState([{display: 'All', active: true}, {display: 'Posts', active: false}, {display: 'Events', active: false}]);
+  const [filters, setFilters]: [{display: string, value?: 'event' | 'post',active: boolean}[], any] = useState([
+    {display: 'All', value: undefined, active: true},
+    {display: 'Posts', value: 'post', active: false},
+    {display: 'Events', value: 'event', active: false}
+  ]);
 
   useEffect(() => {
     async function initPageData() {
       if (account) {
-        setFeed(await fetchProfileFeed(account, 300, 0));
+        setFeed(await fetchProfileFeed(account, 30, 0));
       }
     }
 
     initPageData();
   }, [account]);
 
-  function setActive(i: number) {
-    setFilters((existing: {display: string, active: boolean}[]) => existing.map((f, n) => i === n ? {display: f.display, active: true} : {display: f.display, active: false}));
+  async function setActive(i: number) {
+    if (!filters[i].active) fetchFeed(filters[i].value);
+    setFilters((existing: {display: string, value?: string, active: boolean}[]) => existing.map((f, n) => i === n ? {display: f.display, value: f.value, active: true} : {display: f.display, value: f.value, active: false}));
+  }
+
+  async function fetchFeed(type?: 'post' | 'event') {
+    setFeed([]);
+    setFeed(await fetchProfileFeed(account, 30, 0, type));
   }
 
   return (

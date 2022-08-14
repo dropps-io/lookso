@@ -110,7 +110,6 @@ const Post: FC<PostProps> = (props) => {
     }
 
     catch (e) {
-      console.log('error')
       setLikes(existing => existing - newLikes);
       setIsLiked(newLikes < 0);
     }
