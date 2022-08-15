@@ -20,6 +20,7 @@ import {setProfileJwt} from "../../store/profile-reducer";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/Post/Post";
+import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
 
 interface ProfileProps {
   address: string
@@ -44,8 +45,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState([false, false]);
 
   useEffect(() => {
     async function initPageData() {
@@ -57,10 +57,8 @@ const Profile: FC<ProfileProps> = (props) => {
       } else if (props.address && props.address.length === 42) {
         await initProfile();
       } else {
-        setError(true);
       }
       setFeed(await fetchProfileActivity(props.address, 30, 0));
-      setLoading(false);
     }
 
     async function initProfile() {
@@ -91,6 +89,14 @@ const Profile: FC<ProfileProps> = (props) => {
     else {
       throw 'Failed to connect';
     }
+  }
+
+  function copyToClipboard(toCopy: string, index: number) {
+    setCopied(existing => existing.map((e, i) => i === index));
+    navigator.clipboard.writeText(toCopy);
+    setTimeout(() => {
+      setCopied(existing => existing.map(() => false));
+    }, 500);
   }
 
   async function followUser() {
@@ -131,13 +137,17 @@ const Profile: FC<ProfileProps> = (props) => {
         <Navbar/>
       </div>
        <div className={styles.ProfilePageContent}>
-         <div className={styles.BackgroundImage} style={{backgroundImage: `url(${formatUrl(backgroundImage, IPFS_GATEWAY)})`}}></div>
+         <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage, IPFS_GATEWAY)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
          <div className={styles.ProfileBasicInfo}>
-           <span className={styles.UserTag}>@{username}<span>#{account.slice(2, 6)}</span></span>
-           <div className={styles.ProfileImage} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}></div>
-           <div className={styles.ProfileAddress}>
+           <span className={styles.UserTag}>
+             <span onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6)}`, 0)}>@{username}</span><span>#{account.slice(2, 6)}</span>
+             <span onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6)}`, 0)} className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
+           </span>
+           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
+           <div onClick={() => copyToClipboard(account, 1)} className={styles.ProfileAddress}>
              <img src={chainIcon.src} alt=""/>
              <span>{shortenAddress(account, 3)}</span>
+             <span className={`copied ${copied[1] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </div>
          </div>
          <div className={styles.ProfileInfluence}>

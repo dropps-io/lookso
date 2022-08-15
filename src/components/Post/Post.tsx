@@ -18,6 +18,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostInput from "../PostInput/PostInput";
 import PostContent from "./construct-post-content";
+import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
 
 export interface FeedPost {
   hash: string,
@@ -147,7 +148,7 @@ const Post: FC<PostProps> = (props) => {
                 <div className={styles.PostHeader}>
                   <div className={styles.LeftPart}>
                     <Link href={`/Profile/${authorAddress}`}>
-                      <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(authorImage, IPFS_GATEWAY)})`}}></div>
+                      <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
                     </Link>
                     <Link href={`/Profile/${authorAddress}`}>
                       <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
@@ -205,7 +206,7 @@ const Post: FC<PostProps> = (props) => {
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${authorAddress}`}>
-              <div className={styles.ProfileImageMedium} style={{backgroundImage: `url(${formatUrl(authorImage, IPFS_GATEWAY)})`}}></div>
+              <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
             </Link>
             <Link href={`/Profile/${authorAddress}`}>
               <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>

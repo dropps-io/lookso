@@ -7,7 +7,7 @@
 
 @font-face {
   font-family: FoundersGrotesk;
-  src: url("../assets/fonts/FoundersGrotesk-Regular.otf") format("opentype");
+  src: local("FoundersGrotesk"), url("../assets/fonts/FoundersGrotesk-Regular.otf") format("opentype");
 }
 
 html,
@@ -39,3 +39,19 @@ a, li, ul {
   background-color: var(--color-background-main);
 }
 
+.copied {
+  transition: all 0.2s;
+  position: absolute;
+  padding: 10px 20px;
+  background-color: var(--color-background-reverse);
+  color: var(--color-text-reverse);
+  opacity: 0;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-radius: 40px;
+}
+
+
+.copied-active {
+ opacity: 0.5;
+}

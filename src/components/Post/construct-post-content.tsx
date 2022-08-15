@@ -42,7 +42,7 @@ const ParamContent: FC<ParamContentProps> = (props) => {
         <strong className={styles.Bytes32Parameter} title={props.param.value} onClick={() => copyToClipboard(props.param.value)}>
           {shortenAddress(props.param.value, 5)}
         </strong>
-        <span className={`${styles.Copied} ${copied ? styles.Active : ''}`}>Copied to clipboard</span>
+        <span className={`copied ${copied ? 'copied-active' : ''}`}>Copied to clipboard</span>
       </>
       );
   }
@@ -62,10 +62,10 @@ const PostContent: FC<PostContentProps> = (props) => {
   return (
     <p>
       {
-        props.text.split(/{([^}]+)}/).map(entry =>
+        props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
-            <ParamContent param={props.params[entry]}></ParamContent> :
-            <>{entry}</>
+            <ParamContent key={index} param={props.params[entry]}></ParamContent> :
+            <span key={index}>{entry}</span>
       )
       }
     </p>
