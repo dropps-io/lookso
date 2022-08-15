@@ -144,3 +144,25 @@
 .ProfileParam {
   background-color: var(--color-highlight-lighter);
 }
+
+.Bytes32Parameter {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.Copied {
+  transition: all 0.2s;
+  position: absolute;
+  padding: 10px 20px;
+  background-color: var(--color-background-reverse);
+  color: var(--color-text-reverse);
+  opacity: 0;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-radius: 40px;
+
+  &.Active {
+    opacity: 0.5;
+  }
+}

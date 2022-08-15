@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {FeedDisplayParam} from "./Post";
 import styles from './Post.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
@@ -10,7 +10,8 @@ interface ParamContentProps {
 }
 
 const ParamContent: FC<ParamContentProps> = (props) => {
-  const router = useRouter()
+  const router = useRouter();
+  const [copied, setCopied] = useState(false);
 
   function goToAddress(e: any) {
     e.preventDefault()
@@ -19,6 +20,14 @@ const ParamContent: FC<ParamContentProps> = (props) => {
     else
       window.open ( EXPLORER_URL + '/address/' + props.param.value, '_blank');
   }
+
+  function copyToClipboard(toCopy: string) {
+    setCopied(true);
+    navigator.clipboard.writeText(toCopy);
+    setTimeout(() => {
+      setCopied(false);
+    }, 500);
+  }
   
   if (props.param.type === 'address') {
     return (
@@ -26,6 +35,16 @@ const ParamContent: FC<ParamContentProps> = (props) => {
         {props.param.display ? props.param.additionalProperties.interfaceCode && props.param.additionalProperties.interfaceCode === 'LSP0' ? '@' + props.param.display : props.param.display : shortenAddress(props.param.value, 3)}
         <span>#{props.param.value.slice(2, 6)}</span>
       </strong>);
+  }
+  if (props.param.type === 'bytes32' || props.param.type === 'bytes') {
+    return (
+      <>
+        <strong className={styles.Bytes32Parameter} title={props.param.value} onClick={() => copyToClipboard(props.param.value)}>
+          {shortenAddress(props.param.value, 5)}
+        </strong>
+        <span className={`${styles.Copied} ${copied ? styles.Active : ''}`}>Copied to clipboard</span>
+      </>
+      );
   }
   return (
     <strong className={styles.Parameter}>
