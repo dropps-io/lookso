@@ -25,6 +25,7 @@ const Feed: FC<FeedProps> = () => {
     {display: 'Events', value: 'event'}
   ];
   let loading = false;
+  let feedFullyLoaded = false;
   let offset = 30;
 
   useEffect(() => {
@@ -43,17 +44,18 @@ const Feed: FC<FeedProps> = () => {
 
   // TODO Stop try to load more when end of feed
   async function loadMorePosts() {
-    if (loading) return;
+    if (loading || feedFullyLoaded) return;
     console.log('Loading posts... from' + offset);
     try {
       loading = true;
+      let newPosts: FeedPost[];
       if (store.getState().web3.account) {
-        const newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, activeFilter);
-        setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, activeFilter);
       } else {
-        const newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, activeFilter);
-        setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, activeFilter);
       }
+      if (newPosts.length === 0) feedFullyLoaded = true;
+      setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       loading = false;
       offset += POSTS_PER_LOAD;
     }

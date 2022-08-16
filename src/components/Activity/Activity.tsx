@@ -35,7 +35,7 @@ const Activity: FC<ActivityProps> = (props) => {
   }, [])
 
   return (
-    <div className={styles.Feed} onScroll={() => console.log('scroll')}>
+    <div className={styles.Feed}>
       <div className={styles.FeedHeader}>
         <h5>Activity</h5>
       </div>
