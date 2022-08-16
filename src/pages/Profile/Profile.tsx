@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
-import {IPFS_GATEWAY} from "../../environment/endpoints";
+import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
 import {
@@ -21,6 +21,7 @@ import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/Post/Post";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
+import Image from "next/image";
 
 interface ProfileProps {
   address: string
@@ -131,6 +132,10 @@ const Profile: FC<ProfileProps> = (props) => {
     }
   }
 
+  function openExplorer(address: string) {
+    window.open ( EXPLORER_URL + '/address/' + address, '_blank');
+  }
+
   return (
     <div className={styles.Profile} data-testid="Profile">
       <div className={styles.ProfilePageHeader}>
@@ -144,10 +149,9 @@ const Profile: FC<ProfileProps> = (props) => {
              <span onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6)}`, 0)} className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
            <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
-           <div onClick={() => copyToClipboard(account, 1)} className={styles.ProfileAddress}>
-             <img src={chainIcon.src} alt=""/>
+           <div onClick={() => openExplorer(account)} className={styles.ProfileAddress}>
+             <Image src={chainIcon.src} alt=""/>
              <span>{shortenAddress(account, 3)}</span>
-             <span className={`copied ${copied[1] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </div>
          </div>
          <div className={styles.ProfileInfluence}>
