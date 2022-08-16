@@ -1,9 +1,8 @@
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {ReactNode, useEffect} from "react";
 import {getWeb3Info, listenChanges} from "../core/web3";
-import {setAccount, setBalance, setNetworkId, setWeb3} from "../store/web3-reducer";
+import {setAccount, setBalance, setInitialized, setNetworkId, setWeb3} from "../store/web3-reducer";
 import {setProfileInfo} from "../store/profile-reducer";
-import {RootState} from "../store/store";
 
 const InitProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
@@ -17,17 +16,17 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
   });
 
   async function initApp() {
-    const web3Info = await getWeb3Info();
-    dispatch(setWeb3(web3Info.web3));
-    dispatch(setAccount(web3Info.account));
-    dispatch(setBalance(web3Info.balance));
-    dispatch(setNetworkId(web3Info.networkId));
-    dispatch(setProfileInfo(web3Info.profileInfo));
+    try {
+      const web3Info = await getWeb3Info();
+      dispatch(setWeb3(web3Info.web3));
+      dispatch(setAccount(web3Info.account));
+      dispatch(setBalance(web3Info.balance));
+      dispatch(setNetworkId(web3Info.networkId));
+      dispatch(setProfileInfo(web3Info.profileInfo));
+    } catch (e) {
+    }
+    dispatch(setInitialized(true));
     await listenChanges();
-    // if (!jwt) {
-    //   const resJWT = await connectToAPI(web3Info.account, web3Info.web3);
-    //   if (resJWT) dispatch(setProfileJwt(jwt));
-    // }
   }
 
   return (<>{children}</>

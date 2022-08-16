@@ -7,14 +7,16 @@ export interface Web3State {
     web3: Web3,
     account: string,
     networkId: number,
-    balance: string
+    balance: string,
+    initialized: boolean
 }
 
 const initialState: Web3State = {
     web3: new Web3(RPC),
     account: '',
     networkId: 0,
-    balance: '0'
+    balance: '0',
+    initialized: false
 };
 
 export const web3Slice = createSlice({
@@ -33,10 +35,13 @@ export const web3Slice = createSlice({
         setBalance: (state, action: PayloadAction<string>) => {
             state.balance = action.payload;
         },
+        setInitialized: (state, action: PayloadAction<boolean>) => {
+            state.initialized = action.payload;
+        }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setWeb3, setAccount, setBalance, setNetworkId } = web3Slice.actions;
+export const { setWeb3, setAccount, setBalance, setNetworkId, setInitialized } = web3Slice.actions;
 
 export default web3Slice.reducer;

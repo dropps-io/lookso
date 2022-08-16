@@ -4,48 +4,78 @@ import Navbar from "../../components/Navbar/Navbar";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {RootState, store} from "../../store/store";
 import {fetchAllFeed, fetchProfileFeed} from "../../core/api";
 import {FeedPost} from "../../components/Post/Post";
 import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
+import {POSTS_PER_LOAD} from "../../environment/constants";
 
 interface FeedProps {}
 
 const Feed: FC<FeedProps> = () => {
   const account = useSelector((state: RootState) => state.web3.account);
+  const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
+  const [activeFilter, setActiveFilter]: [undefined | 'post' | 'event', any] = useState(undefined);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
-  const [filters, setFilters]: [{display: string, value?: 'event' | 'post',active: boolean}[], any] = useState([
-    {display: 'All', value: undefined, active: true},
-    {display: 'Posts', value: 'post', active: false},
-    {display: 'Events', value: 'event', active: false}
-  ]);
+
+  const filters: {display: string, value?: 'post' | 'event'}[] = [
+    {display: 'All', value: undefined},
+    {display: 'Posts', value: 'post'},
+    {display: 'Events', value: 'event'}
+  ];
+  let loading = false;
+  let offset = 30;
 
   useEffect(() => {
     async function initPageData() {
       if (account) {
-        setFeed(await fetchProfileFeed(account, 30, 0));
+        setFeed([]);
+        setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
       } else {
-        setFeed(await fetchAllFeed(30, 0));
+        setFeed([]);
+        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0));
       }
     }
 
-    initPageData();
-  }, [account]);
+    if (web3Initialized) initPageData();
+  }, [web3Initialized]);
 
-  async function setActive(i: number) {
-    if (!filters[i].active) fetchFeed(filters[i].value);
-    setFilters((existing: {display: string, value?: string, active: boolean}[]) => existing.map((f, n) => i === n ? {display: f.display, value: f.value, active: true} : {display: f.display, value: f.value, active: false}));
+  // TODO Stop try to load more when end of feed
+  async function loadMorePosts() {
+    if (loading) return;
+    console.log('Loading posts... from' + offset);
+    try {
+      loading = true;
+      if (store.getState().web3.account) {
+        const newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, activeFilter);
+        setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+      } else {
+        const newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, activeFilter);
+        setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+      }
+      loading = false;
+      offset += POSTS_PER_LOAD;
+    }
+    catch (e) {
+      console.error(e);
+      loading = false;
+    }
   }
 
-  async function fetchFeed(type?: 'post' | 'event') {
-    setFeed([]);
-    if (account) {
-      setFeed(await fetchProfileFeed(account, 30, 0, type));
-    } else {
-      setFeed(await fetchAllFeed(30, 0, type));
-    }
+  async function setActive(i: number) {
+    if (filters[i].value !== activeFilter) fetchFeedWithFilter(filters[i].value);
+    setActiveFilter(filters[i].value);
+  }
 
+  async function fetchFeedWithFilter(type?: 'post' | 'event') {
+    setFeed([]);
+    offset = 30;
+    if (account) {
+      setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0, type));
+    } else {
+      setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, type));
+    }
   }
 
   return (
@@ -58,11 +88,11 @@ const Feed: FC<FeedProps> = () => {
       </div>
       <div className={styles.FeedPageContent}>
         <div className={styles.FeedHeader}>
-          <h2>Feed</h2>
+          <h2 onClick={() => console.log(account)}>Feed</h2>
           <div className={styles.Filters}>
             {
               filters.map((filter, index) =>
-                <span key={filter.display} onClick={() => setActive(index)} className={`${filter.active ? styles.ActiveFilter : ''}`}>{filter.display}</span>
+                <span key={filter.display} onClick={() => setActive(index)} className={`${activeFilter === filter.value ? styles.ActiveFilter : ''}`}>{filter.display}</span>
               )
             }
           </div>
@@ -75,7 +105,7 @@ const Feed: FC<FeedProps> = () => {
             :
             <></>
         }
-        <Activity feed={feed}></Activity>
+        <Activity feed={feed} loadNext={() => loadMorePosts()}></Activity>
       </div>
       <Footer/>
     </div>
