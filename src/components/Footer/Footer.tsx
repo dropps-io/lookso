@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import styles from './Footer.module.scss';
 import discordLogo from '../../assets/icons/Discord.svg';
+import Image from "next/image";
 
 interface FooterProps {}
 
@@ -13,7 +14,7 @@ const Footer: FC<FooterProps> = () => (
         <span>Ⓒ</span>
         <span>Made by DROPPS,<br/>powered by LUKSO</span>
       </div>
-      <img src={discordLogo.src} alt=""/>
+      <Image src={discordLogo.src} width={40} height={30} alt=''/>
     </div>
   </div>
 );
