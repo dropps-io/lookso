@@ -10,7 +10,6 @@ import transparencyIcon from "../../assets/icons/transparency.svg";
 import peopleIcon from "../../assets/icons/people.svg";
 import explorerIcon from "../../assets/icons/explorer.svg";
 import Footer from "../../components/Footer/Footer";
-import Image from "next/image";
 
 
 interface HomeProps {}
@@ -30,7 +29,7 @@ const Home: FC<HomeProps> = ()  => {
           <section className={styles.MainSection}>
             <h1>
               Welcome to LOOKSO!
-              <Image src={titleUnderline.src} alt=""/>
+              <img src={titleUnderline.src} alt=""/>
             </h1>
             <h2>A decentralized Social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
             <div className={styles.CallAction}>
@@ -38,31 +37,31 @@ const Home: FC<HomeProps> = ()  => {
               <p>No login required</p>
             </div>
             {/*<div className={styles.RightSection}>*/}
-            <Image className={styles.Shape} src={shape1.src} alt=""/>
-            <Image className={styles.ImpactImg} src={impactImage.src} alt="impact image"/>
+            <img className={styles.Shape} src={shape1.src} alt=""/>
+            <img className={styles.ImpactImg} src={impactImage.src} alt="impact image"/>
             {/*</div>*/}
           </section>
 
           <section className={styles.HeadlinesSection}>
             <div className={styles.BoxHeadlines}></div>
-            <Image className={styles.LayerHeadlines} src={layerHeadlines.src} alt=""/>
+            <img className={styles.LayerHeadlines} src={layerHeadlines.src} alt=""/>
             <div className={styles.Headline}>
               <div className={styles.HeadlineIcon}>
-                <Image src={transparencyIcon.src} alt=""/>
+                <img src={transparencyIcon.src} alt=""/>
               </div>
               <h3>Transparency</h3>
               <p>The data associated with a Universal Profile is always accessible regardless of the owner’s or the platform’s intentions. This is made possible through the use of decentralised platforms, namely LUKSO (blockchain) and Arweave (decentralised storage)</p>
             </div>
             <div className={styles.Headline}>
               <div className={styles.HeadlineIcon}>
-                <Image src={peopleIcon.src} alt=""/>
+                <img src={peopleIcon.src} alt=""/>
               </div>
               <h3>User-owned content</h3>
               <p>Through LSP69 (a social media interoperability standard proposed by the DROPPS team) users wishing to join similar Universal Profile-based platforms can easily carry their information over, including their posts, comments and followers</p>
             </div>
             <div className={styles.Headline}>
               <div className={styles.HeadlineIcon}>
-                <Image src={explorerIcon.src} alt=""/>
+                <img src={explorerIcon.src} alt=""/>
               </div>
               <h3>Explorer meets social</h3>
               <p>Besides traditional social media features (posts, followers etc) LOOKSO  also displays other on-chain activity associated with Universal Profiles in a user-friendly manner, such as contract interactions or value transfers </p>
@@ -75,7 +74,7 @@ const Home: FC<HomeProps> = ()  => {
               <p>The dApp’s current version is live only within the L16 testnet.
                 Once LUKSO’s mainnet goes live we will roll out the definitive version of our platform, along with a user-friendly interface for linking your testnet activity to your mainnet Universal Profile</p>
             </div>
-            <Image className={styles.RightPart} src={impactImage2.src} alt=''></Image>
+            <img className={styles.RightPart} src={impactImage2.src}></img>
           </section>
 
           <section className={styles.FaqSection}>

@@ -12,7 +12,6 @@ import {EXPLORER_URL, IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoi
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import Link from "next/link";
-import Image from "next/image";
 
 interface NavbarProps {}
 
@@ -46,7 +45,7 @@ const Navbar: FC<NavbarProps> = () => {
     <div className={styles.Navbar} data-testid="Navbar">
       <Link href='/'>
         <div className={styles.Logo}>
-          <Image src={logo.src} alt="Logo"/>
+          <img src={logo.src} alt="Logo"/>
         </div>
       </Link>
       <div className={styles.Search}>
@@ -84,7 +83,7 @@ const Navbar: FC<NavbarProps> = () => {
                 </div>
                 <p className={styles.ProfileName}>@{username}<span>#{account.slice(2, 6)}</span></p>
                 <div className={styles.Balance}>
-                  <Image src={miniLogoLukso.src} alt={''}/>
+                  <img src={miniLogoLukso.src} alt={''}/>
                   <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
                 </div>
                 <div className={styles.DropdownButtons}>

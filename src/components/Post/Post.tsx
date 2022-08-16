@@ -19,7 +19,6 @@ import {RootState} from "../../store/store";
 import PostInput from "../PostInput/PostInput";
 import PostContent from "./construct-post-content";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
-import Image from "next/image";
 
 export interface FeedPost {
   hash: string,
@@ -158,7 +157,7 @@ const Post: FC<PostProps> = (props) => {
                   <div className={styles.RightPart}>
                     <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
                     <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' title={'Explorer'} rel="noopener noreferrer">
-                      <Image src={externalLinkIcon.src} alt=""/>
+                      <img src={externalLinkIcon.src} alt=""/>
                     </a>
                   </div>
                 </div>
@@ -169,31 +168,31 @@ const Post: FC<PostProps> = (props) => {
                   </> : <></>}
                   {/*TODO add copies tag*/}
                   {/*<div className={styles.PostTag}>*/}
-                  {/*  <Image src="" alt=""/>*/}
+                  {/*  <img src="" alt=""/>*/}
                   {/*  <span>20</span>*/}
                   {/*</div>*/}
                 </div>
                 <div className={styles.PostContent}>
-                  <Image src={executedEventIcon.src} alt="Executed Event"/>
+                  <img src={executedEventIcon.src} alt="Executed Event"/>
                   {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
                 </div>
                 <div className={styles.PostFooter}>
                   <div></div>
                   <div className={styles.PostActions}>
                     <div className={styles.IconNumber} onClick={toggleCommentPopUp}>
-                      <Image src={commentIcon.src} alt=""/>
+                      <img src={commentIcon.src} alt=""/>
                       <span>{comments}</span>
                     </div>
                     <div className={styles.IconNumber}>
-                      <Image src={repostIcon.src} alt=""/>
+                      <img src={repostIcon.src} alt=""/>
                       <span>{reposts}</span>
                     </div>
                     <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
-                      {isLiked ? <Image src={heartFullIcon.src} alt=""/> : <Image src={heartIcon.src} alt=""/>}
+                      {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
                       <span>{likes}</span>
                     </div>
                   </div>
-                  <Image className={styles.PostShare} src={shareIcon.src} alt=""/>
+                  <img className={styles.PostShare} src={shareIcon.src} alt=""/>
                 </div>
                 <div className={styles.Separator}></div>
                 <PostInput parentHash={hash}/>
@@ -216,7 +215,7 @@ const Post: FC<PostProps> = (props) => {
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
             <a href={EXPLORER_URL + 'tx/' + txHash} target='_blank' rel="noopener noreferrer">
-              <Image src={externalLinkIcon.src} alt=""/>
+              <img src={externalLinkIcon.src} alt=""/>
             </a>
           </div>
         </div>
@@ -227,31 +226,31 @@ const Post: FC<PostProps> = (props) => {
           </> : <></>}
           {/*TODO add copies tag*/}
           {/*<div className={styles.PostTag}>*/}
-          {/*  <Image src="" alt=""/>*/}
+          {/*  <img src="" alt=""/>*/}
           {/*  <span>20</span>*/}
           {/*</div>*/}
         </div>
         <div className={styles.PostContent}>
-          <Image src={executedEventIcon.src} alt="Executed Event"/>
+          <img src={executedEventIcon.src} alt="Executed Event"/>
           {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
         </div>
         <div className={styles.PostFooter}>
           <div></div>
           <div className={styles.PostActions}>
             <div className={styles.IconNumber} onClick={toggleCommentPopUp}>
-              <Image src={commentIcon.src} alt=""/>
+              <img src={commentIcon.src} alt=""/>
               <span>{comments}</span>
             </div>
             <div className={styles.IconNumber}>
-              <Image src={repostIcon.src} alt=""/>
+              <img src={repostIcon.src} alt=""/>
               <span>{reposts}</span>
             </div>
             <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
-              {isLiked ? <Image src={heartFullIcon.src} alt=""/> : <Image src={heartIcon.src} alt=""/>}
+              {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
               <span>{likes}</span>
             </div>
           </div>
-          <Image className={styles.PostShare} src={shareIcon.src} alt=""/>
+          <img className={styles.PostShare} src={shareIcon.src} alt=""/>
         </div>
       </div>
     </>
