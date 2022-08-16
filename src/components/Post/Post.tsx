@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
 import styles from './Post.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
@@ -67,7 +67,8 @@ interface PostProps {
   post: FeedPost;
 }
 
-const Post: FC<PostProps> = (props) => {
+// eslint-disable-next-line react/display-name
+const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
   const router = useRouter();
   const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
@@ -207,7 +208,7 @@ const Post: FC<PostProps> = (props) => {
         :
         <></>
       }
-      <div className={`${styles.FeedPost}`}>
+      <div ref={ref} className={`${styles.FeedPost}`}>
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${authorAddress}`}>
@@ -257,7 +258,7 @@ const Post: FC<PostProps> = (props) => {
         </div>
       </div>
     </>
-);
-}
+  );
+});
 
 export default Post;
