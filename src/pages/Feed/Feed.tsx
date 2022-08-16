@@ -8,6 +8,7 @@ import {RootState} from "../../store/store";
 import {fetchAllFeed, fetchProfileFeed} from "../../core/api";
 import {FeedPost} from "../../components/Post/Post";
 import PostInput from "../../components/PostInput/PostInput";
+import Head from "next/head";
 
 interface FeedProps {}
 
@@ -48,7 +49,10 @@ const Feed: FC<FeedProps> = () => {
   }
 
   return (
-    <div className={styles.Feed} data-testid="Profile">
+    <div className={styles.Feed} data-testid="Feed">
+      <Head>
+        <title>Feed | Lookso</title>
+      </Head>
       <div className={styles.FeedPageHeader}>
         <Navbar/>
       </div>

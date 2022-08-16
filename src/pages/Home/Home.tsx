@@ -10,6 +10,7 @@ import transparencyIcon from "../../assets/icons/transparency.svg";
 import peopleIcon from "../../assets/icons/people.svg";
 import explorerIcon from "../../assets/icons/explorer.svg";
 import Footer from "../../components/Footer/Footer";
+import Head from "next/head";
 
 
 interface HomeProps {}
@@ -22,8 +23,10 @@ const Home: FC<HomeProps> = ()  => {
   }
 
   return (
-    <>
-      <div className={styles.Home} data-testid="Home">
+    <div className={styles.Home} data-testid="Home">
+        <Head>
+          <title>Lookso</title>
+        </Head>
         <div className={styles.Content}>
           <Navbar/>
           <section className={styles.MainSection}>
@@ -156,7 +159,6 @@ const Home: FC<HomeProps> = ()  => {
         </div>
         <Footer/>
       </div>
-    </>
   );
 }
 

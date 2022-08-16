@@ -22,6 +22,7 @@ import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/Post/Post";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
+import Head from "next/head";
 
 interface ProfileProps {
   address: string
@@ -138,6 +139,9 @@ const Profile: FC<ProfileProps> = (props) => {
 
   return (
     <div className={styles.Profile} data-testid="Profile">
+      <Head>
+        <title>{`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`} | Lookso</title>
+      </Head>
       <div className={styles.ProfilePageHeader}>
         <Navbar/>
       </div>
@@ -145,7 +149,7 @@ const Profile: FC<ProfileProps> = (props) => {
          <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage, IPFS_GATEWAY)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
-             <UserTag onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
            <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
