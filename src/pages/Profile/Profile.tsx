@@ -21,7 +21,7 @@ import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/Post/Post";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
-import Image from "next/image";
+import UserTag from "../../components/UserTag/UserTag";
 
 interface ProfileProps {
   address: string
@@ -145,12 +145,12 @@ const Profile: FC<ProfileProps> = (props) => {
          <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage, IPFS_GATEWAY)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
-             <span onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6)}`, 0)}>@{username}</span><span>#{account.slice(2, 6)}</span>
-             <span onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6)}`, 0)} className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
+             <UserTag onClick={() => copyToClipboard(`@${username}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
            <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
            <div onClick={() => openExplorer(account)} className={styles.ProfileAddress}>
-             <Image src={chainIcon.src} alt=""/>
+             <img src={chainIcon.src} alt=""/>
              <span>{shortenAddress(account, 3)}</span>
            </div>
          </div>

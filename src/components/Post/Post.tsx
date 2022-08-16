@@ -19,6 +19,8 @@ import {RootState} from "../../store/store";
 import PostInput from "../PostInput/PostInput";
 import PostContent from "./construct-post-content";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
+import UserTag from "../UserTag/UserTag";
+import {useRouter} from "next/router";
 
 export interface FeedPost {
   hash: string,
@@ -66,6 +68,7 @@ interface PostProps {
 }
 
 const Post: FC<PostProps> = (props) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
@@ -94,6 +97,10 @@ const Post: FC<PostProps> = (props) => {
     else {
       throw 'Failed to connect';
     }
+  }
+
+  function goTo(path: string) {
+    router.push(path);
   }
 
   async function likeOrUnlikePost() {
@@ -150,9 +157,7 @@ const Post: FC<PostProps> = (props) => {
                     <Link href={`/Profile/${authorAddress}`}>
                       <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
                     </Link>
-                    <Link href={`/Profile/${authorAddress}`}>
-                      <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
-                    </Link>
+                    <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
                   </div>
                   <div className={styles.RightPart}>
                     <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
@@ -208,9 +213,7 @@ const Post: FC<PostProps> = (props) => {
             <Link href={`/Profile/${authorAddress}`}>
               <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
             </Link>
-            <Link href={`/Profile/${authorAddress}`}>
-              <div className={styles.UserTag}>@{authorName}<span>#{authorAddress.slice(2, 6)}</span></div>
-            </Link>
+            <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
           </div>
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>

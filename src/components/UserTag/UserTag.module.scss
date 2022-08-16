@@ -1,0 +1,31 @@
+.Pointer {
+  cursor: pointer;
+}
+
+.UserTag {
+  .Username {
+    color: var(--color-text-default);
+  }
+
+  .Unnamed {
+    color: var(--color-text-default-light);
+  }
+
+  .Address {
+    color: var(--color-text-default-light);
+  }
+}
+
+.UserTagReverse {
+  .Username {
+    color: var(--color-text-reverse);
+  }
+
+  .Unnamed {
+    color: var(--color-text-reverse-light);
+  }
+
+  .Address {
+    color: var(--color-text-reverse-light);
+  }
+}

@@ -12,6 +12,7 @@ import {EXPLORER_URL, IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoi
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import Link from "next/link";
+import UserTag from "../UserTag/UserTag";
 
 interface NavbarProps {}
 
@@ -81,7 +82,7 @@ const Navbar: FC<NavbarProps> = () => {
                   </div>
                   </Link>
                 </div>
-                <p className={styles.ProfileName}>@{username}<span>#{account.slice(2, 6)}</span></p>
+                <p className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></p>
                 <div className={styles.Balance}>
                   <img src={miniLogoLukso.src} alt={''}/>
                   <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
