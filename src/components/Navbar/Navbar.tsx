@@ -3,14 +3,14 @@ import styles from './Navbar.module.scss';
 import SearchBar from "../SearchBar/SearchBar";
 import logo from "../../assets/images/logo.png";
 import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
-import {connectToAPI, connectWeb3} from "../../core/web3";
+import {connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {shortenAddress} from "../../core/utils/address-formating";
 import {EXPLORER_URL, IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoints";
 import {formatUrl} from "../../core/utils/url-formating";
-import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
+import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
 import UserTag from "../UserTag/UserTag";
 
@@ -23,7 +23,6 @@ const Navbar: FC<NavbarProps> = () => {
   const balance: string = useSelector((state: RootState) => state.web3.balance);
   const username: string = useSelector((state: RootState) => state.profile.name);
   const profileImage: string = useSelector((state: RootState) => state.profile.profileImage);
-  const jwt: string = useSelector((state: RootState) => state.profile.jwt);
 
   async function connectToWeb3() {
     const web3Info = await connectWeb3();
@@ -34,11 +33,6 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
-
-      if (!jwt) {
-        const resJWT = await connectToAPI(web3Info.account, web3Info.web3);
-        if (resJWT) dispatch(setProfileJwt(jwt));
-      }
     }
   }
 
