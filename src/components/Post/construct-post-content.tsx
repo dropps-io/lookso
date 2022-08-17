@@ -2,26 +2,14 @@ import React, {FC, useState} from 'react';
 import {FeedDisplayParam} from "./Post";
 import styles from './Post.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {useRouter} from "next/router";
-import {EXPLORER_URL} from "../../environment/endpoints";
-import UserTag from "../UserTag/UserTag";
-import AssetTag from "../AssetTag/AssetTag";
+import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 
 interface ParamContentProps {
   param: FeedDisplayParam,
 }
 
 const ParamContent: FC<ParamContentProps> = (props) => {
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
-
-  function goToAddress() {
-    window.open( EXPLORER_URL + '/address/' + props.param.value, '_blank');
-  }
-
-  function goToAccount() {
-    router.push('/Profile/' + props.param.value);
-  }
 
   function copyToClipboard(toCopy: string) {
     setCopied(true);
@@ -34,15 +22,7 @@ const ParamContent: FC<ParamContentProps> = (props) => {
   if (props.param.type === 'address') {
     return (
       <strong title={props.param.value}>
-        {
-          props.param.additionalProperties && props.param.additionalProperties.interfaceCode === 'LSP0' ?
-            <UserTag username={props.param.display} address={props.param.value} onClick={goToAccount} />
-            :
-            props.param.additionalProperties && props.param.additionalProperties.interfaceCode ?
-              <AssetTag name={props.param.display} address={props.param.value} onClick={goToAddress} />
-              :
-              <span>{shortenAddress(props.param.value, 3)}</span>
-        }
+        <AddressFeedDisplay address={props.param.value} name={props.param.display} standard={props.param.additionalProperties.interfaceCode ? props.param.additionalProperties.interfaceCode : ''} />
       </strong>
     );
   }

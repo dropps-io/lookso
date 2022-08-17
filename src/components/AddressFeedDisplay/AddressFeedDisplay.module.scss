@@ -1,0 +1,27 @@
+.AddressFeedDisplay {
+  cursor: pointer;
+  font-size: 0.8em;
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.Profile {
+  background-color: var(--color-highlight-lighter);
+}
+
+.KeyManager {
+  background-color: var(--color-keymanager);
+  .KeyImage {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+  }
+}
+
+.Asset {
+  background-color: var(--color-asset);
+}
+
+.UnknownStandard {
+  background-color: var(--color-dark);
+}
