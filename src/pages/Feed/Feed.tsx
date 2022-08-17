@@ -18,33 +18,36 @@ const Feed: FC<FeedProps> = () => {
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
   const [activeFilter, setActiveFilter]: [undefined | 'post' | 'event', any] = useState(undefined);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
+  const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
+  const [offset, setOffset] = useState(POSTS_PER_LOAD);
+
+  let loading = false;
 
   const filters: {display: string, value?: 'post' | 'event'}[] = [
     {display: 'All', value: undefined},
     {display: 'Posts', value: 'post'},
     {display: 'Events', value: 'event'}
   ];
-  let loading = false;
-  let feedFullyLoaded = false;
-  let offset = 30;
 
   useEffect(() => {
     async function initPageData() {
+      setFeed([]);
+      setOffset(POSTS_PER_LOAD);
+      setFullyLoadedActivity(false);
+      setActiveFilter(undefined);
+
       if (account) {
-        setFeed([]);
         setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
       } else {
-        setFeed([]);
         setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0));
       }
     }
 
     if (web3Initialized) initPageData();
-  }, [web3Initialized]);
+  }, [web3Initialized, account]);
 
-  // TODO Stop try to load more when end of feed
   async function loadMorePosts() {
-    if (loading || feedFullyLoaded) return;
+    if (loading || fullyLoadedActivity) return;
     console.log('Loading posts... from' + offset);
     try {
       loading = true;
@@ -54,10 +57,10 @@ const Feed: FC<FeedProps> = () => {
       } else {
         newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, activeFilter);
       }
-      if (newPosts.length === 0) feedFullyLoaded = true;
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+      if (newPosts.length === 0) setFullyLoadedActivity(true);
+      setOffset(offset + POSTS_PER_LOAD);
       loading = false;
-      offset += POSTS_PER_LOAD;
     }
     catch (e) {
       console.error(e);
@@ -72,7 +75,7 @@ const Feed: FC<FeedProps> = () => {
 
   async function fetchFeedWithFilter(type?: 'post' | 'event') {
     setFeed([]);
-    offset = 30;
+    setOffset(POSTS_PER_LOAD);
     if (account) {
       setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0, type));
     } else {
@@ -90,7 +93,7 @@ const Feed: FC<FeedProps> = () => {
       </div>
       <div className={styles.FeedPageContent}>
         <div className={styles.FeedHeader}>
-          <h2 onClick={() => console.log(account)}>Feed</h2>
+          <h2>Feed</h2>
           <div className={styles.Filters}>
             {
               filters.map((filter, index) =>

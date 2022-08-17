@@ -1,15 +1,17 @@
-import React, {FC, RefObject, useEffect, useRef} from 'react';
+import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
 import styles from './Activity.module.scss';
 
 import Post, {FeedPost} from "../Post/Post";
 import {POSTS_PER_LOAD} from "../../environment/constants";
+import {timer} from "../../core/utils/timer";
 
 interface ActivityProps {
   feed: FeedPost[],
-  loadNext?: () => void
+  loadNext: () => void
 }
 
 const Activity: FC<ActivityProps> = (props) => {
+  const [isListening, setIsListening] = useState(true);
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   function isScrolledIntoView(el: RefObject<HTMLDivElement>) {
@@ -23,16 +25,23 @@ const Activity: FC<ActivityProps> = (props) => {
   }
 
   useEffect(() => {
-    if (props.loadNext) {
-      ['resize','scroll'].forEach( eventName => {
-        window.addEventListener(eventName, () => {
-          if (props.loadNext && isScrolledIntoView(ref)) {
-            props.loadNext();
-          }
-        });
-      });
+    if (isListening) {
+      const listener = async (e: any) => {
+        if (isScrolledIntoView(ref)) {
+          setIsListening(!isListening);
+          props.loadNext();
+          await timer(1000);
+          setIsListening(true);
+        }
+      }
+
+      document.addEventListener("scroll", listener);
+
+      return () => {
+        document.removeEventListener("scroll", listener);
+      };
     }
-  }, [])
+  }, [props.loadNext, isListening])
 
   return (
     <div className={styles.Feed}>

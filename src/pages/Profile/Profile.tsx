@@ -7,8 +7,8 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {
-  fetchIsProfileFollower, fetchProfileActivity,
+import {fetchIsProfileFollower,
+  fetchProfileActivity,
   fetchProfileFollowersCount,
   fetchProfileFollowingCount,
   fetchProfileInfo,
@@ -23,6 +23,7 @@ import {FeedPost} from "../../components/Post/Post";
 import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
 import Head from "next/head";
+import {POSTS_PER_LOAD} from "../../environment/constants";
 
 interface ProfileProps {
   address: string
@@ -48,6 +49,10 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
   const [copied, setCopied] = useState([false, false]);
+  const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
+  const [offset, setOffset] = useState(POSTS_PER_LOAD);
+
+  let loading = false;
 
   useEffect(() => {
     async function initPageData() {
@@ -60,7 +65,7 @@ const Profile: FC<ProfileProps> = (props) => {
         await initProfile();
       } else {
       }
-      setFeed(await fetchProfileActivity(props.address, 30, 0));
+      setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0));
     }
 
     async function initProfile() {
@@ -80,7 +85,7 @@ const Profile: FC<ProfileProps> = (props) => {
     }
 
     initPageData();
-  }, [props.address,connected.account]);
+  }, [props.address, connected.account]);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(connected.account, web3);
@@ -137,6 +142,23 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open ( EXPLORER_URL + '/address/' + address, '_blank');
   }
 
+  async function loadMorePosts() {
+    if (loading || fullyLoadedActivity) return;
+    console.log('Loading new posts from offset ' + offset);
+    try {
+      loading = true;
+      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset);
+      setFeed((existing: FeedPost[]) => existing.concat(newPosts));
+      if (newPosts.length === 0) setFullyLoadedActivity(true);
+      loading = false;
+      setOffset(existing => existing + POSTS_PER_LOAD);
+    }
+    catch (e) {
+      console.error(e);
+      loading = false;
+    }
+  }
+
   return (
     <div className={styles.Profile} data-testid="Profile">
       <Head>
@@ -183,7 +205,7 @@ const Profile: FC<ProfileProps> = (props) => {
              :
              <></>
          }
-         <Activity feed={feed}></Activity>
+         <Activity feed={feed} loadNext={loadMorePosts}></Activity>
        </div>
       <Footer/>
     </div>
