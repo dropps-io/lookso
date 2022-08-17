@@ -4,6 +4,7 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {IPFS_GATEWAY} from "../../environment/endpoints";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
+import imageIcon from '../../assets/icons/image.svg';
 
 interface PostInputProps {
   parentHash?: string;
@@ -33,7 +34,10 @@ const PostInput: FC<PostInputProps> = (props) => {
       </div>
       <div className={styles.BoxBottom}>
         <span>{inputValue.length} / 256</span>
-        <button className='btn btn-secondary'>{props.parentHash ? 'Reply' : 'Post'}</button>
+        <div className={styles.RightPart}>
+          <img src={imageIcon.src} alt='' />
+          <button className='btn btn-secondary'>{props.parentHash ? 'Reply' : 'Post'}</button>
+        </div>
       </div>
     </div>
   );

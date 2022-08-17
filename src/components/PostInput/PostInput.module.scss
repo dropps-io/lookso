@@ -43,10 +43,22 @@
     font-size: 0.7em;
   }
 
-  button {
-    width: max-content;
-    padding: 5px 20px;
-    font-size: 1em;
+  .RightPart {
+    display: flex;
+    align-items: center;
+
+    img {
+      cursor: pointer;
+      width: 25px;
+      height: 25px;
+    }
+
+    button {
+      margin-left: 30px;
+      width: max-content;
+      padding: 5px 20px;
+      font-size: 1em;
+    }
   }
 }
 
