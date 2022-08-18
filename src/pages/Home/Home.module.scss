@@ -137,6 +137,20 @@
             margin: auto;
           }
         }
+
+        .ToggleHeadline {
+          display: none;
+          font-size: 2em;
+          color: var(--color-buttons);
+          font-weight: bold;
+        }
+
+        .UnfoldedHeadline {
+          display: block !important;
+          -webkit-line-clamp: unset !important;
+          -webkit-box-orient: unset !important;
+          overflow: unset !important;
+        }
       }
 
       .BoxHeadlines {
@@ -460,6 +474,14 @@
           }
         }
       }
+
+      .HeadlinesSection {
+        flex-direction: column;
+
+        .Headline {
+          padding: 40px 100px 0 100px;
+        }
+      }
     }
   }
 }
@@ -504,6 +526,13 @@
   .Home {
     .Content {
       padding-top: 50px;
+
+      .HeadlinesSection {
+
+        .Headline {
+          padding: 40px 25px 0 25px;
+        }
+      }
     }
   }
 }
@@ -513,6 +542,7 @@
     .Content {
       .MainSection {
         padding-top: 50px;
+        margin-bottom: 200px;
 
         h1 {
           text-align: center;
@@ -549,6 +579,28 @@
     }
   }
 }
+
+@media only screen and (max-width: 400px) {
+  .Home {
+    .Content {
+      .HeadlinesSection {
+        .Headline {
+          p {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .ToggleHeadline {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+
 
 @media only screen and (max-width: 370px) {
   .Home {
