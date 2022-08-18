@@ -93,7 +93,7 @@ const Feed: FC<FeedProps> = () => {
       </div>
       <div className={styles.FeedPageContent}>
         <div className={styles.FeedHeader}>
-          <h2>Feed</h2>
+          <div></div>
           <div className={styles.Filters}>
             {
               filters.map((filter, index) =>

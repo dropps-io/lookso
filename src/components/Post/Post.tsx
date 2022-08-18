@@ -145,6 +145,8 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
     setIsLiked(props.post.isLiked);
   }, []);
 
+  //TODO in UserTag component add max length name prop number
+
   return (
     <>
       {
@@ -158,7 +160,9 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
                     <Link href={`/Profile/${authorAddress}`}>
                       <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
                     </Link>
-                    <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
+                    <div className={styles.UserTag}>
+                      <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
+                    </div>
                   </div>
                   <div className={styles.RightPart}>
                     <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
@@ -214,7 +218,9 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
             <Link href={`/Profile/${authorAddress}`}>
               <div className={styles.ProfileImageMedium} style={{backgroundImage: authorImage ? `url(${formatUrl(authorImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
             </Link>
-            <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
+            <div className={styles.UserTag}>
+              <UserTag username={authorName} address={authorAddress} onClick={() => goTo(`/Profile/${authorAddress}`)}/>
+            </div>
           </div>
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(date))} Ago</span>
@@ -224,10 +230,12 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
           </div>
         </div>
         <div className={styles.PostTags}>
-          {display.tags.standard ? <>
+          {display.tags.standard ?
             <div className={styles.PostTag}>{display.tags.standard}</div>
+           : <></>}
+          {display.tags.standardType ?
             <div className={styles.PostTag}>{display.tags.standardType}</div>
-          </> : <></>}
+            : <></>}
           {/*TODO add copies tag*/}
           {/*<div className={styles.PostTag}>*/}
           {/*  <img src="" alt=""/>*/}

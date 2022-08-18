@@ -105,3 +105,16 @@
     }
   }
 }
+
+@media only screen and (max-width: 400px) {
+  .Profile {
+
+    .ProfilePageHeader {
+      padding: 0 10px;
+    }
+
+    .ProfilePageContent {
+      padding: 0 10px;
+    }
+  }
+}

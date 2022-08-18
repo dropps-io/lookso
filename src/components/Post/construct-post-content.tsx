@@ -50,7 +50,7 @@ interface PostContentProps {
 const PostContent: FC<PostContentProps> = (props) => {
 
   return (
-    <p>
+    <p style={{textAlign: 'center'}}>
       {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
