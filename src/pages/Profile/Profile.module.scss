@@ -19,8 +19,9 @@
     color: var(--color-text-default);
 
     .BackgroundImage {
+      margin-top: 20px;
       width: 100%;
-      height: 200px;
+      height: 190px;
       border-radius: 200px;
       background-position: center;
       background-size: cover;
@@ -42,9 +43,13 @@
       .ProfileAddress {
         margin-top: 5px;
         width: inherit;
-        cursor: pointer;
+
+        img {
+          cursor: pointer;
+        }
 
         span {
+          cursor: pointer;
           margin-left: 5px;
         }
       }
@@ -54,7 +59,7 @@
         width: 210px;
         min-width: 210px;
         border-radius: 210px;
-        margin-top: -105px;
+        margin-top: -55px;
         margin-left: 10px;
         margin-right: 10px;
 
@@ -62,6 +67,18 @@
         background-size: cover;
         border: 8px solid var(--color-border-light);
       }
+
+      .ProfileButtons {
+        display: none;
+      }
+    }
+
+    .UserTagMobile {
+      display: none;
+    }
+
+    .ProfileAddressMobile {
+      display: none;
     }
 
     .ProfileInfluence {
@@ -103,18 +120,249 @@
         width: 40px;
       }
     }
+
+    .Activity {
+      padding: 0 30px;
+    }
   }
 }
 
+@media only screen and (max-width: 1000px) {
+  .Profile {
+    .ProfilePageHeader {
+    }
+    .ProfilePageContent {
+      padding: 0;
+      .BackgroundImage {
+        margin-top: 0;
+        border-radius: 0;
+        height: 150px;
+      }
+      .ProfileBasicInfo {
+        .UserTag {
+          span {
+          }
+        }
+        .ProfileAddress {
+          img {
+          }
+          span {
+          }
+        }
+        .ProfileImage {
+          height: 150px;
+          width: 150px;
+          min-width: 150px;
+          margin-top: -35px;
+          border: 6px solid;
+        }
+      }
+      .ProfileInfluence {
+        padding: 5px;
+        .Sep {
+        }
+        .ProfileFollow {
+          font-size: 0.85em;
+        }
+      }
+
+      .ProfileButtons {
+        margin-top: 15px;
+        button {
+          font-size: 0.8em;
+        }
+
+        button:nth-child(1) {
+          width: 120px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .Profile {
+    .ProfilePageContent {
+      .BackgroundImage {
+        height: 120px;
+      }
+      .ProfileBasicInfo {
+        font-size: 0.8em;
+
+        .ProfileImage {
+          height: 120px;
+          width: 120px;
+          min-width: 120px;
+          margin-top: -35px;
+          border: 4px solid;
+        }
+      }
+      .ProfileInfluence {
+        .ProfileFollow {
+          font-size: 0.7em;
+        }
+      }
+
+      .ProfileButtons {
+        margin-top: 10px;
+        button {
+          font-size: 0.7em;
+          height: 30px;
+        }
+
+        button:nth-child(1) {
+          width: 100px;
+          margin-right: 10px;
+        }
+
+        button:nth-child(2) {
+          width: 30px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Profile {
+    .ProfilePageContent {
+      .BackgroundImage {
+        height: 90px;
+      }
+      .ProfileBasicInfo {
+        font-size: 0.8em;
+
+        .ProfileImage {
+          height: 90px;
+          width: 90px;
+          min-width: 90px;
+          margin-top: -25px;
+        }
+      }
+      .ProfileInfluence {
+        padding: 15px 0;
+        display: flex;
+        align-items: center;
+
+        .Sep {
+          margin: 0 20px;
+          height: 13px;
+        }
+
+        .ProfileFollow:nth-child(1) {
+          justify-content: end;
+        }
+
+        .ProfileFollow {
+          font-size: 0.7em;
+          padding: 0;
+          flex-direction: row;
+          strong {
+            margin-right: 5px;
+          }
+        }
+      }
+
+
+      .ProfileButtons {
+        margin-top: 10px;
+        button {
+          font-size: 0.7em;
+          height: 30px;
+        }
+
+        button:nth-child(1) {
+          width: 100px;
+        }
+
+        button:nth-child(2) {
+          width: 30px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .Profile {
+    .ProfilePageContent {
+      .BackgroundImage {
+      }
+      .ProfileBasicInfo {
+        padding: 0 30px;
+        font-size: 0.8em;
+        justify-content: space-between;
+
+        .ProfileImage {
+          height: 70px;
+          width: 70px;
+          min-width: 70px;
+          margin-top: -35px;
+          margin-left: 0;
+        }
+        .UserTag, .ProfileAddress {
+          display: none;
+        }
+
+        .ProfileButtons {
+          display: block;
+          margin-top: 10px;
+        }
+      }
+
+      .UserTagMobile, .ProfileAddressMobile {
+        display: block;
+        padding: 0 30px;
+        font-size: 0.7em;
+        margin: 7px 0;
+      }
+
+      .ProfileAddressMobile img {
+        width: 13px;
+        margin-right: 4px;
+      }
+
+      .ProfileInfluence {
+        padding: 0 30px;
+        width: fit-content;
+        margin-bottom: 15px;
+
+        .ProfileFollow {
+          width: fit-content;
+        }
+      }
+
+
+      .ProfileButtons {
+        display: none;
+
+        button {
+          height: 26px;
+        }
+
+        button:nth-child(2) {
+          width: 26px;
+        }
+      }
+    }
+  }
+}
+
+
 @media only screen and (max-width: 400px) {
   .Profile {
-
-    .ProfilePageHeader {
-      padding: 0 10px;
-    }
-
     .ProfilePageContent {
-      padding: 0 10px;
+
+
+
+      .Activity, .ProfileAddressMobile, .UserTagMobile, .ProfileBasicInfo, .ProfileInfluence  {
+        padding: 0 10px;
+      }
+
+
+      .ProfileButtons {
+        margin: 0;
+      }
     }
   }
 }

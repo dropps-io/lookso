@@ -175,10 +175,32 @@ const Profile: FC<ProfileProps> = (props) => {
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
            <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
-           <div onClick={() => openExplorer(account)} className={styles.ProfileAddress}>
-             <img src={chainIcon.src} alt=""/>
-             <span>{shortenAddress(account, 3)}</span>
+           <div className={styles.ProfileAddress}>
+             <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
+             <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
            </div>
+           {
+             connected.account && props.address !== connected.account ?
+               <div className={styles.ProfileButtons}>
+                 {
+                   isFollowing ?
+                     <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                     :
+                     <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                 }
+                 <button className={'btn btn-secondary-no-fill'}>...</button>
+               </div>
+               :
+               <></>
+           }
+         </div>
+         <span className={styles.UserTagMobile}>
+             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
+           </span>
+         <div className={styles.ProfileAddressMobile}>
+           <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
+           <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
          </div>
          <div className={styles.ProfileInfluence}>
            <div className={styles.ProfileFollow}>
@@ -192,7 +214,7 @@ const Profile: FC<ProfileProps> = (props) => {
            </div>
          </div>
          {
-           props.address !== connected.account ?
+           connected.account && props.address !== connected.account ?
              <div className={styles.ProfileButtons}>
                {
                  isFollowing ?
@@ -205,7 +227,9 @@ const Profile: FC<ProfileProps> = (props) => {
              :
              <></>
          }
-         <Activity feed={feed} loadNext={loadMorePosts}></Activity>
+         <div className={styles.Activity}>
+           <Activity feed={feed} loadNext={loadMorePosts}></Activity>
+         </div>
        </div>
       <Footer/>
     </div>
