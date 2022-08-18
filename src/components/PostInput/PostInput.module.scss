@@ -1,5 +1,4 @@
 .BoxTop {
-
   display: flex;
 
   .ProfileImgSmall {
@@ -71,6 +70,101 @@
         font-size: 1em;
       }
     }
-
   }
+}
+
+@media only screen and (max-width: 600px) {
+  .BoxTop {
+    .ProfileImgSmall {
+    }
+
+    .PostInput {
+      padding-top: 5px;
+      font-size: 1.1em;
+
+      &::placeholder {
+        font-size: 1.1em;
+      }
+    }
+  }
+
+  .BoxBottom {
+    margin-top: 10px;
+    span {
+    }
+    .RightPart {
+      img {
+      }
+      button {
+      }
+    }
+  }
+
+  .Comment {
+    .BoxTop {
+      .PostInput {
+        padding-top: 10px;
+        font-size: 0.9em;
+
+        &::placeholder {
+          font-size: 0.9em;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .BoxTop {
+    .ProfileImgSmall {
+      height: 35px;
+      width: 35px;
+      min-width: 35px;
+      border: 2px solid;
+    }
+
+    .PostInput {
+      padding-top: 7px;
+      font-size: 1em;
+
+      &::placeholder {
+        font-size: 1em;
+      }
+    }
+  }
+
+  .BoxBottom {
+    margin-top: 0;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .BoxBottom {
+    .RightPart {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      button {
+        margin-left: 15px;
+        height: 30px;
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  .Comment {
+    .BoxTop {
+      .PostInput {
+        margin-left: 10px;
+        padding-top: 10px;
+        font-size: 0.8em;
+
+        &::placeholder {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
+
 }

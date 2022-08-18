@@ -60,6 +60,16 @@
   }
 }
 
+@media only screen and (max-width: 500px) {
+  .Feed {
+    .FeedPageContent {
+      .PostWritingBox {
+        padding: 10px;
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 400px) {
   .Feed {
     .FeedPageContent {
