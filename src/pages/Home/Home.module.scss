@@ -446,6 +446,21 @@
   }
 }
 
+@media only screen and (max-width: 1000px) {
+  .Home {
+    .Content {
+      .ThirdSection {
+        flex-direction: column;
+
+        .RightPart {
+          margin-top: 30px;
+          width: 80%;
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 900px) {
   .Home {
     .Content {
@@ -506,7 +521,7 @@
 
         h2 {
           width: 250px;
-          font-size: 0.7em;
+          font-size: 0.9em;
         }
 
         .CallAction {
@@ -516,6 +531,10 @@
             font-size: 0.7em;
             padding: 0 15px;
           }
+        }
+
+        .ImpactImg {
+          margin-top: 20px;
         }
       }
     }
@@ -559,6 +578,7 @@
 
         h2 {
           margin: auto;
+          text-align: center;
         }
 
         .ImpactImg {
@@ -574,6 +594,24 @@
           p {
             margin-top: 10px;
           }
+        }
+      }
+
+      .ThirdSection {
+        .LeftPart {
+          padding: 0;
+
+          h2 {
+            font-size: 1.5em;
+          }
+
+          p {
+            font-size: 0.9em;
+          }
+        }
+
+        .RightPart {
+          width: 90%;
         }
       }
     }
@@ -633,9 +671,25 @@
 
         h2 {
           width: 200px;
-          text-align: center;
         }
       }
+
+      .ThirdSection {
+        //.LeftPart {
+        //  h2 {
+        //    font-size: 1.3em;
+        //  }
+        //
+        //  p {
+        //    font-size: 0.7em;
+        //  }
+        //}
+
+        .RightPart {
+          width: 90%;
+        }
+      }
+
     }
   }
 }
