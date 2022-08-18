@@ -16,6 +16,21 @@
     }
   }
 
+  .SearchIcon {
+    display: none;
+    position: relative;
+    z-index: 3;
+    height: 20px;
+    margin-right: 60px;
+    margin-top: auto;
+    margin-bottom: auto;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+    }
+  }
+
   .Search {
     margin: auto 0;
     width: 600px;
@@ -160,6 +175,54 @@
       cursor: pointer;
     }
   }
+
+  .BurgerMenu {
+    display: none;
+    align-items: center;
+    margin-left: 60px;
+    
+    img {
+      position: relative;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .Menu {
+      transition: all 0.3s;
+      z-index: 2;
+      top: -20px;
+      right: -50px;
+      margin-right: -300px;
+      position: absolute;
+      background-color: var(--color-background-main);
+      width: 100vw;
+      max-width: 300px;
+      height: auto;
+      padding: 50px 0 30px 0;
+      border-radius: 0 0 0 20px;
+
+      &.ShowMenu {
+        margin-right: 0 !important;
+      }
+
+      .Buttons {
+        margin: 0;
+        flex-direction: column !important;
+        display: flex !important;
+        align-items: baseline;
+
+        .Profile {
+          margin-top: 25px;
+        }
+
+        .ImportantBtn {
+          text-align: center;
+          margin-top: 25px;
+          width: 220px;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 1500px) {
@@ -192,6 +255,57 @@
         margin-left: 10px;
         border-radius: 60px;
         cursor: pointer;
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 1000px) {
+
+  .Buttons {
+    display: none !important;
+  }
+
+  .BurgerMenu {
+    display: flex !important;
+  }
+
+}
+
+@media only screen and (max-width: 640px) {
+
+  .SearchIcon {
+    display: block !important;
+  }
+
+  .Search {
+    display: none;
+  }
+
+  .Logo {
+    display: none;
+  }
+
+}
+
+@media only screen and (max-width: 450px) {
+  .BurgerMenu {
+
+    .Menu {
+      margin-right: -450px !important;
+      max-width: 450px !important;
+      padding: 50px 30px 30px 30px !important;
+      border-radius: 0 !important;
+      right: -30px !important;
+    }
+
+    .Buttons {
+
+      .ImportantBtn {
+        margin: 0;
+        box-sizing: border-box;
+        width: 100% !important;
       }
     }
   }
