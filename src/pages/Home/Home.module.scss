@@ -234,6 +234,7 @@
           position: relative;
           border-bottom: 1px solid var(--color-border-light);
           transition: all .3s;
+          min-height: 66px;
 
           .Question {
             padding: 20px 0 20px 0;
@@ -253,6 +254,7 @@
           }
 
           p {
+            background-color: var(--color-background-main);
             margin-top: 0;
             font-weight: 300;
             font-size: 18px;
@@ -266,7 +268,7 @@
           .Folded {
             width: 100%;
             opacity: 0;
-            margin-top: -100px ;
+            margin-top: -200px ;
           }
         }
 
@@ -501,6 +503,27 @@
   }
 }
 
+@media only screen and (max-width: 800px) {
+  .Home {
+    .Content {
+      .FaqSection {
+        .Questions {
+          flex-direction: column;
+
+          .Row {
+            width: 100%;
+            padding: 0 !important;
+
+            .Entry {
+              min-height: 80px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 700px) {
   .Home {
     .Content {
@@ -675,18 +698,21 @@
       }
 
       .ThirdSection {
-        //.LeftPart {
-        //  h2 {
-        //    font-size: 1.3em;
-        //  }
-        //
-        //  p {
-        //    font-size: 0.7em;
-        //  }
-        //}
 
         .RightPart {
           width: 90%;
+        }
+      }
+
+      .FaqSection {
+        .Questions {
+          .Row {
+            .Entry {
+              .Folded {
+                margin-top: -300px ;
+              }
+            }
+          }
         }
       }
 
