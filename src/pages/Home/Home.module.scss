@@ -4,409 +4,428 @@
   .Content {
     overflow:hidden;
     padding: 30px 150px 0 150px;
-  }
 
-  .MainSection {
-    color: var(--color-text-default);
-    padding-top: 150px;
-    margin-bottom: 350px;
+    .MainSection {
+      color: var(--color-text-default);
+      padding-top: 150px;
+      margin-bottom: 350px;
 
-    h1 {
-      z-index: 1;
-      position: relative;
-      font-family: 'Clash Display';
-      font-style: normal;
-      font-weight: 600;
-      font-size: 64px;
-      line-height: 78px;
-      letter-spacing: 0.025em;
-      text-transform: capitalize;
-      margin-bottom: 20px;
-
-      img{
+      h1 {
+        z-index: 1;
         position: relative;
-        left: -230px;
-        top: 40px
-      }
-    }
+        font-family: 'Clash Display';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 64px;
+        line-height: 78px;
+        letter-spacing: 0.025em;
+        text-transform: capitalize;
+        margin-bottom: 20px;
 
-    h2 {
-      position: relative;
-      z-index: 1;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 32px;
-      width: 440px;
-    }
-
-    .CallAction {
-      margin-top: 150px;
-      width: fit-content;
-      position: relative;
-      z-index: 1;
-
-      .ImportantBtn {
-        font-weight: bold;
-        font-size: 1.3em;
-        line-height: 36px;
-        color: var(--color-text-default);
-        background-color: var(--color-highlight);
-        padding: 9px 50px 11px 50px;
-        border-radius: 60px;
-
-        &:hover {
-          cursor: pointer;
+        img{
+          position: relative;
+          left: -230px;
+          top: 40px
         }
       }
 
-
-      p {
-        margin-top: 5px;
-        text-align: center;
-        font-size: 0.9em;
+      .Underline {
+        display: none;
       }
-    }
-
-    .ImpactImg {
-      z-index: 0;
-      height: auto;
-      position: absolute;
-      top: 150px;
-      right: 150px;
-      max-height: 90vh;
-    }
-
-    .Shape {
-      position: absolute;
-      width: 60%;
-      left: -100px;
-      top: -150px;
-      z-index: 0;
-
-      transform: rotate(-100.76deg);
-    }
-  }
-
-  .HeadlinesSection {
-    width: 100%;
-    height: auto;
-    position: relative;
-    margin-top: 100px;
-
-    display: flex;
-    justify-content: space-around;
-    color: var(--color-text-default);
-    text-align: center;
-
-    .Headline {
-      padding: 80px 5%;
-      position: relative;
-      z-index: 1;
-
-      .HeadlineIcon {
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 40px auto;
-        border: solid 0.1px var(--color-border-semi-light);
-
-        background: linear-gradient(155.14deg, rgba(255, 255, 255, 0) -2.13%, rgba(255, 255, 255, 0.15) 136.58%);
-        filter: drop-shadow(0px 4.28214px 52.4562px rgba(0, 7, 72, 0.12));
-        backdrop-filter: blur(26.7634px);
-
-        border-radius: 100px;
-        transform: matrix(0.98, 0, -0.18, 1, 0, 0);
-        box-shadow: 0 0 165px var(--color-highlight);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        img {
-          width: 60%;
-          margin: auto;
-        }
-      }
-    }
-
-    .BoxHeadlines {
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      background: linear-gradient(178.2deg, rgba(255, 255, 255, 0.11) -16.49%, rgba(255, 255, 255, 0.11) 45.32%, rgba(255, 255, 255, 0) 103.19%);
-      -webkit-mask-image: -webkit-gradient(linear, left top, left bottom,
-              from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0)));
-      box-shadow: 0 10px 250px rgba(0, 0, 0, 0.25);
-      border-radius: 40px;
-      border: solid 1.5px var(--color-border-light);
-    }
-
-    .LayerHeadlines {
-      z-index: 0;
-      width: 100vw;
-      height: auto;
-      position: absolute;
-      top: -250px;
-      left: -120px;
-
-      transform: rotate(-9.78deg);
-    }
-  }
-
-  .ThirdSection {
-    margin-top: 200px;
-    width: 100%;
-    display: flex;
-    color: var(--color-text-default);
-
-    .LeftPart {
-      padding-left: max(15px, 10%);
-      padding-right: max(15px, 10%);
-      text-align: center;
 
       h2 {
-        font-family: 'Clash Display';
-        font-weight: 600;
-        font-size: 3em;
-        line-height: 59px;
-      }
-
-      p {
-        font-size: 1.15em;
-      }
-    }
-
-    .RightPart {
-      margin: auto;
-      height: max-content;
-      width: 50%;
-    }
-  }
-
-  .FaqSection {
-    margin: 200px 0;
-    width: 100%;
-    color: var(--color-text-default);
-
-    h2 {
-      background-color: var(--color-background-main);
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      padding-block-start: 0.83em;
-      padding-block-end: 1.5em;
-      font-family: 'Clash Display';
-      font-weight: 600;
-      font-size: 3em;
-      text-align: center;
-    }
-
-    .Questions {
-      display: flex;
-
-      .Entry {
-        font-family: 'Clash Display';
         position: relative;
-        border-bottom: 1px solid var(--color-border-light);
-        transition: all .3s;
+        z-index: 1;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 32px;
+        width: 440px;
+      }
 
-        .Question {
-          padding: 20px 0 20px 0;
-          background-color: var(--color-background-main);
-          z-index: 1;
-          position: relative;
-          display: flex;
-          justify-content: space-between;
-          font-weight: 500;
-          font-size: 20px;
-          letter-spacing: 1.5px;
-          transition: all .3s;
+      .CallAction {
+        margin-top: 150px;
+        width: fit-content;
+        position: relative;
+        z-index: 1;
+
+        .ImportantBtn {
+          border: none;
+          font-weight: bold;
+          font-size: 1.3em;
+          line-height: 36px;
+          color: var(--color-text-default);
+          background-color: var(--color-buttons);
+          padding: 9px 50px 11px 50px;
+          border-radius: 60px;
 
           &:hover {
             cursor: pointer;
           }
         }
 
-        p {
-          margin-top: 0;
-          font-weight: 300;
-          font-size: 18px;
-          line-height: 29px;
-          letter-spacing: 1px;
-          display: block;
-          z-index: 0;
-          transition: all .3s;
-        }
 
-        .Folded {
-          width: 100%;
-          opacity: 0;
-          margin-top: -100px ;
+        p {
+          margin-top: 5px;
+          text-align: center;
+          font-size: 0.9em;
         }
       }
 
-      .Row {
+      .ImpactImg {
+        z-index: 0;
+        height: auto;
+        position: absolute;
+        top: 150px;
+        right: 150px;
+        max-height: 90vh;
+      }
+
+      .ImpactImgPhoneSize {
+        display: none;
+        max-width: 300px;
+        width: 80%;
+        margin: 30px auto 0 auto;
+      }
+
+      .Shape {
+        position: absolute;
+        width: 60%;
+        left: -100px;
+        top: -150px;
+        z-index: 0;
+
+        transform: rotate(-100.76deg);
+      }
+    }
+
+    .HeadlinesSection {
+      width: 100%;
+      height: auto;
+      position: relative;
+      margin-top: 100px;
+
+      display: flex;
+      justify-content: space-around;
+      color: var(--color-text-default);
+      text-align: center;
+
+      .Headline {
+        padding: 80px 5%;
+        position: relative;
+        z-index: 1;
+
+        .HeadlineIcon {
+          width: 100px;
+          height: 100px;
+          margin: 0 auto 40px auto;
+          border: solid 0.1px var(--color-border-semi-light);
+
+          background: linear-gradient(155.14deg, rgba(255, 255, 255, 0) -2.13%, rgba(255, 255, 255, 0.15) 136.58%);
+          filter: drop-shadow(0px 4.28214px 52.4562px rgba(0, 7, 72, 0.12));
+          backdrop-filter: blur(26.7634px);
+
+          border-radius: 100px;
+          transform: matrix(0.98, 0, -0.18, 1, 0, 0);
+          box-shadow: 0 0 165px var(--color-highlight);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          img {
+            width: 60%;
+            margin: auto;
+          }
+        }
+      }
+
+      .BoxHeadlines {
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: linear-gradient(178.2deg, rgba(255, 255, 255, 0.11) -16.49%, rgba(255, 255, 255, 0.11) 45.32%, rgba(255, 255, 255, 0) 103.19%);
+        -webkit-mask-image: -webkit-gradient(linear, left top, left bottom,
+                from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0)));
+        box-shadow: 0 10px 250px rgba(0, 0, 0, 0.25);
+        border-radius: 40px;
+        border: solid 1.5px var(--color-border-light);
+      }
+
+      .LayerHeadlines {
+        z-index: 0;
+        width: 100vw;
+        height: auto;
+        position: absolute;
+        top: -250px;
+        left: -120px;
+
+        transform: rotate(-9.78deg);
+      }
+    }
+
+    .ThirdSection {
+      margin-top: 200px;
+      width: 100%;
+      display: flex;
+      color: var(--color-text-default);
+
+      .LeftPart {
+        padding-left: max(15px, 10%);
+        padding-right: max(15px, 10%);
+        text-align: center;
+
+        h2 {
+          font-family: 'Clash Display';
+          font-weight: 600;
+          font-size: 3em;
+          line-height: 59px;
+        }
+
+        p {
+          font-size: 1.15em;
+        }
+      }
+
+      .RightPart {
+        margin: auto;
+        height: max-content;
         width: 50%;
-        padding: 0 50px;
+      }
+    }
+
+    .FaqSection {
+      margin: 200px 0;
+      width: 100%;
+      color: var(--color-text-default);
+
+      h2 {
+        background-color: var(--color-background-main);
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding-block-start: 0.83em;
+        padding-block-end: 1.5em;
+        font-family: 'Clash Display';
+        font-weight: 600;
+        font-size: 3em;
+        text-align: center;
+      }
+
+      .Questions {
+        display: flex;
+
+        .Entry {
+          font-family: 'Clash Display';
+          position: relative;
+          border-bottom: 1px solid var(--color-border-light);
+          transition: all .3s;
+
+          .Question {
+            padding: 20px 0 20px 0;
+            background-color: var(--color-background-main);
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+            font-size: 20px;
+            letter-spacing: 1.5px;
+            transition: all .3s;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+
+          p {
+            margin-top: 0;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 29px;
+            letter-spacing: 1px;
+            display: block;
+            z-index: 0;
+            transition: all .3s;
+          }
+
+          .Folded {
+            width: 100%;
+            opacity: 0;
+            margin-top: -100px ;
+          }
+        }
+
+        .Row {
+          width: 50%;
+          padding: 0 50px;
+        }
       }
     }
   }
 }
 
 @media only screen and (max-width: 1650px) {
-  .ImpactImg {
-    top: 100px !important;
-    right: 100px !important;
+  .Home {
+    .Content {
+      .MainSection {
+        padding-top: 100px;
+
+        .ImpactImg {
+          top: 100px;
+          right: 100px;
+        }
+      }
+    }
   }
 }
 
 @media only screen and (max-width: 1600px) {
-  .MainSection {
-    padding-top: 100px !important;
-  }
-
-  .ThirdSection {
-    .LeftPart {
-      h2 {
-        font-size: 2.6em !important;
+  .Home {
+    .Content {
+      .ThirdSection {
+        .LeftPart {
+          h2 {
+            font-size: 2.6em;
+          }
+        }
       }
     }
   }
 }
 
 @media only screen and (max-width: 1500px) {
-  .Content {
-    padding: 20px 100px 0 100px;
+  .Home {
+    .Content {
+      padding: 20px 100px 0 100px;
 
-    .MainSection {
-      padding-top: 70px !important;
+      .MainSection {
+        padding-top: 70px;
 
-      h1 {
-        font-size: 3.7em;
-      }
+        h1 {
+          font-size: 3.7em;
+        }
 
-      .ImpactImg {
-        max-width: 50%;
-      }
+        .ImpactImg {
+          max-width: 50%;
+        }
 
-      .CallAction {
-        margin-top: 100px;
+        .CallAction {
+          margin-top: 100px;
+        }
       }
     }
   }
 }
 
 @media only screen and (max-width: 1400px) {
-  .Content {
-    padding: 20px 50px 0 50px !important;
+  .Home {
+    .Content {
+      padding: 20px 50px 0 50px;
 
-    .MainSection {
+      .MainSection {
 
-      h1 {
-        font-size: 3.3em;
-      }
-
-      h2 {
-        font-size: 1.1em;
-      }
-
-      .CallAction {
-        .ImportantBtn {
-          font-size: 1em;
-          padding: 8px 40px 9px 40px;
+        h1 {
+          font-size: 3.3em;
         }
 
-        p {
-          margin-top: 3px;
-          font-size: 0.7em;
-        }
-      }
-    }
-
-    .ThirdSection {
-      margin-top: 100px;
-      .LeftPart {
         h2 {
-          font-size: 2.4em !important;
-        }
-      }
-    }
-
-    .FaqSection {
-      .Questions {
-
-        .Row:nth-child(1) {
-          padding-right: 25px;
-          padding-left: 0;
+          font-size: 1.1em;
         }
 
-        .Row:nth-child(2) {
-          padding-right: 0;
-          padding-left: 25px;
+        .CallAction {
+          .ImportantBtn {
+            font-size: 1em;
+            padding: 8px 40px 9px 40px;
+          }
+
+          p {
+            margin-top: 3px;
+            font-size: 0.7em;
+          }
         }
       }
 
+      .ThirdSection {
+        margin-top: 100px;
+        .LeftPart {
+          h2 {
+            font-size: 2.4em;
+          }
+        }
+      }
+
+      .FaqSection {
+        .Questions {
+
+          .Row:nth-child(1) {
+            padding-right: 25px;
+            padding-left: 0;
+          }
+
+          .Row:nth-child(2) {
+            padding-right: 0;
+            padding-left: 25px;
+          }
+        }
+
+      }
     }
   }
 }
 
 @media only screen and (max-width: 1300px) {
-
-
-  .FaqSection {
-    .Questions {
-
-      p {
-        font-size: 1em !important;
+  .Home {
+    .Content {
+      .FaqSection {
+        .Questions {
+          .Entry {
+            p {
+              font-size: 1em;
+            }
+          }
+        }
       }
     }
-
   }
 }
 
 @media only screen and (max-width: 1200px) {
-  .Content {
-
-    .MainSection {
-
-      h1 {
-        font-size: 3em;
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 3em;
+        }
       }
     }
   }
 }
 
 @media only screen and (max-width: 1100px) {
-  .Content {
-    .MainSection {
-
-      h1 {
-        font-size: 2.7em;
-      }
-
-      h2 {
-        font-size: 0.9em;
-        width: 350px;
-        line-height: 18px;
-      }
-
-      .CallAction {
-        margin-top: 70px;
-
-        .ImportantBtn {
-          padding: 6px 30px 7px 30px;
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 2.7em;
         }
-      }
-    }
 
-    .ThirdSection {
-      .LeftPart {
         h2 {
-          font-size: 2em !important;
+          font-size: 0.9em;
+          width: 350px;
+          line-height: 18px;
         }
 
-        p {
-          font-size: 1em;
+        .CallAction {
+          margin-top: 70px;
+
+          .ImportantBtn {
+            padding: 6px 30px 7px 30px;
+          }
+        }
+
+        .ImpactImg {
+          margin-right: -80px;
         }
       }
     }
@@ -414,5 +433,179 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .Home {
+    .Content {
+      .MainSection {
 
+        h1 {
+          margin-top: 0;
+          font-size: 2em;
+
+          img {
+            width: 160px;
+            left: -150px;
+            top: 27px
+          }
+        }
+
+        .CallAction {
+          margin-top: 50px;
+
+          .ImportantBtn {
+            font-size: 0.8em;
+            padding: 4px 20px 4px 20px;
+          }
+          p {
+            font-size: 0.6em;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .Home {
+    .Content {
+      padding: 20px 35px 0 35px;
+
+      .MainSection {
+
+        h1 {
+          font-size: 1.5em;
+          margin: 0;
+
+          img {
+            width: 110px;
+            left: -110px;
+            top: 20px
+          }
+        }
+
+        h2 {
+          width: 250px;
+          font-size: 0.7em;
+        }
+
+        .CallAction {
+          margin-top: 30px;
+
+          .ImportantBtn {
+            font-size: 0.7em;
+            padding: 0 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .Home {
+    .Content {
+      padding-top: 50px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Home {
+    .Content {
+      .MainSection {
+        padding-top: 50px;
+
+        h1 {
+          text-align: center;
+          line-height: normal;
+          width: fit-content;
+          margin: 0 auto 40px auto;
+
+          img {
+            position: absolute;
+            left: 160px;
+            top: 22px
+          }
+        }
+
+        h2 {
+          margin: auto;
+        }
+
+        .ImpactImg {
+          display: none;
+        }
+
+        .ImpactImgPhoneSize {
+          display: block;
+        }
+
+        .CallAction {
+          margin: 0 auto;
+          p {
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 370px) {
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 1.3em;
+          img {
+            width: 100px;
+            left: 135px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 1.1em;
+          img {
+            width: 90px;
+            left: 110px;
+            top: 17px;
+          }
+        }
+
+        h2 {
+          width: 200px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 290px) {
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 1em;
+          img {
+            width: 80px;
+            left: 100px;
+            top: 15px;
+          }
+        }
+
+        h2 {
+          width: 200px;
+          text-align: center;
+        }
+      }
+    }
+  }
 }

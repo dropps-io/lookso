@@ -168,7 +168,7 @@
     }
 
     .ImportantBtn {
-      background-color: var(--color-highlight);
+      background-color: var(--color-buttons);
       padding: 12px 25px 12px 25px;
       margin-left: 10px;
       border-radius: 60px;
@@ -250,11 +250,7 @@
       }
 
       .ImportantBtn {
-        background-color: var(--color-highlight);
         padding: 10px 20px 10px 20px;
-        margin-left: 10px;
-        border-radius: 60px;
-        cursor: pointer;
       }
     }
   }

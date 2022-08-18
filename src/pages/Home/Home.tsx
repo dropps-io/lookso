@@ -35,14 +35,13 @@ const Home: FC<HomeProps> = ()  => {
               <img src={titleUnderline.src} alt=""/>
             </h1>
             <h2>A decentralized Social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
+            <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="impact image"/>
             <div className={styles.CallAction}>
               <button className={styles.ImportantBtn}>See what’s happening</button>
-              <p>No login required</p>
+              <p>(No login required)</p>
             </div>
-            {/*<div className={styles.RightSection}>*/}
             <img className={styles.Shape} src={shape1.src} alt=""/>
             <img className={styles.ImpactImg} src={impactImage.src} alt="impact image"/>
-            {/*</div>*/}
           </section>
 
           <section className={styles.HeadlinesSection}>
@@ -77,7 +76,7 @@ const Home: FC<HomeProps> = ()  => {
               <p>The dApp’s current version is live only within the L16 testnet.
                 Once LUKSO’s mainnet goes live we will roll out the definitive version of our platform, along with a user-friendly interface for linking your testnet activity to your mainnet Universal Profile</p>
             </div>
-            <img className={styles.RightPart} src={impactImage2.src}></img>
+            <img className={styles.RightPart} src={impactImage2.src} alt=''></img>
           </section>
 
           <section className={styles.FaqSection}>
