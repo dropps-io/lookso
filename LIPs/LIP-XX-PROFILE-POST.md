@@ -1,6 +1,6 @@
 ---
 lip: XX
-title: LIP Profile Post
+title: LIP Social Registry
 status: WIP
 type: Meta
 author: Samuel Videau <samuel@dropps.io>
@@ -24,28 +24,14 @@ This standard aims to implement social media features for [ERC725](https://githu
 
 ### ERC725Y Data Keys
 
-#### SupportedStandards:LSP4DigitalAsset
-
-The supported standard SHOULD be `LSP4DigitalAsset`
-
-```json
-{
-    "name": "SupportedStandards:LSP4DigitalAsset",
-    "key": "0xeafec4d89fa9619884b60000a4d96624a38f7ac2d8d9a604ecf07c12c77e480c",
-    "keyType": "Mapping",
-    "valueType": "bytes4",
-    "valueContent": "0xa4d96624"
-}
-```
-
-#### LSPXXPostsRecord
+#### LSPXXSocialRegistry
 
 A string representing the name for the token collection.
 
 ```json
   {
-      "name": "LSPXXSocialRegister.json",
-      "key": "0xdeba1e292f8ba88238e10ab3c7f88bd4be4fac56cad5194b6ecceaf653468af1",
+      "name": "LSPXXSocialRegistry",
+      "key": "0x661d289e41fcd282d8f4b9c0af12c8506d995e5e9e685415517ab5bc8b908247",
       "keyType": "Singleton",
       "valueType": "bytes",
       "valueContent": "JSONURL"
@@ -58,20 +44,14 @@ The linked JSON file SHOULD have the following format:
 
 ```json
 {
-  "LSPXXSocialRegister": {
-    "profile_posts": [
+  "LSPXXSocialRegistry": {
+    "posts": [
       {
         "url": "string",
         "hash": "string"
       }
     ],
-    "profile_comments": [
-      {
-        "url": "string",
-        "hash": "string"
-      }
-    ],
-    "following": [
+    "follows": [
       "string"
     ],
     "likes": [
@@ -86,13 +66,13 @@ The profile post JSON files should have the following format:
 ```json
 {
   "LSPXXProfilePost": {
+    "version": "string",
     "author": "string",
-    "date": "date",
     "message": "string",
     "links": [
       {
-        "title": "string", 
-        "url": "string" 
+        "title": "string",
+        "url": "string"
       }
     ],
     "asset": {
@@ -102,8 +82,7 @@ The profile post JSON files should have the following format:
       "fileType": "string"
     }
   },
-  "LSPXXProfilePostHash": "string",
-  "LSPXXProfilePostSignature": "string"
+  "LSPXXProfilePostHash": "string"
 }
 ```
 
