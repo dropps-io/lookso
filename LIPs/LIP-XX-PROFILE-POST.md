@@ -66,7 +66,7 @@ The profile post JSON files should have the following format:
 ```json
 {
   "LSPXXProfilePost": {
-    "version": "string",
+    "version": "0.0.1",
     "author": "string",
     "message": "string",
     "links": [
@@ -80,7 +80,9 @@ The profile post JSON files should have the following format:
       "hash": "string",
       "url": "string",
       "fileType": "string"
-    }
+    },
+    "parent": "string OR undefined",
+    "child": "string OR undefined"
   },
   "LSPXXProfilePostHash": "string"
 }
