@@ -68,6 +68,7 @@ The profile post JSON files should have the following format:
   "LSPXXProfilePost": {
     "version": "0.0.1",
     "author": "string",
+    "eoa": "string",
     "message": "string",
     "links": [
       {
@@ -81,10 +82,11 @@ The profile post JSON files should have the following format:
       "url": "string",
       "fileType": "string"
     },
-    "parent": "string OR undefined",
-    "child": "string OR undefined"
+    "parentHash": "string OR undefined",
+    "childHash": "string OR undefined"
   },
-  "LSPXXProfilePostHash": "string"
+  "LSPXXProfilePostHash": "string",
+  "LSPXXProfilePostEOASignature": "string"
 }
 ```
 
