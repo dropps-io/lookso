@@ -74,9 +74,9 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <Post ref={ref} key={index} post={post}/>
+                  <Post ref={ref} key={post.hash} post={post}/>
                   :
-                  <Post key={index} post={post}/>
+                  <Post key={post.hash} post={post}/>
               )
             }
           </div>

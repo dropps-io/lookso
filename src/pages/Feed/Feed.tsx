@@ -16,7 +16,7 @@ interface FeedProps {}
 const Feed: FC<FeedProps> = () => {
   const account = useSelector((state: RootState) => state.web3.account);
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
-  const [feed, setFeed]: [FeedPost[], any] = useState([]);
+  const [feed, setFeed] = useState<FeedPost[]>([])
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
 
@@ -70,7 +70,8 @@ const Feed: FC<FeedProps> = () => {
   }
 
   function handleNewPost(post: FeedPost) {
-    setFeed((existing: FeedPost[]) => [post].concat(existing));
+    setFeed(existing => [post].concat(existing));
+    console.log(feed)
   }
 
   return (
