@@ -10,6 +10,7 @@
     "component:new": "npx generate-react-cli component"
   },
   "dependencies": {
+    "@erc725/erc725.js": "^0.14.4",
     "@reduxjs/toolkit": "^1.8.3",
     "config": "^3.3.7",
     "next": "12.2.3",
