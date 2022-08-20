@@ -5,6 +5,7 @@ import logo from "../../assets/images/logo.png";
 import burgerMenuIcon from "../../assets/icons/burger-menu.svg";
 import crossIcon from "../../assets/icons/cross.svg";
 import searchIcon from "../../assets/icons/search.svg";
+import bellIcon from "../../assets/icons/bell.svg";
 import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
 import {connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
@@ -54,9 +55,18 @@ const Navbar: FC<NavbarProps> = () => {
         <SearchBar></SearchBar>
       </div>
       <ul className={styles.Buttons}>
-        <li><a href="">Discord</a></li>
-        <li><a href="">F.A.Q</a></li>
-        <li><Link href='/feed'><a href="">Feed</a></Link></li>
+        {
+          account ?
+            <li><a href="">Explore</a></li>
+            :
+            <li><a href="">Discord</a></li>
+        }
+        <li><Link href='/feed'><a href="">{
+          account ?
+            'My feed' :
+            'Explore'
+        }</a></Link></li>
+        <li><Link href=''><a className={styles.Notifications} href=""><img className={styles.BellIcon} src={bellIcon.src} alt=""/></a></Link></li>
         {
           account ?
             <li className={styles.Profile}>
@@ -78,17 +88,21 @@ const Navbar: FC<NavbarProps> = () => {
                   </Link>
                   <Link href={`/Profile/${account}`}>
                   <div className={styles.ProfileContext}>
-                    <strong>{ shortenAddress(account, 3) }</strong>
-                    <span>L16 Testnet</span>
+                    <strong className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></strong>
+                    <span className={styles.Network}>L16 testnet</span>
                   </div>
                   </Link>
                 </div>
-                <p className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></p>
-                <div className={styles.Balance}>
-                  <img src={miniLogoLukso.src} alt={''}/>
-                  <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
-                </div>
+                <Link href={`/Profile/${account}`}>
+                  <div className={styles.MyProfile}>
+                    <button className={'btn btn-dark'}>My profile</button>
+                  </div>
+                </Link>
                 <div className={styles.DropdownButtons}>
+                  <div className={styles.Balance}>
+                    <img src={miniLogoLukso.src} alt={''}/>
+                    <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
+                  </div>
                   <div className={styles.TopButtons}>
                     <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
                     <button className={'btn btn-secondary'}>UP.cloud</button>
@@ -112,9 +126,19 @@ const Navbar: FC<NavbarProps> = () => {
         }
         <div className={`${styles.Menu} ${showBurgerMenu ? styles.ShowMenu : ''}`}>
           <ul className={styles.Buttons}>
-            <li><a href="">Discord</a></li>
-            <li><a href="">F.A.Q</a></li>
-            <li><Link href='/feed'><a href="">Feed</a></Link></li>
+            <li><a href="">Home</a></li>
+            {
+              account ?
+                <li><a href="">Explore</a></li>
+                :
+                <li><a href="">Discord</a></li>
+            }
+            <li><Link href='/feed'><a href="">{
+              account ?
+                'My Feed' :
+                'Explore'
+            }</a></Link></li>
+            <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li>
             {
               account ?
                 <li className={styles.Profile}>

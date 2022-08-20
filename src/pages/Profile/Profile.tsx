@@ -228,7 +228,7 @@ const Profile: FC<ProfileProps> = (props) => {
              <></>
          }
          <div className={styles.Activity}>
-           <Activity feed={feed} loadNext={loadMorePosts}></Activity>
+           <Activity headline='Activity' feed={feed} loadNext={loadMorePosts}></Activity>
          </div>
        </div>
       <Footer/>

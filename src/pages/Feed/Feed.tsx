@@ -92,16 +92,6 @@ const Feed: FC<FeedProps> = () => {
         <Navbar/>
       </div>
       <div className={styles.FeedPageContent}>
-        <div className={styles.FeedHeader}>
-          <div></div>
-          <div className={styles.Filters}>
-            {
-              filters.map((filter, index) =>
-                <span key={filter.display} onClick={() => setActive(index)} className={`${activeFilter === filter.value ? styles.ActiveFilter : ''}`}>{filter.display}</span>
-              )
-            }
-          </div>
-        </div>
         {
           account ?
             <div className={styles.PostWritingBox}>
@@ -110,7 +100,7 @@ const Feed: FC<FeedProps> = () => {
             :
             <></>
         }
-        <Activity feed={feed} loadNext={() => loadMorePosts()}></Activity>
+        <Activity feed={feed} headline='Feed' loadNext={() => loadMorePosts()}></Activity>
       </div>
       <Footer/>
     </div>

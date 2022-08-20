@@ -45,16 +45,24 @@
     align-items: center;
 
     li {
-      padding: 0 30px;
+      padding: 0 25px;
       a {
+        white-space: nowrap;
         cursor: pointer;
       }
     }
 
+    .Notifications {
+      display: flex;
+      .BellIcon {
+        width: 25px;
+      }
+    }
+
     .Profile {
-      width: 40px;
-      height: 40px;
-      border-radius: 40px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
       padding: 0 30px;
       vertical-align: middle;
       
@@ -62,9 +70,9 @@
 
       .ProfilePicSmall {
         border: 2px solid var(--color-border-light);
-        width: 40px;
-        height: 40px;
-        border-radius: 40px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
         background: url("https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg");
         background-size: cover;
         background-position: center;
@@ -115,14 +123,18 @@
             flex-direction: column;
 
             strong {
-              font-size: 0.8em;
+              padding: 5px 0;
             }
 
-            span {
+            .Network {
               font-size: 0.6em;
               color: var(--color-text-reverse-light);
             }
           }
+        }
+
+        .MyProfile {
+          padding: 0 15px 15px 15px;
         }
 
         .ProfileName {
@@ -131,24 +143,24 @@
           margin: 0;
         }
 
-        .Balance {
-          padding: 0 15px 15px 15px;
-
-          img {
-            margin-right: 20px;
-            vertical-align: middle;
-          }
-
-          span {
-            font-size: 0.8em;
-          }
-        }
-
         .DropdownButtons {
           border-top: 1px solid var(--color-border-semi-light);
           padding: 15px;
           background-color: var(--color-background-reverse-darker);
           border-radius: 0 0 20px 20px;
+
+          .Balance {
+            padding: 0 0 15px 0;
+
+            img {
+              margin-right: 20px;
+              vertical-align: middle;
+            }
+
+            span {
+              font-size: 0.8em;
+            }
+          }
 
           .TopButtons {
             display: flex;
@@ -245,8 +257,19 @@
       font-weight: 500;
       font-size: 1.1em;
 
+      .Profile {
+        width: 40px;
+        height: 40px;
+
+
+        .ProfilePicSmall {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
       li {
-        padding: 20px 30px;
+        padding: 20px 20px;
       }
 
       .ImportantBtn {

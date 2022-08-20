@@ -17,6 +17,11 @@
   color: var(--color-text-default);
 }
 
+.btn-dark {
+  background-color: var(--color-buttons-dark);
+  color: var(--color-text-default);
+}
+
 .btn-secondary {
   border: 1px solid var(--color-border-semi-light);
   background-color: var(--color-background-reverse);

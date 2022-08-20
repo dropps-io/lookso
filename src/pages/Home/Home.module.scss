@@ -66,7 +66,7 @@
 
 
         p {
-          margin-top: 5px;
+          margin-top: 7px;
           text-align: center;
           font-size: 0.9em;
         }
@@ -83,8 +83,8 @@
 
       .ImpactImgPhoneSize {
         display: none;
-        max-width: 300px;
-        width: 80%;
+        max-width: 600px;
+        width: 100%;
         margin: 30px auto 0 auto;
       }
 
@@ -281,6 +281,18 @@
   }
 }
 
+@media only screen and (max-width: 1750px) {
+  .Home {
+    .Content {
+      .MainSection {
+        .ImpactImg {
+          right: 50px;
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 1650px) {
   .Home {
     .Content {
@@ -289,7 +301,7 @@
 
         .ImpactImg {
           top: 100px;
-          right: 100px;
+          max-width: 50%;
         }
       }
     }
@@ -310,7 +322,7 @@
   }
 }
 
-@media only screen and (max-width: 1500px) {
+@media only screen and (max-width: 1550px) {
   .Home {
     .Content {
       padding: 20px 100px 0 100px;
@@ -323,7 +335,7 @@
         }
 
         .ImpactImg {
-          max-width: 50%;
+
         }
 
         .CallAction {
@@ -343,6 +355,12 @@
 
         h1 {
           font-size: 3.3em;
+
+          img {
+            width: 190px;
+            left: -190px;
+            top: 30px
+          }
         }
 
         h2 {
@@ -424,6 +442,12 @@
       .MainSection {
         h1 {
           font-size: 2.7em;
+
+          img {
+            width: 170px;
+            left: -170px;
+            top: 27px
+          }
         }
 
         h2 {
@@ -441,7 +465,7 @@
         }
 
         .ImpactImg {
-          margin-right: -80px;
+          right: 20px;
         }
       }
     }
@@ -463,34 +487,71 @@
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 950px) {
   .Home {
     .Content {
       .MainSection {
+        height: calc(100vh - 70px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
+        margin-bottom: 100px;
+        min-height: 800px;
 
         h1 {
-          margin-top: 0;
-          font-size: 2em;
+          text-align: center;
+          line-height: normal;
+          width: fit-content;
+          margin: 0 auto 40px auto;
+          font-size: 3.3em;
 
           img {
-            width: 160px;
-            left: -150px;
-            top: 27px
+            position: absolute;
+            width: 210px;
+            left: 390px;
+            top: 50px
           }
+        }
+
+        h2 {
+          margin: auto;
+          text-align: center;
+          font-size: 1.2em;
+          width: 500px;
+          line-height: 30px;
+        }
+
+        .ImpactImg {
+          display: none;
+        }
+
+        .ImpactImgPhoneSize {
+          display: block;
+          width: 60%;
         }
 
         .CallAction {
-          margin-top: 50px;
+          margin: 0 auto;
 
           .ImportantBtn {
-            font-size: 0.8em;
-            padding: 4px 20px 4px 20px;
+            font-size: 1em;
+            padding: 5px 20px;
           }
+
           p {
-            font-size: 0.6em;
+            margin-top: 5px;
+            font-size: 0.7em;
           }
         }
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .Home {
+    .Content {
 
       .HeadlinesSection {
         flex-direction: column;
@@ -503,9 +564,46 @@
   }
 }
 
+@media only screen and (max-width: 850px) {
+  .Home {
+    .Content {
+      .MainSection {
+        h1 {
+          font-size: 2.8em;
+
+          img {
+            width: 180px;
+            left: 335px;
+            top: 44px
+          }
+        }
+
+        //h2 {
+        //  font-size: 1.7em;
+        //  width: 500px;
+        //  line-height: 35px;
+        //}
+
+        .ImpactImg {
+          display: none;
+        }
+
+        .ImpactImgPhoneSize {
+          display: block;
+        }
+
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 800px) {
   .Home {
     .Content {
+      .MainSection{
+        min-height: 750px;
+      }
+
       .FaqSection {
         .Questions {
           flex-direction: column;
@@ -530,50 +628,7 @@
       padding: 20px 35px 0 35px;
 
       .MainSection {
-
-        h1 {
-          font-size: 1.5em;
-          margin: 0;
-
-          img {
-            width: 110px;
-            left: -110px;
-            top: 20px
-          }
-        }
-
-        h2 {
-          width: 250px;
-          font-size: 0.9em;
-        }
-
-        .CallAction {
-          margin-top: 30px;
-
-          .ImportantBtn {
-            font-size: 0.7em;
-            padding: 0 15px;
-          }
-        }
-
-        .ImpactImg {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  .Home {
-    .Content {
-      padding-top: 50px;
-
-      .HeadlinesSection {
-
-        .Headline {
-          padding: 40px 25px 0 25px;
-        }
+        min-height: 700px;
       }
     }
   }
@@ -583,25 +638,27 @@
   .Home {
     .Content {
       .MainSection {
-        padding-top: 50px;
-        margin-bottom: 200px;
-
+        min-height: 600px;
         h1 {
           text-align: center;
           line-height: normal;
           width: fit-content;
           margin: 0 auto 40px auto;
+          font-size: 2.2em;
 
           img {
             position: absolute;
-            left: 160px;
-            top: 22px
+            width: 155px;
+            left: 245px;
+            top: 32px
           }
         }
 
         h2 {
           margin: auto;
           text-align: center;
+          font-size: 1.1em;
+          width: 400px;
         }
 
         .ImpactImg {
@@ -614,8 +671,15 @@
 
         .CallAction {
           margin: 0 auto;
+
+          .ImportantBtn {
+            font-size: 1em;
+            padding: 5px 30px;
+          }
+
           p {
-            margin-top: 10px;
+            margin-top: 5px;
+            font-size: 0.7em;
           }
         }
       }
@@ -641,19 +705,106 @@
   }
 }
 
+@media only screen and (max-width: 550px) {
+  .Home {
+    .Content {
+      .MainSection {
+        min-height: 650px;
+      }
+      .HeadlinesSection {
+        .Headline {
+          padding: 40px 50px 0;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .Home {
+    .Content {
+      .MainSection {
+        min-height: 550px;
+        h1 {
+          font-size: 1.7em;
+
+          img {
+            width: 120px;
+            left: 190px;
+            top: 25px
+          }
+        }
+
+        h2 {
+          font-size: 1.1em;
+          width: 300px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .Home {
+    .Content {
+      .MainSection {
+        min-height: 550px;
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 400px) {
   .Home {
     .Content {
+      .MainSection {
+        min-height: 550px;
+        h1 {
+          font-size: 1.5em;
+
+          img {
+            width: 100px;
+            left: 175px;
+            top: 22px
+          }
+        }
+
+        h2 {
+          font-size: 1em;
+          width: 270px;
+        }
+
+        .CallAction {
+          .ImportantBtn {
+            font-size: 0.9em;
+            padding: 5px 25px;
+          }
+        }
+      }
+
       .HeadlinesSection {
         .Headline {
+          .HeadlineIcon {
+            width: 70px;
+            height: 70px;
+          }
+
+          h3 {
+            font-size: 1em;
+          }
+
           p {
+            cursor: pointer;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            font-size: 0.8em;
           }
 
           .ToggleHeadline {
+            cursor: pointer;
             display: block;
           }
         }
@@ -667,11 +818,26 @@
   .Home {
     .Content {
       .MainSection {
+        min-height: 450px;
+        min-height: 450px;
         h1 {
           font-size: 1.3em;
           img {
             width: 100px;
             left: 135px;
+            top: 20px
+          }
+        }
+
+        h2 {
+          font-size: 0.8em;
+          width: 230px;
+        }
+
+        .CallAction {
+          .ImportantBtn {
+            font-size: 0.8em;
+            padding: 2px 22px;
           }
         }
       }
@@ -693,7 +859,15 @@
         }
 
         h2 {
+          font-size: 0.7em;
           width: 200px;
+        }
+
+        .CallAction {
+          .ImportantBtn {
+            font-size: 0.7em;
+            padding: 2px 20px;
+          }
         }
       }
 
