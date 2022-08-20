@@ -46,7 +46,7 @@ export async function connectToAPI(address: string, web3: Web3) {
   }
 }
 
-async function signMessage(address: string, data: string, web3: Web3) {
+export async function signMessage(address: string, data: string, web3: Web3) {
   const res = await web3.eth.sign(data, address);
   return JSON.parse(JSON.stringify(res)).signature;
 }

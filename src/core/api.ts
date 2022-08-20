@@ -1,5 +1,6 @@
 import {API_URL} from "../environment/endpoints";
 import {FeedPost} from "../components/Post/Post";
+import {LSPXXProfilePost} from "../models/profile-post";
 
 const headers = {
   Accept: 'application/json',
@@ -122,4 +123,47 @@ export async function fetchAllFeed(limit: number, offset: number, type?: 'event'
   let url = API_URL + '/lookso/feed?limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
+}
+
+function getBase64(file: File): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      resolve(reader.result as string);
+    };
+    reader.onerror = function (error) {
+      reject('Error: ' + error);
+    };
+  });
+}
+
+export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
+  const content = {
+    lspXXProfilePost: post,
+    fileType: asset.type,
+    base64File: await getBase64(asset)
+  };
+
+  const res = await fetch(API_URL + '/lookso/post/request-object', {
+    method: 'POST',
+    body: JSON.stringify(content),
+    headers: headersWithJWT(jwt)
+  });
+
+  return (await res.json()).LSPXXProfilePost;
+}
+
+export async function uploadPostObject(post: LSPXXProfilePost, signature: string, jwt: string): Promise<{postHash: string, jsonUrl: string}> {
+  const content = {
+    lspXXProfilePost: post,
+    signature
+  };
+
+  const res = await fetch(API_URL + '/lookso/post/upload', {
+    method: 'POST',
+    body: JSON.stringify(content),
+    headers: headersWithJWT(jwt)
+  });
+  return await res.json();
 }

@@ -46,10 +46,19 @@
     display: flex;
     align-items: center;
 
-    img {
-      cursor: pointer;
+    .ImageUpload {
       width: 25px;
       height: 25px;
+      cursor: pointer;
+
+      img {
+        width: 25px;
+        height: 25px;
+      }
+
+      input {
+        display: none;
+      }
     }
 
     button {
