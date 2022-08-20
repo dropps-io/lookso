@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import styles from './AddressFeedDisplay.module.scss';
 import UserTag from "../UserTag/UserTag";
 import {shortenAddress} from "../../core/utils/address-formating";
-import keyIcon from '../../assets/icons/key.svg';
 import AssetTag from "../AssetTag/AssetTag";
 import {EXPLORER_URL} from "../../environment/endpoints";
 import {useRouter} from "next/router";
@@ -34,7 +33,7 @@ const AddressFeedDisplay: FC<AddressFeedDisplayProps> = (props) => {
   else if (props.standard === 'LSP6') {
     return (
       <span onClick={goToAddress} className={`${styles.AddressFeedDisplay} ${styles.KeyManager}`} data-testid="AddressFeedDisplay">
-        <img className={styles.KeyImage} src={keyIcon.src} alt=''/>
+        <span>🔑 </span>
         {shortenAddress(props.address, 3)}
       </span>
     )
