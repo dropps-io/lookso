@@ -16,25 +16,16 @@ interface FeedProps {}
 const Feed: FC<FeedProps> = () => {
   const account = useSelector((state: RootState) => state.web3.account);
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
-  const [activeFilter, setActiveFilter]: [undefined | 'post' | 'event', any] = useState(undefined);
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
 
   let loading = false;
-
-  const filters: {display: string, value?: 'post' | 'event'}[] = [
-    {display: 'All', value: undefined},
-    {display: 'Posts', value: 'post'},
-    {display: 'Events', value: 'event'}
-  ];
-
   useEffect(() => {
     async function initPageData() {
       setFeed([]);
       setOffset(POSTS_PER_LOAD);
       setFullyLoadedActivity(false);
-      setActiveFilter(undefined);
 
       if (account) {
         setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
@@ -53,9 +44,9 @@ const Feed: FC<FeedProps> = () => {
       loading = true;
       let newPosts: FeedPost[];
       if (store.getState().web3.account) {
-        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, activeFilter);
+        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, undefined);
       } else {
-        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, activeFilter);
+        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined);
       }
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
@@ -68,11 +59,6 @@ const Feed: FC<FeedProps> = () => {
     }
   }
 
-  async function setActive(i: number) {
-    if (filters[i].value !== activeFilter) fetchFeedWithFilter(filters[i].value);
-    setActiveFilter(filters[i].value);
-  }
-
   async function fetchFeedWithFilter(type?: 'post' | 'event') {
     setFeed([]);
     setOffset(POSTS_PER_LOAD);
@@ -81,6 +67,10 @@ const Feed: FC<FeedProps> = () => {
     } else {
       setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, type));
     }
+  }
+
+  function handleNewPost(post: FeedPost) {
+    setFeed((existing: FeedPost[]) => [post].concat(existing));
   }
 
   return (
@@ -95,7 +85,7 @@ const Feed: FC<FeedProps> = () => {
         {
           account ?
             <div className={styles.PostWritingBox}>
-              <PostInput/>
+              <PostInput onNewPost={handleNewPost}/>
             </div>
             :
             <></>

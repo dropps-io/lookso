@@ -11,16 +11,19 @@ import {connectToAPI, signMessage} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistry} from "../../core/update-registry";
+import {FeedPost} from "../Post/Post";
 
 interface PostInputProps {
   parentHash?: string;
   childHash?: string;
+  onNewPost: (post: FeedPost) => any;
 }
 
 const PostInput: FC<PostInputProps> = (props) => {
   const dispatch = useDispatch();
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const account = useSelector((state: RootState) => state.web3.account);
+  const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
 
@@ -71,7 +74,9 @@ const PostInput: FC<PostInputProps> = (props) => {
       message: inputValue,
       author: account,
       eoa: '',
-      links: []
+      links: [],
+      childHash: props.childHash,
+      parentHash: props.parentHash
     };
 
     const resJWT = jwt ? jwt : await requestJWT();
@@ -82,7 +87,31 @@ const PostInput: FC<PostInputProps> = (props) => {
     const signedMessage = await signMessage(account, JSON.stringify(post), web3);
     const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
 
-    await updateRegistry(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
+    const receipt = await updateRegistry(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
+
+    props.onNewPost({
+      date: new Date(),
+      author: {
+        address: account,
+        name: username,
+        image: profileImage
+      },
+      name: '',
+      type: 'post',
+      display: {
+        text: post.message,
+        params: {},
+        image: post.asset ? post.asset.url : '',
+        tags: {standard: null, standardType: null, copies: null}
+      },
+      hash: postUploaded.postHash,
+      transactionHash: receipt.transactionHash,
+      blockNumber: receipt.blockNumber,
+      comments: 0,
+      likes: 0,
+      isLiked: false,
+      reposts: 0
+    });
   }
 
   function handleChangeMessage(e: any) {
