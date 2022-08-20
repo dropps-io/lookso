@@ -183,7 +183,12 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
                   {/*</div>*/}
                 </div>
                 <div className={styles.PostContent}>
-                  <img src={executedEventIcon.src} alt="Executed Event"/>
+                  {
+                    type === 'event' ?
+                      <img src={executedEventIcon.src} alt="Executed Event"/>
+                      :
+                      <></>
+                  }
                   {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
                 </div>
                 <div className={styles.PostFooter}>
@@ -205,7 +210,7 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
                   <img className={styles.PostShare} src={shareIcon.src} alt=""/>
                 </div>
                 <div className={styles.Separator}></div>
-                <PostInput parentHash={hash}/>
+                <PostInput onNewPost={() => {}} parentHash={hash}/>
               </div>
             </div>
           </>
@@ -243,7 +248,12 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
           {/*</div>*/}
         </div>
         <div className={styles.PostContent}>
-          <img src={executedEventIcon.src} alt="Executed Event"/>
+          {
+            type === 'event' ?
+              <img src={executedEventIcon.src} alt="Executed Event"/>
+              :
+              <></>
+          }
           {display.text ? <PostContent text={display.text} params={display.params}/> : <p>Event: {name}</p>}
         </div>
         <div className={styles.PostFooter}>
