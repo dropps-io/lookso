@@ -125,7 +125,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   return (
     <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''}`}>
       <div className={`${styles.BoxTop}`}>
-        <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
+        <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
         <textarea onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
       </div>
       <div className={styles.BoxBottom}>
