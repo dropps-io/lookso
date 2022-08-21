@@ -57,15 +57,17 @@ const Navbar: FC<NavbarProps> = () => {
       <ul className={styles.Buttons}>
         {
           account ?
-            <li><a href="">Explore</a></li>
+            <></>
             :
             <li><a href="">Discord</a></li>
         }
-        <li><Link href='/feed'><a href="">{
+        <li><Link href='/explore'><a href="">Explore</a></Link></li>
+        {
           account ?
-            'My feed' :
-            'Explore'
-        }</a></Link></li>
+            <li><Link href='/feed'><a href="">My Feed</a></Link></li>
+            :
+            <></>
+        }
         <li><Link href=''><a className={styles.Notifications} href=""><img className={styles.BellIcon} src={bellIcon.src} alt=""/></a></Link></li>
         {
           account ?
@@ -129,15 +131,17 @@ const Navbar: FC<NavbarProps> = () => {
             <li><a href="">Home</a></li>
             {
               account ?
-                <li><a href="">Explore</a></li>
+                <></>
                 :
                 <li><a href="">Discord</a></li>
             }
-            <li><Link href='/feed'><a href="">{
+            <li><Link href='/explore'><a href="">Explore</a></Link></li>
+            {
               account ?
-                'My Feed' :
-                'Explore'
-            }</a></Link></li>
+                <li><Link href='/feed'><a href="">My Feed</a></Link></li>
+                :
+                <></>
+            }
             <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li>
             {
               account ?

@@ -1,3 +1,7 @@
 import Feed from "./Feed/Feed";
 
-export default Feed;
+const feed = () => (
+  <Feed type='Feed'/>
+);
+
+export default feed;

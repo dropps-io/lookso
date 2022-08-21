@@ -11,9 +11,11 @@ import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 
-interface FeedProps {}
+interface FeedProps {
+  type: 'Feed' | 'Explore';
+}
 
-const Feed: FC<FeedProps> = () => {
+const Feed: FC<FeedProps> = (props) => {
   const account = useSelector((state: RootState) => state.web3.account);
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
   const [feed, setFeed] = useState<FeedPost[]>([])
@@ -27,7 +29,7 @@ const Feed: FC<FeedProps> = () => {
       setOffset(POSTS_PER_LOAD);
       setFullyLoadedActivity(false);
 
-      if (account) {
+      if (account && props.type === 'Feed') {
         setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
       } else {
         setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0));
@@ -35,7 +37,7 @@ const Feed: FC<FeedProps> = () => {
     }
 
     if (web3Initialized) initPageData();
-  }, [web3Initialized, account]);
+  }, [web3Initialized, account, props.type]);
 
   async function loadMorePosts() {
     if (loading || fullyLoadedActivity) return;
@@ -90,7 +92,7 @@ const Feed: FC<FeedProps> = () => {
             :
             <></>
         }
-        <Activity feed={feed} headline='Feed' loadNext={() => loadMorePosts()}></Activity>
+        <Activity feed={feed} headline={props.type} loadNext={() => loadMorePosts()}></Activity>
       </div>
       <Footer/>
     </div>
