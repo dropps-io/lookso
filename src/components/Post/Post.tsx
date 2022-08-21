@@ -94,7 +94,7 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
   }
 
   async function likeOrUnlikePost() {
-    if (props.static) return;
+    if (props.static || !account) return;
 
     const newLikes = !isLiked ? 1 : - 1;
     setLikes(existing => existing + newLikes);
@@ -116,7 +116,7 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
   }
 
   function toggleCommentPopUp() {
-    if (props.static) return;
+    if (props.static  || !account) return;
     setShowCommentModal(!showCommentModal);
   }
 
