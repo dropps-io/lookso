@@ -1,0 +1,42 @@
+.CommentModal {
+  background-color: var(--color-background-main-l2);
+  border-radius: 20px;
+  color: var(--color-text-default);
+  font-family: Poppins;
+  outline: none;
+  margin-left: -20px;
+
+  .Close {
+    cursor: pointer;
+    position: absolute;
+    margin-top: -70px;
+    width: 30px;
+  }
+
+  .Content {
+    max-width: 700px;
+    width: 90vw;
+    margin-top: -50px;
+
+    .Separator {
+      width: 90%;
+      height: 1px;
+      margin: 0 auto;
+      background-color: var(--color-border);
+    }
+
+    .CommentSection {
+      padding: 20px 30px;
+    }
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .CommentModal {
+    .Content {
+      .CommentSection {
+        padding: 10px 20px;
+      }
+    }
+  }
+}
