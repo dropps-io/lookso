@@ -74,7 +74,7 @@ const Navbar: FC<NavbarProps> = () => {
             <li className={styles.Profile}>
               {
                 profileImage ?
-                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}></div>
+                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
                   :
                   <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
               }
@@ -83,7 +83,7 @@ const Navbar: FC<NavbarProps> = () => {
                   <Link href={`/Profile/${account}`}>
                   {
                     profileImage ?
-                      <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
+                      <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
                       :
                       <div className={styles.ProfilePicMedium}/>
                   }
@@ -148,7 +148,7 @@ const Navbar: FC<NavbarProps> = () => {
                 <li className={styles.Profile}>
                   {
                     profileImage ?
-                      <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}></div>
+                      <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
                       :
                       <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
                   }
@@ -157,7 +157,7 @@ const Navbar: FC<NavbarProps> = () => {
                       <Link href={`/Profile/${account}`}>
                         {
                           profileImage ?
-                            <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage, IPFS_GATEWAY)})`}}/>
+                            <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
                             :
                             <div className={styles.ProfilePicMedium}/>
                         }
