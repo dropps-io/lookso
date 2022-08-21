@@ -1,0 +1,25 @@
+.CustomModal {
+  background-color: var(--color-background-main);
+  border-radius: 20px;
+  color: var(--color-text-default);
+  font-family: Poppins;
+  outline: none;
+  padding: 20px;
+
+  .Close {
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: right;
+
+    img {
+      width: 20px;
+    }
+  }
+
+  .Content {
+    padding: 0 50px 20px 50px;
+    display: flex;
+  }
+}

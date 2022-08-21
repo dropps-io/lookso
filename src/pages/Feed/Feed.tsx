@@ -71,7 +71,6 @@ const Feed: FC<FeedProps> = () => {
 
   function handleNewPost(post: FeedPost) {
     setFeed(existing => [post].concat(existing));
-    console.log(feed)
   }
 
   return (
