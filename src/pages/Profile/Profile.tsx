@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
-import {EXPLORER_URL, IPFS_GATEWAY} from "../../environment/endpoints";
+import {EXPLORER_URL} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
 import {fetchIsProfileFollower,
@@ -56,6 +56,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   useEffect(() => {
     async function initPageData() {
+      setFeed([]);
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
@@ -168,13 +169,13 @@ const Profile: FC<ProfileProps> = (props) => {
         <Navbar/>
       </div>
        <div className={styles.ProfilePageContent}>
-         <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage, IPFS_GATEWAY)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
+         <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
              <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage, IPFS_GATEWAY)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
+           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
            <div className={styles.ProfileAddress}>
              <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
              <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
