@@ -149,6 +149,7 @@ const Profile: FC<ProfileProps> = (props) => {
     try {
       loading = true;
       let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset);
+      newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       loading = false;
@@ -158,6 +159,7 @@ const Profile: FC<ProfileProps> = (props) => {
       console.error(e);
       loading = false;
     }
+    console.log(feed);
   }
 
   return (

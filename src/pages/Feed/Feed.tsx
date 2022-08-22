@@ -45,11 +45,12 @@ const Feed: FC<FeedProps> = (props) => {
     try {
       loading = true;
       let newPosts: FeedPost[];
-      if (store.getState().web3.account) {
+      if (account && props.type === 'Feed') {
         newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, undefined);
       } else {
         newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined);
       }
+      newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       setOffset(offset + POSTS_PER_LOAD);
