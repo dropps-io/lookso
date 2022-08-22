@@ -159,11 +159,20 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
         <div className={styles.PostContent}>
           {
             props.post.type === 'event' ?
-              <img src={executedEventIcon.src} alt="Executed Event"/>
+              props.post.display.image ?
+                <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} />
+                :
+                <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
               :
               <></>
           }
           {props.post.display.text ? <PostContent text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
+          {
+            props.post.type === 'post' && props.post.display.image ?
+              <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.PostImage} />
+            :
+              <></>
+          }
         </div>
         {props.static ?
           <></> :
