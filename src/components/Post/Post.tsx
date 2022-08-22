@@ -17,7 +17,7 @@ import {insertLike} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
-import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
+import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../UserTag/UserTag";
 import {useRouter} from "next/router";
 import CommentModal from "../Modals/CommentModal/CommentModal";
@@ -135,7 +135,7 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
-              <div className={styles.ProfileImageMedium} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
+              <div className={styles.ProfileImageMedium} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
             </Link>
             <div className={styles.UserTag}>
               <UserTag username={props.post.author.name} address={props.post.author.address} onClick={() => goTo(`/Profile/${props.post.author.address}`)}/>

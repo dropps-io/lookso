@@ -19,6 +19,7 @@ import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
 import UserTag from "../UserTag/UserTag";
 import {fetchProfileNotificationsCount} from "../../core/api";
+import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
 
 interface NavbarProps {}
 
@@ -26,6 +27,7 @@ const Navbar: FC<NavbarProps> = () => {
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [notificationsCount, setNotificationsCount] = useState(0);
   const account: string = useSelector((state: RootState) => state.web3.account);
   const balance: string = useSelector((state: RootState) => state.web3.balance);
@@ -54,6 +56,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <div className={styles.Navbar} data-testid="Navbar">
+      <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
       <Link href='/'>
         <div className={styles.Logo}>
           <img src={logo.src} alt="Logo"/>
@@ -81,8 +84,8 @@ const Navbar: FC<NavbarProps> = () => {
         }
         {
           account ?
-            <li><Link href=''>
-              <a className={styles.Notifications} href="">
+            <li>
+              <a className={styles.Notifications} onClick={() => setShowNotificationsModal(true)}>
                 {
                   notificationsCount > 0 ?
                     <>
@@ -93,7 +96,6 @@ const Navbar: FC<NavbarProps> = () => {
                     <img className={styles.BellIcon} src={bellIcon.src} alt=""/>
                 }
               </a>
-            </Link>
             </li> : <></>
         }
         {

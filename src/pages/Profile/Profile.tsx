@@ -20,7 +20,7 @@ import {setProfileJwt} from "../../store/profile-reducer";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/Post/Post";
-import {UNKNOWN_PROFILE_IMAGE} from "../../core/utils/constants";
+import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
 import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
@@ -177,7 +177,7 @@ const Profile: FC<ProfileProps> = (props) => {
              <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage)})` : `url(${UNKNOWN_PROFILE_IMAGE})`}}></div>
+           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
            <div className={styles.ProfileAddress}>
              <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
              <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>

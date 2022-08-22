@@ -1,6 +1,7 @@
 import {API_URL} from "../environment/endpoints";
 import {FeedPost} from "../components/Post/Post";
 import {LSPXXProfilePost} from "../models/profile-post";
+import {Notification} from "../models/notification";
 
 const headers = {
   Accept: 'application/json',
@@ -170,4 +171,8 @@ export async function uploadPostObject(post: LSPXXProfilePost, signature: string
 
 export async function fetchProfileNotificationsCount(address: string): Promise<number> {
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications/count')).json()).notifications;
+}
+
+export async function fetchProfileNotifications(address: string): Promise<Notification[]> {
+  return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications')).json()) as Notification[];
 }
