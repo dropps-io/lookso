@@ -4,4 +4,4 @@ export const ARWEAVE_GATEWAY = 'https://arweave.net/';
 export const NATIVE_TOKEN = 'LYXt';
 export const API_URL = 'https://api.lookso.io';
 export const EXPLORER_URL = 'https://explorer.execution.l16.lukso.network/';
-export const POST_VALIDATOR_ADDRESS = '0xe3c6642a58ec9E75F0AB4F3eBbbd140EecaDa177';
+export const POST_VALIDATOR_ADDRESS = '0xCF3f83D711844E72947172Ebe8EadAF92900B146';
