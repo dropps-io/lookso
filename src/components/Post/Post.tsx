@@ -39,7 +39,8 @@ export interface FeedPost {
   likes: number,
   comments: number,
   reposts: number,
-  isLiked: boolean
+  isLiked: boolean,
+  inRegistry?: boolean
 }
 
 export interface FeedDisplay {
@@ -130,7 +131,7 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
   return (
     <>
       <CommentModal open={showCommentModal} onClose={toggleCommentPopUp} post={props.post} />
-      <div ref={ref} className={`${styles.FeedPost}`}>
+      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType}`}>
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
