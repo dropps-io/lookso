@@ -12,7 +12,7 @@ import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-re
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {shortenAddress} from "../../core/utils/address-formating";
-import {EXPLORER_URL, IPFS_GATEWAY, NATIVE_TOKEN} from "../../environment/endpoints";
+import {EXPLORER_URL, NATIVE_TOKEN} from "../../environment/endpoints";
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
@@ -68,7 +68,10 @@ const Navbar: FC<NavbarProps> = () => {
             :
             <></>
         }
-        <li><Link href=''><a className={styles.Notifications} href=""><img className={styles.BellIcon} src={bellIcon.src} alt=""/></a></Link></li>
+        {
+          account ?
+            <li><Link href=''><a className={styles.Notifications} href=""><img className={styles.BellIcon} src={bellIcon.src} alt=""/></a></Link></li> : <></>
+        }
         {
           account ?
             <li className={styles.Profile}>
@@ -142,7 +145,10 @@ const Navbar: FC<NavbarProps> = () => {
                 :
                 <></>
             }
-            <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li>
+            {
+              account ?
+                <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li> : <></>
+            }
             {
               account ?
                 <li className={styles.Profile}>
