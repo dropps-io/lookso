@@ -167,3 +167,7 @@ export async function uploadPostObject(post: LSPXXProfilePost, signature: string
   });
   return await res.json();
 }
+
+export async function fetchProfileNotificationsCount(address: string): Promise<number> {
+  return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications/count')).json()).notifications;
+}

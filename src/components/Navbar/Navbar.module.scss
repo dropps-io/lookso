@@ -56,6 +56,17 @@
       display: flex;
       .BellIcon {
         width: 25px;
+        fill: white;
+      }
+
+      .NotificationsCount {
+        position: absolute;
+        margin-left: 13px;
+        margin-top: -6px;
+        padding: 1px 5px 0 5px;
+        border-radius: 20px;
+        font-size: 0.6em;
+        background-color: var(--color-danger);
       }
     }
 

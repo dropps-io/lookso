@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styles from './Navbar.module.scss';
 import SearchBar from "../SearchBar/SearchBar";
 import logo from "../../assets/images/logo.png";
@@ -6,6 +6,7 @@ import burgerMenuIcon from "../../assets/icons/burger-menu.svg";
 import crossIcon from "../../assets/icons/cross.svg";
 import searchIcon from "../../assets/icons/search.svg";
 import bellIcon from "../../assets/icons/bell.svg";
+import bellIconFilled from "../../assets/icons/bell-filled.svg";
 import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
 import {connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
@@ -17,6 +18,7 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
 import UserTag from "../UserTag/UserTag";
+import {fetchProfileNotificationsCount} from "../../core/api";
 
 interface NavbarProps {}
 
@@ -24,6 +26,7 @@ const Navbar: FC<NavbarProps> = () => {
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
+  const [notificationsCount, setNotificationsCount] = useState(0);
   const account: string = useSelector((state: RootState) => state.web3.account);
   const balance: string = useSelector((state: RootState) => state.web3.balance);
   const username: string = useSelector((state: RootState) => state.profile.name);
@@ -40,6 +43,14 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setProfileInfo(web3Info.profileInfo));
     }
   }
+
+  useEffect(() => {
+    const init = async () => {
+      if (account) setNotificationsCount(await fetchProfileNotificationsCount(account));
+    }
+
+    init();
+  }, [account]);
 
   return (
     <div className={styles.Navbar} data-testid="Navbar">
@@ -70,7 +81,20 @@ const Navbar: FC<NavbarProps> = () => {
         }
         {
           account ?
-            <li><Link href=''><a className={styles.Notifications} href=""><img className={styles.BellIcon} src={bellIcon.src} alt=""/></a></Link></li> : <></>
+            <li><Link href=''>
+              <a className={styles.Notifications} href="">
+                {
+                  notificationsCount > 0 ?
+                    <>
+                      <img className={styles.BellIcon} src={bellIconFilled.src} alt=""/>
+                      <div className={styles.NotificationsCount}>{notificationsCount}</div>
+                    </>
+                    :
+                    <img className={styles.BellIcon} src={bellIcon.src} alt=""/>
+                }
+              </a>
+            </Link>
+            </li> : <></>
         }
         {
           account ?
