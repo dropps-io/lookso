@@ -11,12 +11,12 @@ import {connectToAPI, signMessage} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistry} from "../../core/update-registry";
-import {FeedPost} from "../PostBox/PostBox";
+import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 
 interface PostInputProps {
   parentHash?: string;
-  childHash?: string;
+  childPost?: FeedPost;
   onNewPost: (post: FeedPost) => any;
 }
 
@@ -76,7 +76,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       author: account,
       eoa: '',
       links: [],
-      childHash: props.childHash,
+      childHash: props.childPost?.hash,
       parentHash: props.parentHash
     };
 
@@ -124,11 +124,15 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''}`}>
+    <form onSubmit={handleSubmit} className={`${props.parentHash || props.childPost ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
       <div className={`${styles.BoxTop}`}>
         <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
         <textarea onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
       </div>
+      {
+        props.childPost ?
+          <PostBox post={props.childPost} static repost/> : <></>
+      }
       <div className={styles.BoxBottom}>
         <span>{inputValue.length} / 256</span>
         <div className={styles.RightPart}>
@@ -136,7 +140,6 @@ const PostInput: FC<PostInputProps> = (props) => {
             <label htmlFor="file-input">
               <img src={imageIcon.src} alt='' />
             </label>
-
             <input onChange={handleChangeFile} id="file-input" type="file"/>
           </div>
           <button type='submit' className='btn btn-secondary'>{props.parentHash ? 'Reply' : 'Post'}</button>

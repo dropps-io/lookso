@@ -21,6 +21,7 @@ import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../UserTag/UserTag";
 import {useRouter} from "next/router";
 import CommentModal from "../Modals/CommentModal/CommentModal";
+import RepostModal from "../Modals/RepostModal/RepostModal";
 
 export interface FeedPost {
   hash: string,
@@ -88,6 +89,7 @@ interface PostProps {
   post: FeedPost;
   newComment?: ((comment: FeedPost) => any);
   comment?: boolean;
+  repost?: boolean;
   static?: boolean;
 }
 // eslint-disable-next-line react/display-name
@@ -100,6 +102,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [showRepostModal, setShowRepostModal] = useState(false);
 
   useEffect(() => {
     setLikes(props.post.likes);
@@ -143,10 +146,15 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }
   }
 
-  function toggleCommentPopUp(newComment?: FeedPost) {
+  function closeCommentModal(newComment?: FeedPost) {
     if (props.static  || !account) return;
-    setShowCommentModal(!showCommentModal);
+    setShowCommentModal(false);
     if (newComment && props.newComment) props.newComment(newComment);
+  }
+
+  function closeRepostModal() {
+    if (props.static  || !account) return;
+    setShowRepostModal(false);
   }
 
   function goToPost() {
@@ -159,8 +167,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   return (
     <>
-      <CommentModal open={showCommentModal} onClose={toggleCommentPopUp} post={props.post} />
-      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment ? styles.Comment : ''}`}>
+      <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
+      <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
+      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment || props.repost  ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
@@ -208,11 +217,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div className={styles.IconNumber} onClick={() => toggleCommentPopUp()}>
+              <div className={styles.IconNumber} onClick={() => setShowCommentModal(true)}>
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>
-              <div className={styles.IconNumber}>
+              <div className={styles.IconNumber}  onClick={() => setShowRepostModal(true)}>
                 <img src={repostIcon.src} alt=""/>
                 <span>{props.post.reposts}</span>
               </div>

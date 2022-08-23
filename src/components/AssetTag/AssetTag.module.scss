@@ -3,6 +3,7 @@
 }
 
 .AssetTag {
+  white-space: nowrap;
   .Username {
     color: var(--color-text-default);
   }
@@ -17,6 +18,7 @@
 }
 
 .AssetTagReverse {
+  white-space: nowrap;
   .Username {
     color: var(--color-text-reverse);
   }

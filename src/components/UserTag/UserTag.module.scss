@@ -3,6 +3,7 @@
 }
 
 .UserTag {
+  white-space: nowrap;
   .Username {
     color: var(--color-text-default);
   }
@@ -17,6 +18,7 @@
 }
 
 .UserTagReverse {
+  white-space: nowrap;
   .Username {
     color: var(--color-text-reverse);
   }
