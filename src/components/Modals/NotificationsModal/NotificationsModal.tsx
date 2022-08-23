@@ -58,6 +58,11 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
     router.push('/Profile/' + account);
   }
 
+  function goToPost(hash?: string) {
+    props.onClose();
+    if (hash) router.push('/Post/' + hash);
+  }
+
   return (
     <CustomModal open={props.open} onClose={onClose}>
       <div className={styles.NotificationsModal}>
@@ -70,10 +75,10 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
               <div key={index} className={`${styles.Notification} ${notification.viewed ? styles.Viewed : ''}`}>
                 <div onClick={() => goToProfile(notification.sender.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${notification.sender.image ? formatUrl(notification.sender.image) : DEFAULT_PROFILE_IMAGE})`}}/>
                 <p>
-                  {notification.type === 'like' ? <span className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>liked your post</span></span> : <></>}
+                  {notification.type === 'like' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>liked your post</span></span> : <></>}
                   {notification.type === 'follow' ? <span onClick={() => goToProfile(notification.sender.address)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>followed you</span></span> : <></>}
-                  {notification.type === 'repost' ? <span className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>reposted your post</span></span> : <></>}
-                  {notification.type === 'comment' ? <span className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>commented your post</span></span> : <></>}
+                  {notification.type === 'repost' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>reposted your post</span></span> : <></>}
+                  {notification.type === 'comment' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>commented your post</span></span> : <></>}
                 </p>
               </div>
             )
