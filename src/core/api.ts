@@ -2,6 +2,7 @@ import {API_URL} from "../environment/endpoints";
 import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
+import {fileToBase64} from "./utils/file-to-base64";
 
 const headers = {
   Accept: 'application/json',
@@ -126,24 +127,21 @@ export async function fetchAllFeed(limit: number, offset: number, type?: 'event'
   return await (await fetch(url)).json();
 }
 
-function getBase64(file: File): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      resolve(reader.result as string);
-    };
-    reader.onerror = function (error) {
-      reject('Error: ' + error);
-    };
-  });
+export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {
+  let url = API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf;
+  return await (await fetch(url)).json();
+}
+
+export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/post/' + hash + '/comments?limit=' + limit + '&offset=' + offset + '&viewOf=' + viewOf;
+  return await (await fetch(url)).json();
 }
 
 export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
   const content = {
     lspXXProfilePost: post,
     fileType: asset.type,
-    base64File: await getBase64(asset)
+    base64File: await fileToBase64(asset)
   };
 
   const res = await fetch(API_URL + '/lookso/post/request-object', {

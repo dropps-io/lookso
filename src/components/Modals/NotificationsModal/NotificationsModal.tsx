@@ -46,7 +46,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
   }
 
   async function onClose () {
-    if (web3) {
+    if (web3 && !notifications.every(n => n.viewed)) {
       const resJWT = jwt ? jwt : await requestJWT();
       await setProfileNotificationsToViewed(props.account, resJWT);
     }

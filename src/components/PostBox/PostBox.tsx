@@ -43,6 +43,26 @@ export interface FeedPost {
   inRegistry?: boolean
 }
 
+export const initialFeedPost: FeedPost = {
+  hash: '',
+  author:
+    {
+      address: '',
+      name: '',
+      image: DEFAULT_PROFILE_IMAGE
+    },
+  type: 'post',
+  name: '',
+  date: new Date(),
+  blockNumber: 0,
+  transactionHash: '',
+  display: {text: '', params: {}, image: '', tags: {standard: null, standardType: null, copies: null}},
+  likes: 0,
+  comments: 0,
+  reposts: 0,
+  isLiked: false
+}
+
 export interface FeedDisplay {
   text: string,
   params: {[key: string]: FeedDisplayParam},
@@ -66,6 +86,7 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 
 interface PostProps {
   post: FeedPost;
+  comment?: boolean;
   static?: boolean;
 }
 // eslint-disable-next-line react/display-name
@@ -131,7 +152,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   return (
     <>
       <CommentModal open={showCommentModal} onClose={toggleCommentPopUp} post={props.post} />
-      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType}`}>
+      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment ? styles.Comment : ''}`}>
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
