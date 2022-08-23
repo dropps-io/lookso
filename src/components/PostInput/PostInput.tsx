@@ -12,6 +12,7 @@ import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistry} from "../../core/update-registry";
 import {FeedPost} from "../PostBox/PostBox";
+import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 
 interface PostInputProps {
   parentHash?: string;
@@ -125,7 +126,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   return (
     <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''}`}>
       <div className={`${styles.BoxTop}`}>
-        <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
+        <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
         <textarea onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
       </div>
       <div className={styles.BoxBottom}>
