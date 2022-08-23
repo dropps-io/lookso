@@ -173,6 +173,15 @@ export async function fetchProfileNotificationsCount(address: string): Promise<n
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications/count')).json()).notifications;
 }
 
-export async function fetchProfileNotifications(address: string): Promise<Notification[]> {
-  return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications')).json()) as Notification[];
+export async function fetchProfileNotifications(address: string, limit: number, offset: number): Promise<Notification[]> {
+  return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications?limit=' + limit + '&offset=' + offset)).json()) as Notification[];
+}
+
+export async function setProfileNotificationsToViewed(address: string, jwt: string): Promise<void> {
+  await fetch(API_URL + '/lookso/profile/' + address + '/notifications',
+    {
+      method: 'PUT',
+      body: JSON.stringify({}),
+      headers: headersWithJWT(jwt)
+    });
 }

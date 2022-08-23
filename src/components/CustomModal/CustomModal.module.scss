@@ -5,6 +5,7 @@
   font-family: Poppins;
   outline: none;
   padding: 20px;
+  max-width: 95%;
 
   .Close {
     cursor: pointer;
@@ -21,5 +22,35 @@
   .Content {
     padding: 0 50px 20px 50px;
     display: flex;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .CustomModal {
+    padding: 15px;
+
+    .Content {
+      padding: 0 30px 10px 30px;
+    }
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .CustomModal {
+    padding: 15px;
+
+    .Content {
+      padding: 0 15px 10px 15px;
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .CustomModal {
+    padding: 15px;
+
+    .Content {
+      padding: 0 5px 10px 5px;
+    }
   }
 }

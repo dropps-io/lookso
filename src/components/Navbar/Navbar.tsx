@@ -8,18 +8,19 @@ import searchIcon from "../../assets/icons/search.svg";
 import bellIcon from "../../assets/icons/bell.svg";
 import bellIconFilled from "../../assets/icons/bell-filled.svg";
 import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
-import {connectWeb3} from "../../core/web3";
+import {connectToAPI, connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {shortenAddress} from "../../core/utils/address-formating";
 import {EXPLORER_URL, NATIVE_TOKEN} from "../../environment/endpoints";
 import {formatUrl} from "../../core/utils/url-formating";
-import {setProfileInfo} from "../../store/profile-reducer";
+import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import Link from "next/link";
 import UserTag from "../UserTag/UserTag";
 import {fetchProfileNotificationsCount} from "../../core/api";
 import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
+import Web3 from "web3";
 
 interface NavbarProps {}
 
@@ -43,7 +44,24 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
+      await requestJWT(web3Info.account, web3Info.web3);
     }
+  }
+
+  async function requestJWT(account: string, web3: Web3) {
+    const resJWT = await connectToAPI(account, web3);
+    if (resJWT) {
+      dispatch(setProfileJwt(resJWT));
+      return resJWT;
+    }
+    else {
+      throw 'Failed to connect';
+    }
+  }
+
+  function displayNotifications() {
+    setNotificationsCount(0);
+    setShowNotificationsModal(true);
   }
 
   useEffect(() => {
@@ -85,7 +103,7 @@ const Navbar: FC<NavbarProps> = () => {
         {
           account ?
             <li>
-              <a className={styles.Notifications} onClick={() => setShowNotificationsModal(true)}>
+              <a className={styles.Notifications} onClick={() => displayNotifications()}>
                 {
                   notificationsCount > 0 ?
                     <>
