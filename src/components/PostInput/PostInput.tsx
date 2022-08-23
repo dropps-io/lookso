@@ -11,7 +11,7 @@ import {connectToAPI, signMessage} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistry} from "../../core/update-registry";
-import {FeedPost} from "../Post/Post";
+import {FeedPost} from "../PostBox/PostBox";
 
 interface PostInputProps {
   parentHash?: string;

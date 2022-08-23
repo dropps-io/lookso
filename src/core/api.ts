@@ -1,5 +1,5 @@
 import {API_URL} from "../environment/endpoints";
-import {FeedPost} from "../components/Post/Post";
+import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 

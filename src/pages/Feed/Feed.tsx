@@ -6,7 +6,7 @@ import Footer from "../../components/Footer/Footer";
 import {useSelector} from "react-redux";
 import {RootState, store} from "../../store/store";
 import {fetchAllFeed, fetchProfileFeed} from "../../core/api";
-import {FeedPost} from "../../components/Post/Post";
+import {FeedPost} from "../../components/PostBox/PostBox";
 import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";

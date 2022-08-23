@@ -19,7 +19,7 @@ import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
-import {FeedPost} from "../../components/Post/Post";
+import {FeedPost} from "../../components/PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
 import Head from "next/head";

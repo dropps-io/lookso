@@ -1,7 +1,7 @@
 import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
 import styles from './Activity.module.scss';
 
-import Post, {FeedPost} from "../Post/Post";
+import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {timer} from "../../core/utils/timer";
 
@@ -74,9 +74,9 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <Post ref={ref} key={post.hash} post={post}/>
+                  <PostBox ref={ref} key={post.hash} post={post}/>
                   :
-                  <Post key={post.hash + index} post={post}/>
+                  <PostBox key={post.hash + index} post={post}/>
               )
             }
           </div>

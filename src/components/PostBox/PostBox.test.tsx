@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import Post from './Post';
+import PostBox from './PostBox';
 
-describe('<Post />', () => {
+describe('<PostBoxBox />', () => {
   test('it should mount', () => {
-    render(<Post />);
+    render(<PostBox />);
     
     const feedPost = screen.getByTestId('Post');
 

@@ -4,7 +4,7 @@ import styles from './CommentModal.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
 import crossIcon from '../../../assets/icons/cross.svg';
-import Post, {FeedPost} from "../../Post/Post";
+import PostBox, {FeedPost} from "../../PostBox/PostBox";
 import PostInput from "../../PostInput/PostInput";
 
 // eslint-disable-next-line react/display-name
@@ -62,7 +62,7 @@ const CommentModal: FC<CustomModalProps> = (props) => (
     <Box className={styles.CommentModal}>
       <img className={styles.Close} onClick={props.onClose} src={crossIcon.src} alt=""/>
       <div className={styles.Content}>
-        <Post post={props.post} static/>
+        <PostBox post={props.post} static/>
         <div className={styles.Separator}></div>
         <div className={styles.CommentSection}>
           <PostInput onNewPost={() => {}} parentHash={props.post.hash}/>

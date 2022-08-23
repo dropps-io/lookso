@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
-import {FeedDisplayParam} from "./Post";
-import styles from './Post.module.scss';
+import {FeedDisplayParam} from "./PostBox";
+import styles from './PostBox.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
 import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 

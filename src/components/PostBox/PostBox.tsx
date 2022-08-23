@@ -1,5 +1,5 @@
 import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
-import styles from './Post.module.scss';
+import styles from './PostBox.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL} from "../../environment/endpoints";
@@ -69,7 +69,7 @@ interface PostProps {
   static?: boolean;
 }
 // eslint-disable-next-line react/display-name
-const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
+const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
   const router = useRouter();
   const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
@@ -200,4 +200,4 @@ const Post = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): R
   );
 });
 
-export default Post;
+export default PostBox;
