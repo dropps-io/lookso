@@ -113,6 +113,10 @@ const PostInput: FC<PostInputProps> = (props) => {
       isLiked: false,
       reposts: 0
     });
+
+    setInputFile(null);
+    setInputValue('');
+    setInputHeight(70);
   }
 
   function handleChangeMessage(e: any) {

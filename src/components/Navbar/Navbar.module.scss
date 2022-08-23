@@ -108,6 +108,7 @@
         backdrop-filter: blur(25px);
         border-radius: 20px;
         color: var(--color-text-reverse);
+        border: 2px solid var(--color-highlight-lighter);
         font-weight: 600;
         transition: all 0.3s;
 
