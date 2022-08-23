@@ -41,7 +41,8 @@ export interface FeedPost {
   comments: number,
   reposts: number,
   isLiked: boolean,
-  inRegistry?: boolean
+  inRegistry?: boolean,
+  childPost?: FeedPost
 }
 
 export const initialFeedPost: FeedPost = {
@@ -88,6 +89,7 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 interface PostProps {
   post: FeedPost;
   newComment?: ((comment: FeedPost) => any);
+  newRepost?: ((repost: FeedPost) => any);
   comment?: boolean;
   repost?: boolean;
   static?: boolean;
@@ -152,9 +154,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     if (newComment && props.newComment) props.newComment(newComment);
   }
 
-  function closeRepostModal() {
+  function closeRepostModal(newPost?: FeedPost) {
     if (props.static  || !account) return;
     setShowRepostModal(false);
+    if (newPost && props.newRepost) props.newRepost(newPost);
   }
 
   function goToPost() {
@@ -210,6 +213,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
               <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.PostImage} />
             :
               <></>
+          }
+          {
+            props.post.childPost ?
+              <PostBox post={props.post.childPost} static repost/> : <></>
           }
         </div>
         {props.static ?

@@ -93,7 +93,7 @@ const Feed: FC<FeedProps> = (props) => {
             :
             <></>
         }
-        <Activity feed={feed} headline={props.type} loadNext={() => loadMorePosts()}></Activity>
+        <Activity newPost={handleNewPost} feed={feed} headline={props.type} loadNext={() => loadMorePosts()}></Activity>
       </div>
       <Footer/>
     </div>

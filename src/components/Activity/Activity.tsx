@@ -8,7 +8,8 @@ import {timer} from "../../core/utils/timer";
 interface ActivityProps {
   feed: FeedPost[],
   headline: string,
-  loadNext: () => void
+  loadNext: () => void,
+  newPost?: (post: FeedPost) => any
 }
 
 const Activity: FC<ActivityProps> = (props) => {
@@ -74,9 +75,9 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <PostBox ref={ref} key={post.hash} post={post}/>
+                  <PostBox newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
                   :
-                  <PostBox key={post.hash + index} post={post}/>
+                  <PostBox newRepost={props.newPost} key={post.hash + index} post={post}/>
               )
             }
           </div>

@@ -12,10 +12,16 @@ interface RepostModalProps {
 
 const RepostModal: FC<RepostModalProps> = (props) => {
 
+  function handleNewRepost(repost: FeedPost) {
+    const newPost = repost;
+    newPost.childPost = props.post;
+    props.onClose(newPost);
+  }
+
   return (
     <CustomModal open={props.open} onClose={props.onClose}>
       <div className={styles.RepostModal}>
-        <PostInput onNewPost={props.onClose} childPost={props.post}/>
+        <PostInput onNewPost={handleNewRepost} childPost={props.post}/>
       </div>
     </CustomModal>
   );
