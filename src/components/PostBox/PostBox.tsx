@@ -86,6 +86,7 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 
 interface PostProps {
   post: FeedPost;
+  newComment?: ((comment: FeedPost) => any);
   comment?: boolean;
   static?: boolean;
 }
@@ -99,6 +100,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
+
+  useEffect(() => {
+    setLikes(props.post.likes);
+    setIsLiked(props.post.isLiked);
+  }, [props.post]);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account, web3);
@@ -137,15 +143,17 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }
   }
 
-  function toggleCommentPopUp() {
+  function toggleCommentPopUp(newComment?: FeedPost) {
     if (props.static  || !account) return;
     setShowCommentModal(!showCommentModal);
+    if (newComment && props.newComment) props.newComment(newComment);
   }
 
-  useEffect(() => {
-    setLikes(props.post.likes);
-    setIsLiked(props.post.isLiked);
-  }, [props.post]);
+  function goToPost() {
+    router.push({ pathname:'/Post/' +props.post.hash, query: {post: JSON.stringify(props.post)}});
+  }
+
+
 
   //TODO in UserTag component add max length name prop number
 
@@ -177,7 +185,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             <div className={styles.PostTag}>{props.post.display.tags.standardType}</div>
             : <></>}
         </div>
-        <div className={styles.PostContent}>
+        <div className={styles.PostContent} onClick={goToPost}>
           {
             props.post.type === 'event' ?
               props.post.display.image ?
@@ -200,7 +208,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div className={styles.IconNumber} onClick={toggleCommentPopUp}>
+              <div className={styles.IconNumber} onClick={() => toggleCommentPopUp()}>
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>

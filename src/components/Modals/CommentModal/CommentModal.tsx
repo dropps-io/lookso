@@ -6,6 +6,7 @@ import clsx from "clsx";
 import crossIcon from '../../../assets/icons/cross.svg';
 import PostBox, {FeedPost} from "../../PostBox/PostBox";
 import PostInput from "../../PostInput/PostInput";
+import {useRouter} from "next/router";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -47,29 +48,45 @@ const Backdrop = styled(BackdropUnstyled)`
 
 interface CustomModalProps extends React.PropsWithChildren {
   open: boolean,
-  onClose: () => any,
+  onClose: (comment?: FeedPost) => any,
   post: FeedPost
 }
 
-const CommentModal: FC<CustomModalProps> = (props) => (
-  <Modal
-    aria-labelledby="unstyled-modal-title"
-    aria-describedby="unstyled-modal-description"
-    open={props.open}
-    onClose={props.onClose}
-    components={{ Backdrop }}
-  >
-    <Box className={styles.CommentModal}>
-      <img className={styles.Close} onClick={props.onClose} src={crossIcon.src} alt=""/>
-      <div className={styles.Content}>
-        <PostBox post={props.post} static/>
-        <div className={styles.Separator}></div>
-        <div className={styles.CommentSection}>
-          <PostInput onNewPost={() => {}} parentHash={props.post.hash}/>
+const CommentModal: FC<CustomModalProps> = (props) => {
+  const router = useRouter();
+
+  function handleNewPost(comment: FeedPost) {
+    if (!router.asPath.includes('/Post/' +props.post.hash)) {
+      router.push({ pathname:'/Post/' +props.post.hash,
+        query: {
+          newComment: JSON.stringify(comment)
+        }});
+      props.onClose();
+    } else {
+      props.onClose(comment);
+    }
+  }
+
+  return (
+    <Modal
+      aria-labelledby="unstyled-modal-title"
+      aria-describedby="unstyled-modal-description"
+      open={props.open}
+      onClose={() => props.onClose()}
+      components={{ Backdrop }}
+    >
+      <Box className={styles.CommentModal}>
+        <img className={styles.Close} onClick={() => props.onClose()} src={crossIcon.src} alt=""/>
+        <div className={styles.Content}>
+          <PostBox post={props.post} static/>
+          <div className={styles.Separator}></div>
+          <div className={styles.CommentSection}>
+            <PostInput onNewPost={handleNewPost} parentHash={props.post.hash}/>
+          </div>
         </div>
-      </div>
-    </Box>
-  </Modal>
-);
+      </Box>
+    </Modal>
+  );
+}
 
 export default CommentModal;
