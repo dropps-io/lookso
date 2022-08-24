@@ -88,7 +88,7 @@ const Feed: FC<FeedProps> = (props) => {
         {
           account ?
             <div className={styles.PostWritingBox}>
-              <PostInput onNewPost={handleNewPost}/>
+              <PostInput key={'FeedInput'} onNewPost={handleNewPost}/>
             </div>
             :
             <></>

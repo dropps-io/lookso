@@ -183,7 +183,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             </div>
           </div>
           <div className={styles.RightPart}>
-            <span>{dateDifference(new Date(Date.now()), new Date(props.post.date))} Ago</span>
+            <span>{dateDifference(new Date(Date.now()), new Date(props.post.date))} ago</span>
             <a href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">
               <img src={externalLinkIcon.src} alt=""/>
             </a>
@@ -210,7 +210,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           {props.post.display.text ? <PostContent text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
-              <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.PostImage} />
+              <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt='' />
             :
               <></>
           }

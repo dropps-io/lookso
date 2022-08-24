@@ -69,6 +69,13 @@
       width: 64px;
       height: 64px;
     }
+
+    .PostImage {
+      margin-bottom: 10px;
+      max-width: 80%;
+      max-height: 600px;
+      border-radius: 5px;
+    }
   }
 
   .PostFooter {
@@ -321,7 +328,7 @@
     .PostContent {
       font-size: 0.7em;
       margin: 0;
-      img {
+      .EventIcon, .EventImage {
         width: 30px;
         height: 30px;
       }

@@ -54,13 +54,13 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
   }
 
   function goToProfile(account: string) {
-    props.onClose();
     router.push('/Profile/' + account);
+    onClose();
   }
 
   function goToPost(hash?: string) {
-    props.onClose();
     if (hash) router.push('/Post/' + hash);
+    onClose();
   }
 
   return (
