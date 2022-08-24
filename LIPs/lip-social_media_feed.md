@@ -21,7 +21,7 @@ This standard defines a set of key-value pairs that are useful to create a Socia
 
 Real interoperability requires social media itself to be separated from social media companies. This proposal aims to create a common interoperable standard in which messages generated on one social media app could be transported and read in any other application.
 
-Using a standardised data model to store social media makes content platform-independent and allows it to be read and stored easily. This content can be added to an [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md), giving it a Social Media Account character.
+Using a standardized data model to store social media makes content platform-independent and allows it to be read and stored easily. This content can be added to an [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md), giving it a Social Media Account character.
 
 ## Specification
 
