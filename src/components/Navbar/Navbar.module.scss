@@ -76,7 +76,7 @@
       border-radius: 50px;
       padding: 0 30px;
       vertical-align: middle;
-      
+
 
 
       .ProfilePicSmall {
@@ -92,103 +92,6 @@
           cursor: pointer;
         }
       }
-
-      .InactiveDropdown {
-        opacity: 0;
-        margin-right: -500px;
-      }
-
-      .ProfileDropdown {
-        z-index: 2;
-        position: absolute;
-        right: 30px;
-        width: 300px;
-        background: linear-gradient(155.14deg, #FFFFFF -2.13%, #FFFFFF 136.58%);
-        box-shadow: 0 4px 49px rgba(0, 7, 72, 0.12);
-        backdrop-filter: blur(25px);
-        border-radius: 20px;
-        color: var(--color-text-reverse);
-        border: 2px solid var(--color-highlight-lighter);
-        font-weight: 600;
-        transition: all 0.3s;
-
-        .DropdownHeader {
-          display: flex;
-          align-items: center;
-          padding: 15px;
-
-          .ProfilePicMedium {
-            cursor: pointer;
-            width: 65px;
-            height: 65px;
-            border-radius: 65px;
-            margin-right: 10px;
-
-            background: url("https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg");
-            background-size: cover;
-            background-position: center;
-          }
-
-          .ProfileContext {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-
-            strong {
-              padding: 5px 0;
-            }
-
-            .Network {
-              font-size: 0.6em;
-              color: var(--color-text-reverse-light);
-            }
-          }
-        }
-
-        .MyProfile {
-          padding: 0 15px 15px 15px;
-        }
-
-        .ProfileName {
-          padding: 15px;
-          font-size: 0.8em;
-          margin: 0;
-        }
-
-        .DropdownButtons {
-          border-top: 1px solid var(--color-border-semi-light);
-          padding: 15px;
-          background-color: var(--color-background-reverse-darker);
-          border-radius: 0 0 20px 20px;
-
-          .Balance {
-            padding: 0 0 15px 0;
-
-            img {
-              margin-right: 20px;
-              vertical-align: middle;
-            }
-
-            span {
-              font-size: 0.8em;
-            }
-          }
-
-          .TopButtons {
-            display: flex;
-            margin-bottom: 15px;
-
-            button:nth-child(1) {
-              margin-right: 4px;
-            }
-
-            button:nth-child(2) {
-              margin-left: 4px;
-            }
-          }
-        }
-      }
-
     }
 
     .ImportantBtn {

@@ -21,6 +21,7 @@ import UserTag from "../UserTag/UserTag";
 import {fetchProfileNotificationsCount} from "../../core/api";
 import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
 import Web3 from "web3";
+import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 
 interface NavbarProps {}
 
@@ -125,40 +126,7 @@ const Navbar: FC<NavbarProps> = () => {
                   :
                   <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
               }
-              <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
-                <div className={styles.DropdownHeader}>
-                  <Link href={`/Profile/${account}`}>
-                  {
-                    profileImage ?
-                      <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
-                      :
-                      <div className={styles.ProfilePicMedium}/>
-                  }
-                  </Link>
-                  <Link href={`/Profile/${account}`}>
-                  <div className={styles.ProfileContext}>
-                    <strong className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></strong>
-                    <span className={styles.Network}>L16 testnet</span>
-                  </div>
-                  </Link>
-                </div>
-                <Link href={`/Profile/${account}`}>
-                  <div className={styles.MyProfile}>
-                    <button className={'btn btn-dark'}>My profile</button>
-                  </div>
-                </Link>
-                <div className={styles.DropdownButtons}>
-                  <div className={styles.Balance}>
-                    <img src={miniLogoLukso.src} alt={''}/>
-                    <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
-                  </div>
-                  <div className={styles.TopButtons}>
-                    <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
-                    <button className={'btn btn-secondary'}>UP.cloud</button>
-                  </div>
-                  <button className={'btn btn-main'}>Disconnect</button>
-                </div>
-              </div>
+              <ProfileDropdown showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
             </li>
             :
             <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
@@ -202,36 +170,7 @@ const Navbar: FC<NavbarProps> = () => {
                       :
                       <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
                   }
-                  <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
-                    <div className={styles.DropdownHeader}>
-                      <Link href={`/Profile/${account}`}>
-                        {
-                          profileImage ?
-                            <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
-                            :
-                            <div className={styles.ProfilePicMedium}/>
-                        }
-                      </Link>
-                      <Link href={`/Profile/${account}`}>
-                        <div className={styles.ProfileContext}>
-                          <strong>{ shortenAddress(account, 3) }</strong>
-                          <span>L16 Testnet</span>
-                        </div>
-                      </Link>
-                    </div>
-                    <p className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></p>
-                    <div className={styles.Balance}>
-                      <img src={miniLogoLukso.src} alt={''}/>
-                      <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
-                    </div>
-                    <div className={styles.DropdownButtons}>
-                      <div className={styles.TopButtons}>
-                        <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
-                        <button className={'btn btn-secondary'}>UP.cloud</button>
-                      </div>
-                      <button className={'btn btn-main'}>Disconnect</button>
-                    </div>
-                  </div>
+                  <ProfileDropdown showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
                 </li>
                 :
                 <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
