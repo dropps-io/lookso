@@ -1,32 +1,37 @@
 ---
 lip: XX
-title: LIP Social Registry
-status: WIP
+title: Social Registry Meta
+status: Draft
 type: Meta
-author: Samuel Videau <samuel@dropps.io>
+author: Samuel Videau <samuel@dropps.io>, António Pedro (@AntonioPMCS)
 created: 2022-07-26
-updated: /
+updated: 2022-08-24
+requires: ERC725Y, LSP2
 ---
 
 ## Simple Summary
 
-This standard describes a set of [ERC725Y](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-725.md) data key-value pairs that describe social post, following and like system.
+This standard describes a data model to store Social Media information such as posts, likes and follows. 
 
 ## Abstract
 
-This standard, defines a set of data key-value pairs that are useful to describe a social media using posts, following, and likes.
+This standard defines a set of key-value pairs that are useful to create a Social Media Feed, combining [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md) and an open distributed storage network such as [IPFS](https://ipfs.tech/) or [ARWEAVE](https://arweave.org).
 
 ## Motivation
 
-This standard aims to implement social media features for [ERC725](https://github.com/ERC725Alliance/ERC725/blob/main/docs/ERC-725.md) smart contracts, as posts, following, and like system.
+Real interoperability requires social media itself to be separated from social media companies. This proposal aims to create a common interoperable standard in which messages generated on one social media app could be transported and read in any other application.
+
+Using a standardised data model to store social media makes content platform-independent and allows it to be read and stored easily. This content can be added to an [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md), giving it a Social Media Account character.
 
 ## Specification
+
+Every Universal Profile that participates in the Social Media standard SHOULD add the following ERC725Y data keys:
 
 ### ERC725Y Data Keys
 
 #### LSPXXSocialRegistry
 
-A string representing the name for the token collection.
+A JSON file that lists all the social media actions of a profile, including posts, likes and follows.
 
 ```json
   {
@@ -42,50 +47,51 @@ This should be updated everytime a new post is added by the user.
 
 The linked JSON file SHOULD have the following format:
 
-```json
+```js
 {
   "LSPXXSocialRegistry": {
-    "posts": [
+    "posts": [ // Messages authored by the profile. Includes original posts, comments and reposts.
       {
-        "url": "string",
-        "hash": "string"
-      }
+        "url": "string", // The url in decentralized storage with the post content and metadata
+        "hash": "string" // The hash of the post object
+      },
+      ...
     ],
-    "follows": [
-      "string"
-    ],
-    "likes": [
-      "string"
-    ]
+    "follows": [ "Address", ... ], // UPs this account has subscribed.  Will compose the account's feed.
+    "likes": ["bytes32", ...], // The identifiers of all the posts this account has liked
   }
 }
 ```
 
-The profile post JSON files should have the following format:
+A Profile Post can be an original message, a comment on another post or a repost. The JSON file should have the following format:
 
-```json
+```js
 {
   "LSPXXProfilePost": {
     "version": "0.0.1",
-    "author": "string",
-    "eoa": "string",
-    "message": "string",
+    "author": "Address", // The Universal Profile who authored the post
+    "validator": "Address", // Address of a time stamper smart contract which will certify the post date
+    "message": "string", // The post original content
     "links": [
       {
-        "title": "string",
+        "title": "string", // The link's label
         "url": "string"
-      }
+      },
+      ...
     ],
-    "asset": {
+    "asset": { // Each post can have up to 1 media file attached. 
       "hashFunction": "keccak256(bytes)",
       "hash": "string",
-      "url": "string",
+      "url": "string", 
       "fileType": "string"
     },
-    "parentHash": "string OR undefined",
-    "childHash": "string OR undefined"
+    "parentHash": "string" // or null. A post with a parent is a comment.
+    "childHash": "string" // or null. A post with a child is a repost. 
   },
-  "LSPXXProfilePostHash": "string",
+  "LSPXXProfilePostHash": {// Hash of the LSPXXProfilePost object
+    "hashFunction": 'keccak256(bytes)',
+    "hash": "string",
+  }, 
   "LSPXXProfilePostEOASignature": "string"
 }
 ```
