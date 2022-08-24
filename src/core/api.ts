@@ -3,7 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {fileToBase64} from "./utils/file-to-base64";
-import {ProfileInfo} from "../models/profile";
+import {ProfileDisplay, ProfileInfo} from "../models/profile";
 
 const headers = {
   Accept: 'application/json',
@@ -174,6 +174,10 @@ export async function fetchProfileNotificationsCount(address: string): Promise<n
 
 export async function fetchProfileNotifications(address: string, limit: number, offset: number): Promise<Notification[]> {
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications?limit=' + limit + '&offset=' + offset)).json()) as Notification[];
+}
+
+export async function searchProfiles(input: string, limit: number, offset: number): Promise<ProfileDisplay[]> {
+  return (await (await fetch(API_URL + '/lookso/search/' + input + '?limit=' + limit + '&offset=' + offset)).json()) as ProfileDisplay[];
 }
 
 export async function setProfileNotificationsToViewed(address: string, jwt: string): Promise<void> {

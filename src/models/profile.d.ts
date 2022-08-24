@@ -6,3 +6,9 @@ export interface ProfileInfo {
   profileImage: string,
   backgroundImage: string
 }
+
+export interface ProfileDisplay {
+  address: string,
+  name: string,
+  image: string
+}
