@@ -1,6 +1,6 @@
 ---
 lip: XX
-title: Social Registry Meta
+title: Social Media Feed
 status: Draft
 type: Meta
 author: Samuel Videau <samuel@dropps.io>, António Pedro (@AntonioPMCS)
