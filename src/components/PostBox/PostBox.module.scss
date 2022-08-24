@@ -207,6 +207,11 @@
   }
 }
 
+.PostText {
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 .Bytes32Parameter {
   position: relative;
   z-index: 2;

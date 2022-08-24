@@ -131,6 +131,10 @@ const PostInput: FC<PostInputProps> = (props) => {
       setInputValue('');
       setInputHeight(70);
       setLoadingMessage('');
+      if (postInput.current) {
+        postInput.current.value = '';
+        postInput.current.style.height = '70px';
+      }
     } catch (e) {
       setLoadingMessage('');
     }
