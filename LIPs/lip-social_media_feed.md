@@ -3,7 +3,7 @@ lip: XX
 title: Social Media Feed
 status: Draft
 type: Meta
-author: Samuel Videau <samuel@dropps.io>, António Pedro (@AntonioPMCS)
+author: Samuel Videau <samuel@dropps.io>, António Pedro <antonio@dropps.io>
 created: 2022-07-26
 updated: 2022-08-24
 requires: ERC725Y, LSP2
