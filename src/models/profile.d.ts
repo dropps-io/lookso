@@ -1,4 +1,4 @@
-export interface Profile {
+export interface ProfileInfo {
   name: string,
   description: string,
   tags: string[],

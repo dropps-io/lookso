@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
+import Head from "next/head";
 
 interface PostProps {
   hash: string
@@ -43,6 +44,9 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <div className={styles.PostPage} data-testid="Post">
+      <Head>
+        <title>Post | Lookso</title>
+      </Head>
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PageContent}>
         <PostBox newComment={newComment} post={post}/>

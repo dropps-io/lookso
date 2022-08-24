@@ -79,7 +79,7 @@ const Feed: FC<FeedProps> = (props) => {
   return (
     <div className={styles.Feed} data-testid="Feed">
       <Head>
-        <title>Feed | Lookso</title>
+        <title>{props.type} | Lookso</title>
       </Head>
       <div className={styles.FeedPageHeader}>
         <Navbar/>

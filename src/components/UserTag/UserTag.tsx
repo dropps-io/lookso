@@ -18,7 +18,7 @@ const UserTag: FC<UserTagProps> = (props) => (
         :
         <span className={styles.Unnamed}>unnamed</span>
     }
-    <span className={styles.Address}>#{props.address.slice(2, 6).toUpperCase()}</span>
+    <span className={styles.Address}>#{props.address ? props.address.slice(2, 6).toUpperCase() : ''}</span>
   </span>
 );
 

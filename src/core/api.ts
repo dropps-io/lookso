@@ -3,6 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {fileToBase64} from "./utils/file-to-base64";
+import {ProfileInfo} from "../models/profile";
 
 const headers = {
   Accept: 'application/json',
@@ -92,7 +93,7 @@ export async function FetchIsLikedPost(sender: string, postHash: string) {
 }
 
 
-export async function fetchProfileInfo(address: string) {
+export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
   return await (await fetch(API_URL + '/lookso/profile/' + address + '/info')).json();
 }
 

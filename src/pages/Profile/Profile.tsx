@@ -11,7 +11,6 @@ import {fetchIsProfileFollower,
   fetchProfileActivity,
   fetchProfileFollowersCount,
   fetchProfileFollowingCount,
-  fetchProfileInfo,
   insertFollow,
   insertUnfollow
 } from "../../core/api";
@@ -22,11 +21,13 @@ import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
-import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
+import {ProfileInfo} from "../../models/profile";
 
 interface ProfileProps {
-  address: string
+  address: string,
+  profileInfo: ProfileInfo,
+  userTag: string
 }
 
 const Profile: FC<ProfileProps> = (props) => {
@@ -40,10 +41,6 @@ const Profile: FC<ProfileProps> = (props) => {
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
 
-  const [account, setAccount] = useState('');
-  const [username, setUsername] = useState('');
-  const [profileImage, setProfileImage] = useState('');
-  const [backgroundImage, setBackgroundImage] = useState('');
   const [following, setFollowing] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -51,17 +48,18 @@ const Profile: FC<ProfileProps> = (props) => {
   const [copied, setCopied] = useState([false, false]);
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
+  const [bgColor, setBgColor] = useState('fff');
 
   let loading = false;
 
   useEffect(() => {
+    if (props.address) setBgColor(props.address.slice(2, 6));
     async function initPageData() {
       setFeed([]);
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
       if (connected.account === props.address) {
-        await initConnectedAccount();
       } else if (props.address && props.address.length === 42) {
         await initProfile();
       } else {
@@ -70,19 +68,7 @@ const Profile: FC<ProfileProps> = (props) => {
     }
 
     async function initProfile() {
-      setAccount(props.address);
-      const profileData = await fetchProfileInfo(props.address);
-      setUsername(profileData.name);
-      setProfileImage(profileData.profileImage);
-      setBackgroundImage(profileData.backgroundImage);
       setIsFollowing(await fetchIsProfileFollower(props.address, connected.account));
-    }
-
-    async function initConnectedAccount() {
-      setAccount(connected.account);
-      setUsername(connected.username);
-      setProfileImage(connected.profileImage);
-      setBackgroundImage(connected.backgroundImage);
     }
 
     initPageData();
@@ -115,7 +101,7 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertFollow(connected.account, account, headersJWT);
+      await insertFollow(connected.account, props.address, headersJWT);
     }
     catch (e) {
       console.error(e);
@@ -131,7 +117,7 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertUnfollow(connected.account, account, headersJWT);
+      await insertUnfollow(connected.account, props.address, headersJWT);
     }
     catch (e) {
       console.error(e);
@@ -164,23 +150,20 @@ const Profile: FC<ProfileProps> = (props) => {
 
   return (
     <div className={styles.Profile} data-testid="Profile">
-      <Head>
-        <title>{`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`} | Lookso</title>
-      </Head>
       <div className={styles.ProfilePageHeader}>
         <Navbar/>
       </div>
        <div className={styles.ProfilePageContent}>
-         <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
+         <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
-             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+           <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
            <div className={styles.ProfileAddress}>
-             <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
-             <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
+             <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+             <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
            </div>
            {
              connected.account && props.address !== connected.account ?
@@ -198,12 +181,12 @@ const Profile: FC<ProfileProps> = (props) => {
            }
          </div>
          <span className={styles.UserTagMobile}>
-             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
          <div className={styles.ProfileAddressMobile}>
-           <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
-           <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
+           <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+           <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
          </div>
          <div className={styles.ProfileInfluence}>
            <div className={styles.ProfileFollow}>
