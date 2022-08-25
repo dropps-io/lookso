@@ -165,7 +165,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   function goToPost() {
-    router.push({ pathname:'/Post/' +props.post.hash, query: {post: JSON.stringify(props.post)}});
+    router.push('/Post/' +props.post.hash);
   }
 
 
