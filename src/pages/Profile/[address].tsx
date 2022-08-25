@@ -36,11 +36,15 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
   if (address) return (<>
     <Head>
       <title>{userTag} | Lookso</title>
+      <meta name="twitter:card" content={'summary'} />
+      <meta name="twitter:site" content="@lookso_io" />
+      <meta name="twitter:title" content={`${userTag} | Lookso`} />
+      <meta property='twitter:description' content={profile.description} />
+      <meta property='twitter:creator' content='@undeveloped' />
       <meta name='description' content={profile.description} />
       <meta property='og:title' content={`${userTag} | Lookso`} />
       <meta property='og:image' itemProp='image' content={formatUrl(profile.profileImage) || undefined} />
       <meta property='og:description' content={profile.description} />
-      <meta property="og:type" content="website" />
     </Head>
     <Profile userTag={userTag} address={address as string} profileInfo={props}></Profile>;
   </>)
