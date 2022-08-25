@@ -7,12 +7,13 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {fetchIsProfileFollower,
+import {
+  fetchIsProfileFollower,
   fetchProfileActivity,
   fetchProfileFollowersCount,
   fetchProfileFollowingCount,
   insertFollow,
-  insertUnfollow
+  insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile
 } from "../../core/api";
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
@@ -23,6 +24,8 @@ import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {ProfileInfo} from "../../models/profile";
+import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
+import {updateRegistry} from "../../core/update-registry";
 
 interface ProfileProps {
   address: string,
@@ -49,6 +52,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
   const [bgColor, setBgColor] = useState('fff');
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   let loading = false;
 
@@ -101,7 +105,14 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertFollow(connected.account, props.address, headersJWT);
+      try {
+        await insertFollow(connected.account, props.address, headersJWT);
+      } catch (e: any) {
+        setIsFollowing(true);
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain()
+        }
+      }
     }
     catch (e) {
       console.error(e);
@@ -117,11 +128,37 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertUnfollow(connected.account, props.address, headersJWT);
+      try {
+        await insertUnfollow(connected.account, props.address, headersJWT);
+      } catch (e: any) {
+        setIsFollowing(true);
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain()
+        }
+      }
     }
     catch (e) {
       console.error(e);
       setIsFollowing(true);
+    }
+  }
+
+  async function pushRegistryToTheBlockchain() {
+    setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
+
+    try {
+      let headersJWT = jwt;
+
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+
+      const res = await requestNewRegistryJsonUrl(connected.account, headersJWT);
+      await updateRegistry(connected.account, res.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(connected.account, jwt);
+      setLoadingMessage('');
+    } catch (e) {
+      setLoadingMessage('');
     }
   }
 
@@ -155,76 +192,79 @@ const Profile: FC<ProfileProps> = (props) => {
   }
 
   return (
-    <div className={styles.Profile} data-testid="Profile">
-      <div className={styles.ProfilePageHeader}>
-        <Navbar/>
-      </div>
-       <div className={styles.ProfilePageContent}>
-         <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
-         <div className={styles.ProfileBasicInfo}>
+    <>
+      <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
+      <div className={styles.Profile} data-testid="Profile">
+        <div className={styles.ProfilePageHeader}>
+          <Navbar/>
+        </div>
+        <div className={styles.ProfilePageContent}>
+          <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-           <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
-           <div className={styles.ProfileAddress}>
-             <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
-             <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
-           </div>
-           {
-             connected.account && props.address !== connected.account ?
-               <div className={styles.ProfileButtons}>
-                 {
-                   isFollowing ?
-                     <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
-                     :
-                     <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
-                 }
-                 <button className={'btn btn-secondary-no-fill'}>...</button>
-               </div>
-               :
-               <></>
-           }
-         </div>
-         <span className={styles.UserTagMobile}>
+            <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            <div className={styles.ProfileAddress}>
+              <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+              <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
+            </div>
+            {
+              connected.account && props.address !== connected.account ?
+                <div className={styles.ProfileButtons}>
+                  {
+                    isFollowing ?
+                      <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                      :
+                      <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                  }
+                  <button className={'btn btn-secondary-no-fill'}>...</button>
+                </div>
+                :
+                <></>
+            }
+          </div>
+          <span className={styles.UserTagMobile}>
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-         <div className={styles.ProfileAddressMobile}>
-           <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
-           <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
-         </div>
-         <div className={styles.ProfileInfluence}>
-           <div className={styles.ProfileFollow}>
-             <strong>{following}</strong>
-             <span>Following</span>
-           </div>
-           <div className={styles.Sep}></div>
-           <div className={styles.ProfileFollow}>
-             <strong>{followers}</strong>
-             <span>Followers</span>
-           </div>
-         </div>
-         {
-           connected.account && props.address !== connected.account ?
-             <div className={styles.ProfileButtons}>
-               {
-                 isFollowing ?
-                   <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
-                   :
-                   <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
-               }
-               <button className={'btn btn-secondary-no-fill'}>...</button>
-             </div>
-             :
-             <></>
-         }
-         <div className={styles.Activity}>
-           <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
-         </div>
-       </div>
-      <Footer/>
-    </div>
+          <div className={styles.ProfileAddressMobile}>
+            <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+            <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
+          </div>
+          <div className={styles.ProfileInfluence}>
+            <div className={styles.ProfileFollow}>
+              <strong>{following}</strong>
+              <span>Following</span>
+            </div>
+            <div className={styles.Sep}></div>
+            <div className={styles.ProfileFollow}>
+              <strong>{followers}</strong>
+              <span>Followers</span>
+            </div>
+          </div>
+          {
+            connected.account && props.address !== connected.account ?
+              <div className={styles.ProfileButtons}>
+                {
+                  isFollowing ?
+                    <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                    :
+                    <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                }
+                <button className={'btn btn-secondary-no-fill'}>...</button>
+              </div>
+              :
+              <></>
+          }
+          <div className={styles.Activity}>
+            <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
+          </div>
+        </div>
+        <Footer/>
+      </div>
+    </>
   );
 }
 

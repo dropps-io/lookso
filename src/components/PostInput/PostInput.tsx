@@ -8,11 +8,11 @@ import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
 import {LSPXXProfilePost} from "../../models/profile-post";
-import {fetchPostObjectWithAsset, uploadPostObject} from "../../core/api";
+import {fetchPostObjectWithAsset, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api";
 import {connectToAPI, signMessage} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
-import {updateRegistry} from "../../core/update-registry";
+import {updateRegistryWithPost} from "../../core/update-registry";
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import LoadingModal from "../Modals/LoadingModal/LoadingModal";
@@ -113,7 +113,8 @@ const PostInput: FC<PostInputProps> = (props) => {
       const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
 
       setLoadingMessage('Last step, send your post to the blockchain! ⛓️');
-      const receipt = await updateRegistry(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
+      const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(account, jwt);
 
       props.onNewPost({
         date: new Date(),

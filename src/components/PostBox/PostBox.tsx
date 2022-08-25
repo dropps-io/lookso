@@ -13,7 +13,7 @@ import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
-import {insertLike} from "../../core/api";
+import {insertLike, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
@@ -23,6 +23,8 @@ import {useRouter} from "next/router";
 import CommentModal from "../Modals/CommentModal/CommentModal";
 import RepostModal from "../Modals/RepostModal/RepostModal";
 import FourOhFour from "../../pages/404";
+import LoadingModal from "../Modals/LoadingModal/LoadingModal";
+import {updateRegistry} from "../../core/update-registry";
 
 export interface FeedPost {
   hash: string,
@@ -43,7 +45,8 @@ export interface FeedPost {
   reposts: number,
   isLiked: boolean,
   inRegistry?: boolean,
-  childPost?: FeedPost
+  childPost?: FeedPost,
+  trusted?: boolean
 }
 
 export const initialFeedPost: FeedPost = {
@@ -107,6 +110,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showRepostModal, setShowRepostModal] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
+
 
   useEffect(() => {
     setLikes(props.post.likes);
@@ -139,16 +144,43 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     try {
       let headersJWT = jwt;
+
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
 
-      await insertLike(account, props.post.hash, headersJWT);
+      try {
+        await insertLike(account, props.post.hash, headersJWT);
+      } catch (e: any) {
+        setLikes(existing => existing - newLikes);
+        setIsLiked(newLikes < 0);
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain()
+        }
+      }
     }
-
-    catch (e) {
+    catch (e: any) {
       setLikes(existing => existing - newLikes);
       setIsLiked(newLikes < 0);
+    }
+  }
+
+  async function pushRegistryToTheBlockchain() {
+    setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
+
+    try {
+      let headersJWT = jwt;
+
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+
+      const res = await requestNewRegistryJsonUrl(account, headersJWT);
+      await updateRegistry(account, res.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(account, jwt);
+      setLoadingMessage('');
+    } catch (e) {
+      setLoadingMessage('');
     }
   }
 
@@ -177,6 +209,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   if (props.post) return (
     <>
+      <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
       <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment || props.repost  ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
