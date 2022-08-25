@@ -29,11 +29,7 @@ Furthermore, notice that timestamping a given hash is proof that the author was 
 #### validate
 
 ```solidity
-function validate(bytes32 contentHash) external {
-    require( getData(contentHash).length == 0, 
-        "Corresponding value for this hash is not null.");
-    setData(contentHash, bytes(abi.encodePacked(address(_msgSender()), bytes12(uint96(block.timestamp)))));
-}
+function validate(bytes32 contentHash) external
 ```
 
 Verifies there isn't already a timestamp for this content. Stores the msgSender and the blocktimestamp under a key equal to the hash of the content to timestamp and claim.  
@@ -53,9 +49,7 @@ Overrides the setData function from the ERC725Y core in order to remove the owne
 #### getTimestamp
 
 ```solidity
-function getTimestamp(bytes32 key) public view returns(bytes12) {
-    return bytes12(bytes32(this.getData(key)) << 160);
-}
+function getTimestamp(bytes32 key) public view returns(bytes12)
 ```
 
 Returns only the Timestamp part stored under a give key.
@@ -66,14 +60,57 @@ _Parameters:_
 #### getAddress
 
 ```solidity
-function getAddress(bytes32 key) public view returns (bytes20) {
-    return bytes20(this.getData(key));
-}
+function getAddress(bytes32 key) public view returns (bytes20)
 ```
 Returns only the Address part stored under a give key.
 
 _Parameters:_
 - `key`: Key to access the storage. Most frequently will represent the hash of some off-chain content.
+
+## Implementation
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.7;
+
+import { Context } from "@openzeppelin/contracts/utils/Context.sol";
+import { ERC725YCore } from "@erc725/smart-contracts/contracts/ERC725YCore.sol";
+import { OwnableUnset } from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+import { GasLib } from "@erc725/smart-contracts/contracts/utils/GasLib.sol";
+
+contract Validator is ERC725YCore(), Context {
+
+    constructor(address newOwner) {
+        OwnableUnset._setOwner(newOwner);
+    }
+
+    function validate(bytes32 contentHash) external {
+        require( getData(contentHash).length == 0, 
+            "Corresponding value for this hash is not null.");
+        setData(contentHash, bytes(abi.encodePacked(address(_msgSender()), bytes12(uint96(block.timestamp)))));
+    }
+
+    function setData(bytes32 dataKey, bytes memory dataValue) public virtual override {
+        _setData(dataKey, dataValue);
+    }
+
+    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) public virtual override {
+        require(dataKeys.length == dataValues.length, "Keys length not equal to values length");
+        for (uint256 i = 0; i < dataKeys.length; i = GasLib.uncheckedIncrement(i)) {
+            _setData(dataKeys[i], dataValues[i]);
+        }
+    }
+
+    function getTimestamp(bytes32 key) public view returns(bytes12) {
+        return bytes12(bytes32(this.getData(key)) << 160);
+    }
+
+    function getAddress(bytes32 key) public view returns (bytes20) {
+        return bytes20(this.getData(key));
+    }
+}
+```
 
 ## Rationale
 
