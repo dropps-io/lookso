@@ -79,6 +79,13 @@ A Profile Post can be an original message, a comment on another post or a repost
       },
       ...
     ],
+    "tags": [
+      {
+        "title": "string", // The tag's label
+        "value": "string"
+      },
+      ...
+    ],
     "asset": { // Each post can have up to 1 media file attached. 
       "hashFunction": "keccak256(bytes)",
       "hash": "string",
