@@ -64,7 +64,7 @@ const Profile: FC<ProfileProps> = (props) => {
         await initProfile();
       } else {
       }
-      setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0));
+      await fetchPosts('all');
     }
 
     async function initProfile() {
@@ -129,12 +129,12 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open ( EXPLORER_URL + '/address/' + address, '_blank');
   }
 
-  async function loadMorePosts() {
+  async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
-      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset);
+      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
@@ -145,7 +145,13 @@ const Profile: FC<ProfileProps> = (props) => {
       console.error(e);
       loading = false;
     }
-    console.log(feed);
+  }
+
+  async function fetchPosts(filter: 'all' | 'post' | 'event') {
+    setFeed([]);
+    setFullyLoadedActivity(false);
+    setOffset(POSTS_PER_LOAD);
+    setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined));
   }
 
   return (
@@ -214,7 +220,7 @@ const Profile: FC<ProfileProps> = (props) => {
              <></>
          }
          <div className={styles.Activity}>
-           <Activity headline='Activity' feed={feed} loadNext={loadMorePosts}></Activity>
+           <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
          </div>
        </div>
       <Footer/>

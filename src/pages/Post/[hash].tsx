@@ -30,11 +30,12 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
 
   if (hash) return (<>
       <Head>
-        <title>Post from {userTag} | Lookso</title>
+        <title>{post.type === 'event' ? 'Event' : 'Post'} from {userTag} | Lookso</title>
         <meta name='description' content={description} />
         <meta property='og:title' content={`Post from ${userTag} | Lookso`} />
-        <meta property='og:image' content={formatUrl(post.display.image) || formatUrl(post.author.image)} />
+        <meta property='og:image' itemProp="image" content={formatUrl(post.display.image) || formatUrl(post.author.image)} />
         <meta property='og:description' content={description} />
+        <meta property="og:type" content="website" />
       </Head>
       <Post post={post} hash={hash as string}></Post>
     </>
