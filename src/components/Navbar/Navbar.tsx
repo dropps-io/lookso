@@ -97,7 +97,7 @@ const Navbar: FC<NavbarProps> = () => {
         <li><Link href='/explore'><a href="">Explore</a></Link></li>
         {
           account ?
-            <li><Link href='/feed'><a href="">My Feed</a></Link></li>
+            <li><Link href='/feed'><a href="">My feed</a></Link></li>
             :
             <></>
         }
@@ -153,7 +153,7 @@ const Navbar: FC<NavbarProps> = () => {
             <li><Link href='/explore'><a href="">Explore</a></Link></li>
             {
               account ?
-                <li><Link href='/feed'><a href="">My Feed</a></Link></li>
+                <li><Link href='/feed'><a href="">My feed</a></Link></li>
                 :
                 <></>
             }
