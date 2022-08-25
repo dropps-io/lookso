@@ -52,9 +52,11 @@ Overrides the setData function from the ERC725Y core in order to remove the owne
 
 #### getTimestamp
 
+```solidity
 function getTimestamp(bytes32 key) public view returns(bytes12) {
     return bytes12(bytes32(this.getData(key)) << 160);
 }
+```
 
 Returns only the Timestamp part stored under a give key.
 
