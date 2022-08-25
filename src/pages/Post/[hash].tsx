@@ -27,15 +27,18 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
   const userTag = `@${post.author.name ? post.author.name : 'unnamed'}#${post.author.address.slice(2, 6)}`;
   const description = getTextPostContent(post.display.text, post.display.params);
 
-
   if (hash) return (<>
       <Head>
         <title>{post.type === 'event' ? 'Event' : 'Post'} from {userTag} | Lookso</title>
+        <meta name="twitter:card" content={post.display.image ? 'summary_large_image' : 'summary'} />
+        <meta name="twitter:site" content="@lookso_io" />
+        <meta name="twitter:title" content={`${post.type === 'event' ? 'Event' : 'Post'} from ${userTag} | Lookso`} />
+        <meta property='twitter:description' content={description} />
+        <meta property='twitter:creator' content='@undeveloped' />
         <meta name='description' content={description} />
-        <meta property='og:title' content={`Post from ${userTag} | Lookso`} />
-        <meta property='og:image' itemProp="image" content={formatUrl(post.display.image) || formatUrl(post.author.image)} />
+        <meta property='og:title' content={`${post.type === 'event' ? 'Event' : 'Post'} from ${userTag} | Lookso`} />
+        <meta property='og:image' content={formatUrl(post.display.image) || formatUrl(post.author.image)} />
         <meta property='og:description' content={description} />
-        <meta property="og:type" content="website" />
       </Head>
       <Post post={post} hash={hash as string}></Post>
     </>

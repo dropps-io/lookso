@@ -5,3 +5,4 @@ export const NATIVE_TOKEN = 'LYXt';
 export const API_URL = 'http://localhost:3030';
 export const EXPLORER_URL = 'https://explorer.execution.l16.lukso.network/';
 export const POST_VALIDATOR_ADDRESS = '0xCF3f83D711844E72947172Ebe8EadAF92900B146';
+export const WEBSITE_URL = 'https://lookso.io';

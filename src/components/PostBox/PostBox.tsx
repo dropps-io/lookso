@@ -2,7 +2,7 @@ import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
 import styles from './PostBox.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
-import {EXPLORER_URL} from "../../environment/endpoints";
+import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import externalLinkIcon from "../../assets/icons/external-link.svg";
 import executedEventIcon from "../../assets/icons/events/executed.png";
@@ -168,7 +168,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     router.push('/Post/' +props.post.hash);
   }
 
-
+  function shareOnTwitter() {
+    const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n${WEBSITE_URL}/Post/${props.post.hash}`
+    window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
+  }
 
   //TODO in UserTag component add max length name prop number
 
@@ -241,7 +244,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 <span>{likes}</span>
               </div>
             </div>
-            <img className={styles.PostShare} src={shareIcon.src} alt=""/>
+            <img onClick={shareOnTwitter} className={styles.PostShare} src={shareIcon.src} alt=""/>
           </div>
         }
       </div>
