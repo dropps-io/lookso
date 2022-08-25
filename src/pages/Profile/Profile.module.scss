@@ -1,7 +1,9 @@
 .Profile {
   background-color: var(--color-background-main);
-  min-height: 200vh;
-  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .ProfilePageHeader {
     position: sticky;
@@ -16,6 +18,7 @@
 
   .ProfilePageContent {
     padding: 0 30px;
+    margin-bottom: auto;
     color: var(--color-text-default);
 
     .BackgroundImage {
