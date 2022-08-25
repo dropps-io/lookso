@@ -169,7 +169,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   function shareOnTwitter() {
-    const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n${WEBSITE_URL}/Post/${props.post.hash}`
+    const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n\n${WEBSITE_URL}/Post/${props.post.hash}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
 

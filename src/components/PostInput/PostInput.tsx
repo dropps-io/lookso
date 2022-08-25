@@ -96,7 +96,7 @@ const PostInput: FC<PostInputProps> = (props) => {
         version: '0.0.1',
         message: inputValue,
         author: account,
-        eoa: '',
+        validator: POST_VALIDATOR_ADDRESS,
         links: [],
         childHash: props.childPost?.hash,
         parentHash: props.parentHash
