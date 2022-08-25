@@ -12,6 +12,8 @@
 /.next/
 /out/
 
+/.idea
+
 # production
 /build
 
@@ -33,3 +35,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+!/package-lock.json
