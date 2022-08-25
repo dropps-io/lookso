@@ -43,9 +43,10 @@ _Parameters:_
 
 #### setData 
 
+```solidity
     function setData(bytes32 dataKey, bytes memory dataValue) public virtual override
     function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) public virtual override
-
+```
 
 Overrides the setData function from the ERC725Y core in order to remove the ownership requirements, making this registry public to use and immutable.
 
@@ -62,10 +63,11 @@ _Parameters:_
 
 #### getAddress
 
+```solidity
 function getAddress(bytes32 key) public view returns (bytes20) {
     return bytes20(this.getData(key));
 }
-
+```
 Returns only the Address part stored under a give key.
 
 _Parameters:_
