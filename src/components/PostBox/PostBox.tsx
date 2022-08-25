@@ -88,6 +88,7 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 
 interface PostProps {
   post: FeedPost;
+  isLiked?: boolean;
   newComment?: ((comment: FeedPost) => any);
   newRepost?: ((repost: FeedPost) => any);
   comment?: boolean;
@@ -109,7 +110,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   useEffect(() => {
     setLikes(props.post.likes);
     setIsLiked(props.post.isLiked);
-  }, [props.post]);
+
+    if (props.isLiked) setIsLiked(props.isLiked)
+  }, [props.post, props.isLiked]);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account, web3);

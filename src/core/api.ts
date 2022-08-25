@@ -87,8 +87,8 @@ export async function deleteLike(address: string, postHash: string, jwt: string)
   });
 }
 
-export async function FetchIsLikedPost(sender: string, postHash: string) {
-  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json()).followers;
+export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
+  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json());
   return likes && likes.length > 0;
 }
 
