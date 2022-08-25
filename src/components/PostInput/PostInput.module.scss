@@ -73,6 +73,27 @@
     display: flex;
     align-items: center;
 
+    .SmileIcon {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      margin-right: 20px;
+       img {
+         width: 100%;
+         height: 100%;
+       }
+
+      .EmojiPicker {
+        margin-left: -250px;
+        display: none;
+        color: black;
+      }
+
+      .ActivePicker {
+        display: block;
+      }
+    }
+
     .ImageUpload {
       width: 25px;
       height: 25px;
@@ -99,11 +120,13 @@
 
 .Comment {
   .BoxTop {
-    .PostInput {
-      font-size: 1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
         font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
       }
     }
   }
@@ -114,12 +137,14 @@
     .ProfileImgSmall {
     }
 
-    .PostInput {
-      padding-top: 5px;
-      font-size: 1.1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
+        padding-top: 5px;
         font-size: 1.1em;
+
+        &::placeholder {
+          font-size: 1.1em;
+        }
       }
     }
   }
@@ -138,14 +163,17 @@
 
   .Comment {
     .BoxTop {
-      .PostInput {
-        padding-top: 10px;
-        font-size: 0.9em;
-
-        &::placeholder {
+      .Inputs {
+        .PostInput {
+          padding-top: 10px;
           font-size: 0.9em;
+
+          &::placeholder {
+            font-size: 0.9em;
+          }
         }
       }
+
     }
   }
 }
@@ -159,12 +187,14 @@
       border: 2px solid;
     }
 
-    .PostInput {
-      padding-top: 7px;
-      font-size: 1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
+        padding-top: 7px;
         font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
       }
     }
   }
@@ -173,6 +203,13 @@
     margin-top: 0;
 
     .RightPart {
+
+      .SmileIcon {
+        .EmojiPicker {
+          margin-left: -150px;
+        }
+      }
+
       img {
         width: 20px;
         height: 20px;
@@ -194,17 +231,26 @@
 
 @media only screen and (max-width: 350px) {
   .BoxBottom {
+    .RightPart {
+      .SmileIcon {
+        .EmojiPicker {
+          margin-left: -100px;
+        }
+      }
+    }
   }
 
   .Comment {
     .BoxTop {
-      .PostInput {
-        margin-left: 10px;
-        padding-top: 10px;
-        font-size: 0.8em;
-
-        &::placeholder {
+      .Inputs {
+        .PostInput {
+          margin-left: 10px;
+          padding-top: 10px;
           font-size: 0.8em;
+
+          &::placeholder {
+            font-size: 0.8em;
+          }
         }
       }
     }

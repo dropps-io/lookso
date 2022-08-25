@@ -207,7 +207,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
               props.post.display.image ?
                 <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} />
                 :
-                <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
+                <img onClick={goToPost} className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
               :
               <></>
           }

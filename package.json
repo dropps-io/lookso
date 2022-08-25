@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.8.3",
     "@testing-library/react": "^13.3.0",
     "config": "^3.3.7",
+    "emoji-picker-react": "^3.6.1",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

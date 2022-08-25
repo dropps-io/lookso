@@ -89,6 +89,7 @@ export async function deleteLike(address: string, postHash: string, jwt: string)
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
   const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json());
+  console.log(likes);
   return likes && likes.length > 0;
 }
 

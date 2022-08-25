@@ -24,6 +24,7 @@ const Post: FC<PostProps> = (props) => {
       if (account && !isLiking) {
         const isLiking = await fetchIsLikedPost(account, props.hash);
         if (isLiking) {
+          console.log('isLiking')
           setIsLiking(true);
         }
       }

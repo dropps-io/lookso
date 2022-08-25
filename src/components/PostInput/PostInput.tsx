@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
+import smileIcon from '../../assets/icons/smile.svg';
 import {LSPXXProfilePost} from "../../models/profile-post";
 import {fetchPostObjectWithAsset, uploadPostObject} from "../../core/api";
 import {connectToAPI, signMessage} from "../../core/web3";
@@ -15,6 +16,14 @@ import {updateRegistry} from "../../core/update-registry";
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import LoadingModal from "../Modals/LoadingModal/LoadingModal";
+import dynamic from "next/dynamic";
+
+const Picker = dynamic(
+  () => {
+    return import("emoji-picker-react");
+  },
+  { ssr: false }
+);
 
 interface PostInputProps {
   parentHash?: string;
@@ -36,6 +45,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [inputFile, setInputFile] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [showEmojiPicker , setShowEmojiPicker] = useState(false);
 
 
   async function requestJWT() {
@@ -69,6 +79,8 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   async function createPost() {
+    setShowEmojiPicker(false);
+    console.log(inputValue)
     try {
       setLoadingMessage(' ');
       const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
@@ -153,6 +165,11 @@ const PostInput: FC<PostInputProps> = (props) => {
     setInputFile(null);
   }
 
+  const onEmojiClick = (event: any, emojiObject: any) => {
+    if (postInput.current) postInput.current.value = inputValue + emojiObject.emoji;
+    setInputValue(value => value + emojiObject.emoji);
+  };
+
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
@@ -160,7 +177,7 @@ const PostInput: FC<PostInputProps> = (props) => {
         <div className={`${styles.BoxTop}`}>
           <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
           <div className={styles.Inputs}>
-            <textarea disabled={!!loadingMessage} onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
+            <textarea onClick={() => setShowEmojiPicker(false)} disabled={!!loadingMessage} onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
             {
               inputFile ?
                 <div className={styles.InputImage}>
@@ -177,7 +194,13 @@ const PostInput: FC<PostInputProps> = (props) => {
         <div className={styles.BoxBottom}>
           <span>{inputValue.length} / 256</span>
           <div className={styles.RightPart}>
-            <div className={styles.ImageUpload}>
+            <div className={styles.SmileIcon}>
+              <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>
+              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`}>
+                <Picker onEmojiClick={onEmojiClick} disableSearchBar native/>
+              </div>
+            </div>
+            <div onClick={() => setShowEmojiPicker(false)} className={styles.ImageUpload}>
               <label htmlFor={props.parentHash ? 'Reply' : props.childPost ? 'Repost' : 'Post'}>
                 <img src={imageIcon.src} alt='' />
               </label>
