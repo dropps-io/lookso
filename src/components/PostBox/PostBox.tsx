@@ -22,6 +22,7 @@ import UserTag from "../UserTag/UserTag";
 import {useRouter} from "next/router";
 import CommentModal from "../Modals/CommentModal/CommentModal";
 import RepostModal from "../Modals/RepostModal/RepostModal";
+import FourOhFour from "../../pages/404";
 
 export interface FeedPost {
   hash: string,
@@ -171,7 +172,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   //TODO in UserTag component add max length name prop number
 
-  return (
+  if (props.post) return (
     <>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
@@ -246,6 +247,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       </div>
     </>
   );
+  else return <FourOhFour/>
 });
 
 export default PostBox;
