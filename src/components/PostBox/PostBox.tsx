@@ -201,7 +201,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             <div className={styles.PostTag}>{props.post.display.tags.standardType}</div>
             : <></>}
         </div>
-        <div className={styles.PostContent} onClick={goToPost}>
+        <div className={styles.PostContent}>
           {
             props.post.type === 'event' ?
               props.post.display.image ?
@@ -211,7 +211,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
               :
               <></>
           }
-          {props.post.display.text ? <PostContent text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
+          {props.post.display.text ? <PostContent onClick={goToPost} text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
               <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt='' />

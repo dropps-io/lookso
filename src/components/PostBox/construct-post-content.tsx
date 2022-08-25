@@ -44,13 +44,14 @@ const ParamContent: FC<ParamContentProps> = (props) => {
 
 interface PostContentProps {
   text: string,
-  params: {[key: string]: FeedDisplayParam}
+  params: {[key: string]: FeedDisplayParam},
+  onClick: () => void
 }
 
 const PostContent: FC<PostContentProps> = (props) => {
 
   return (
-    <p className={styles.PostText}>
+    <p onClick={props.onClick} className={styles.PostText}>
       {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
