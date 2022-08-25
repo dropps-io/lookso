@@ -1,5 +1,5 @@
 .Faq {
-  $question-close-height: 80px;
+  $question-close-height: 66px;
   color: var(--color-text-default);
   font-family: 'Clash Display', serif;
   margin-bottom: 50px;
@@ -18,14 +18,12 @@
   // 2 columns wrapper
   .FaqWrapper {
     display: grid;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 40px;
+    grid-column-gap: 50px;
     padding: 0 50px;
   }
   .FaqRow {
-    display: flex;
-    flex-direction: column;
   }
   // Block of a question
   .FaqQuestion {
@@ -33,6 +31,7 @@
     border-bottom: 1px solid var(--color-border-light);
     transition: all .3s;
     min-height: $question-close-height;
+    max-height: $question-close-height;
     // Title
     .FaqQuestionTitle {
       background-color: var(--color-background-main);
@@ -44,12 +43,13 @@
       font-size: 20px;
       letter-spacing: 1.5px;
       transition: all .3s;
+      margin: 20px 0;
       &:hover {
         cursor: pointer;
       }
     }
     // Response
-    .FaqQuestionFolded {
+    .FaqResponseFolded {
       width: 100%;
       opacity: 0;
       margin-top: -200px;
@@ -68,6 +68,51 @@
       letter-spacing: 1px;
       display: block;
       transition: all .3s;
+    }
+  }
+  .FaqQuestionFolded {
+    max-height: max-content;
+  }
+}
+// To fix large question 2
+@media only screen and (max-width: 1660px) {
+  $question-close-height: 80px;
+  .FaqQuestion {
+    &:nth-child(2) {
+      min-height: $question-close-height!important;
+    }
+  }
+}
+
+// For Tablet
+@media only screen and (max-width: 1400px) {
+  .FaqWrapper {
+    padding: 0!important;
+  }
+  // reduce font size
+  .FaqQuestionTitle {
+    font-size: 18px!important;
+  }
+  .Faq {
+    p {
+      font-size: 14px!important;
+    }
+  }
+  $question-close-height: 80px;
+  .FaqQuestion {
+    min-height: $question-close-height!important;
+  }
+}
+// For mobile
+@media only screen and (max-width: 910px) {
+  .FaqWrapper {
+    grid-template-columns: 1fr!important;
+  }
+  // reset fix for large question 2
+  .FaqQuestion {
+    $question-close-height: 66px;
+    &:nth-child(2) {
+      min-height: $question-close-height!important;
     }
   }
 }

@@ -17,7 +17,12 @@ import Faq from "../../components/Faq/Faq";
 interface HomeProps {}
 
 const Home: FC<HomeProps> = ()  => {
+  const [foldQuestions, setFoldQuestions] = useState([true, true, true, true, true, true, true, true]);
   const [foldHeadlines, setFoldHeadlines] = useState([true, true, true]);
+
+  function foldQuestion(n: number) {
+    setFoldQuestions(existing => existing.map((x, i) => i === n ? !x : x ));
+  }
 
   function foldHeadline(n: number) {
     setFoldHeadlines(existing => existing.map((x, i) => i === n ? !x : x ));
@@ -90,7 +95,6 @@ const Home: FC<HomeProps> = ()  => {
             </div>
             <img className={styles.RightPart} src={impactImage2.src} alt=''></img>
           </section>
-          {/* F.A.Q Section */}
           <Faq/>
         </div>
         <Footer/>

@@ -67,12 +67,12 @@ const Faq: FC<FaqProps> = () => {
                 <div className={styles.FaqRow}>
                     {/* For each question between 0 to size question / 2 */}
                     { questions.slice(0, numberOfQuestion).map(function(question, index){
-                        return <div key={index}  className={styles.FaqQuestion}>
+                        return <div key={index}  className={`${styles.FaqQuestion} ${!foldQuestions[index] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index)}}>
                                 { question.title }
                                 { foldQuestions[index] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p className={`${foldQuestions[index] ? styles.FaqQuestionFolded : ''}`}>{ question.response }</p>
+                            <p className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`}>{ question.response }</p>
                         </div>;
 
                     }) }
@@ -80,12 +80,12 @@ const Faq: FC<FaqProps> = () => {
                 <div className={styles.FaqRow}>
                     {/* For each question between size question / 2 to end */}
                     { questions.slice(numberOfQuestion, questions.length - 1).map(function(question, index){
-                        return <div key={index + numberOfQuestion}  className={styles.FaqQuestion}>
+                        return <div key={index + numberOfQuestion}  className={`${styles.FaqQuestion} ${!foldQuestions[index + numberOfQuestion] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index + numberOfQuestion)}}>
                                 { question.title }
                                 { foldQuestions[index + numberOfQuestion] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqQuestionFolded : ''}`}>{ question.response }</p>
+                            <p className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`}>{ question.response }</p>
                         </div>;
 
                     }) }
