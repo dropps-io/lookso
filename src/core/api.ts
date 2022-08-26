@@ -117,8 +117,8 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/profile/' + address + '/activity?limit=' + limit + '&offset=' + offset;
+export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/profile/' + address + '/activity?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }
@@ -129,8 +129,8 @@ export async function fetchProfileFeed(address: string, limit: number, offset: n
   return await (await fetch(url)).json();
 }
 
-export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/feed?limit=' + limit + '&offset=' + offset;
+export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/feed?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }

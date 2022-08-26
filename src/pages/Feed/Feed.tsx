@@ -32,7 +32,7 @@ const Feed: FC<FeedProps> = (props) => {
       if (account && props.type === 'Feed') {
         setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
       } else {
-        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0));
+        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, undefined, account));
       }
     }
 
@@ -48,7 +48,7 @@ const Feed: FC<FeedProps> = (props) => {
       if (account && props.type === 'Feed') {
         newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
       } else {
-        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
+        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, account);
       }
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));

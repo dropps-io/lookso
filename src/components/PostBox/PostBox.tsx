@@ -177,7 +177,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
       const res = await requestNewRegistryJsonUrl(account, headersJWT);
       await updateRegistry(account, res.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account, jwt);
+      await setNewRegistryPostedOnProfile(account, headersJWT);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');

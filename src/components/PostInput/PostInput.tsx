@@ -114,7 +114,7 @@ const PostInput: FC<PostInputProps> = (props) => {
 
       setLoadingMessage('Last step, send your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account, jwt);
+      await setNewRegistryPostedOnProfile(account, resJWT);
 
       props.onNewPost({
         date: new Date(),
