@@ -116,6 +116,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
 
+  let clickLoading = false;
 
 
   useEffect(() => {
@@ -245,6 +246,41 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }
   }
 
+  function goToAddress(address: string) {
+    window.open( EXPLORER_URL + '/address/' + address, '_blank');
+  }
+
+  function goToProfile(address: string) {
+    router.push('/Profile/' + address);
+  }
+
+  function copy(value: string) {
+    navigator.clipboard.writeText(value);
+  }
+
+  async function handleClick(e: any, value?: string) {
+    if (clickLoading) return;
+    clickLoading = true;
+    
+    const el: HTMLElement = e.target as HTMLElement;
+
+    if (value) {
+      if(el.className.includes('EventImage')) goToPost();
+      if(el.className.includes('PostImage')) goToPost();
+      else if(el.className.includes('UserTag')) goToProfile(value);
+      else if(el.className.includes('AssetTag') || el.id === 'name') goToAddress(value);
+      else if(el.className.includes('Address')) goToAddress(value)
+      else if(el.className.includes('Bytes32')) copy(value);
+      else goToPost()
+    } else {
+      goToPost();
+    }
+
+    setTimeout(() => {
+      clickLoading = false;
+    }, 10);
+  }
+
   //TODO in UserTag component add max length name prop number
 
   if (props.post) return (
@@ -279,17 +315,17 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             <div className={styles.PostTag}>{props.post.display.tags.standardType}</div>
             : <></>}
         </div>
-        <div className={styles.PostContent}>
+        <div onClick={handleClick} className={styles.PostContent}>
           {
             props.post.type === 'event' ?
               props.post.display.image ?
                 <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} />
                 :
-                <img onClick={goToPost} className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
+                <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
               :
               <></>
           }
-          {props.post.display.text ? <PostContent onClick={goToPost} text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
+          {props.post.display.text ? <PostContent onClick={handleClick} text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
               <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt='' />
