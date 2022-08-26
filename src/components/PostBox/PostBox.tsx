@@ -302,7 +302,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           </div>
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(props.post.date))} ago</span>
-            <a href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">
+            <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">
               <img src={externalLinkIcon.src} alt=""/>
             </a>
           </div>
@@ -342,20 +342,20 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div className={styles.IconNumber} onClick={openCommentModal}>
+              <div title={'Comment'} className={styles.IconNumber} onClick={openCommentModal}>
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>
-              <div className={styles.IconNumber}  onClick={openRepostModal}>
+              <div title={'Repost'} className={styles.IconNumber}  onClick={openRepostModal}>
                 <img src={repostIcon.src} alt=""/>
                 <span>{props.post.reposts}</span>
               </div>
-              <div onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
+              <div title={'Like'} onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
                 {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
                 <span>{likes}</span>
               </div>
             </div>
-            <img onClick={shareOnTwitter} className={styles.PostShare} src={shareIcon.src} alt=""/>
+            <img title={'Share'} onClick={shareOnTwitter} className={styles.PostShare} src={shareIcon.src} alt=""/>
           </div>
         }
       </div>
