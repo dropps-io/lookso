@@ -31,11 +31,15 @@ a, li, ul {
   all: unset;
 }
 
+button:hover {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+}
+
 .Home {
   overflow: hidden;
   padding: 30px 150px 0 150px;
   min-height: 250vh;
-  background-color: var(--color-background-main);
+  background-color: var(--color-background-reverse-darker);
 }
 
 .copied {

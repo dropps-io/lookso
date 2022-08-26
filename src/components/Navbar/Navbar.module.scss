@@ -44,7 +44,7 @@
   }
 
   .Buttons {
-    color: var(--color-text-default);
+    color: var(--color-text-default-light);
     margin: auto 0 auto 20px;
     font-weight: 500;
     font-size: 1.25em;
@@ -56,6 +56,9 @@
       a {
         white-space: nowrap;
         cursor: pointer;
+        &:hover {
+          color: var(--color-text-default);
+        }
       }
     }
 
