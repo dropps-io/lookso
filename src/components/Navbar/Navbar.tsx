@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Navbar.module.scss';
 import SearchBar from "../SearchBar/SearchBar";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/icons/logo.svg";
 import burgerMenuIcon from "../../assets/icons/burger-menu.svg";
 import crossIcon from "../../assets/icons/cross.svg";
 import searchIcon from "../../assets/icons/search.svg";
