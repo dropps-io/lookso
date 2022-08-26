@@ -29,6 +29,7 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
   return (
     <>
       <ActionModal open={showNoUpCloud} onClose={() => setShowNoUpCloud(false)} textToDisplay={'Unavailable (still running on L14 testnet)'} btnText={'Ok 😔'} callback={() => setShowNoUpCloud(false)}/>
+      <div className={props.showDropdown ? styles.BackDrop : ''} onClick={props.onClose}></div>
       <div className={`${styles.ProfileDropdown} ${!props.showDropdown ? styles.InactiveDropdown : ''}`}>
         <div className={styles.DropdownHeader}>
           {

@@ -1,5 +1,15 @@
-.ProfileDropdown {
+.BackDrop {
   z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+}
+
+.ProfileDropdown {
+  z-index: 3;
   position: absolute;
   right: 30px;
   width: 300px;
