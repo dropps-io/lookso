@@ -112,8 +112,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showRepostModal, setShowRepostModal] = useState(false);
-  const [showActionModal, setShowActionModal] = useState(false);
+  const [showLogInModal, setShowLogInModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
+
 
 
   useEffect(() => {
@@ -140,7 +142,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   async function likeOrUnlikePost() {
     if (props.static) return;
-    if (!account) setShowActionModal(true);
+    if (!account) setShowLogInModal(true);
 
     const newLikes = !isLiked ? 1 : - 1;
     setLikes(existing => existing + newLikes);
@@ -207,17 +209,32 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
   
   function openCommentModal() {
-    if (!account) setShowActionModal(true);
+    if (!account) setShowLogInModal(true);
     else setShowCommentModal(true);
   }
 
   function openRepostModal() {
-    if (!account) setShowActionModal(true);
+    if (!account) setShowLogInModal(true);
     else setShowRepostModal(true);
   }
 
+  function goToUpInstallationGuide() {
+    window.open('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/', '_blank');
+    setShowUpInstallationModal(false);
+  }
+
   async function connectToWeb3() {
-    const web3Info = await connectWeb3();
+    let web3Info;
+    try {
+      web3Info = await connectWeb3();
+    } catch (e: any) {
+      console.error(e.message);
+      if ((e.message as string).includes('Provider')) {
+        setShowUpInstallationModal(true);
+        setShowLogInModal(false)
+      }
+      return;
+    }
 
     if (web3Info) {
       dispatch(setWeb3(web3Info.web3));
@@ -232,7 +249,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   if (props.post) return (
     <>
-      <ActionModal open={showActionModal} onClose={() => setShowActionModal(false)} textToDisplay={'Please log in first'} btnText={'Log in'} callback={() => connectToWeb3()}/>
+      <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
+      <ActionModal open={showLogInModal} onClose={() => setShowLogInModal(false)} textToDisplay={'Please log in first'} btnText={'Log in'} callback={() => connectToWeb3()}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>

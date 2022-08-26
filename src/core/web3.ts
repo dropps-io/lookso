@@ -4,12 +4,12 @@ import {fetchProfileAuthJwtToken, fetchProfileAuthNonce, fetchProfileInfo} from 
 declare const window: any;
 
 export function listenChanges() {
-  window.ethereum.on('chainChanged', () => {
-    getWeb3Info();
-  });
-  window.ethereum.on('accountsChanged', () => {
-    getWeb3Info();
-  });
+  // window.ethereum.on('chainChanged', () => {
+  //   getWeb3Info();
+  // });
+  // window.ethereum.on('accountsChanged', () => {
+  //   getWeb3Info();
+  // });
 }
 
 export async function getWeb3Info() {
