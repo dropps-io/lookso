@@ -1,5 +1,8 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Profile.module.scss';
+import blockIcon from '../../assets/icons/block.svg'
+import reportIcon from '../../assets/icons/report.svg'
+
 import Navbar from "../../components/Navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -47,6 +50,9 @@ const Profile: FC<ProfileProps> = (props) => {
   const [following, setFollowing] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
+  // extra button with "report" and "block" user
+  const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
+
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
   const [copied, setCopied] = useState([false, false]);
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
@@ -187,6 +193,14 @@ const Profile: FC<ProfileProps> = (props) => {
     setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account));
   }
 
+  async function reportUser() {
+    // TODO add api call
+  }
+  async function blockUser() {
+    // TODO add api call
+  }
+
+
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
@@ -215,7 +229,17 @@ const Profile: FC<ProfileProps> = (props) => {
                       :
                       <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
                   }
-                  <button className={'btn btn-secondary-no-fill'}>...</button>
+                  <div className={styles.ProfileExtraActions}>
+                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    {
+                        isOpenExtraAction && (
+                            <div>
+                              <span><img onClick={() => reportUser()} src={reportIcon.src} alt="Report user"/>Report</span>
+                              <span><img onClick={() => blockUser()} src={blockIcon.src} alt="Block user"/>Block</span>
+                            </div>
+                        )
+                    }
+                  </div>
                 </div>
                 :
                 <></>
@@ -249,7 +273,17 @@ const Profile: FC<ProfileProps> = (props) => {
                     :
                     <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
                 }
-                <button className={'btn btn-secondary-no-fill'}>...</button>
+                <div className={styles.ProfileExtraActions}>
+                  <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                  {
+                    isOpenExtraAction && (
+                          <div>
+                            <span><img onClick={() => reportUser()} src={reportIcon.src} alt="Report user"/>Report</span>
+                            <span><img onClick={() => blockUser()} src={blockIcon.src} alt="Block user"/>Block</span>
+                          </div>
+                      )
+                  }
+                </div>
               </div>
               :
               <></>
