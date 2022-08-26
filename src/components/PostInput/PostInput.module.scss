@@ -190,6 +190,7 @@
     .Inputs {
       .PostInput {
         padding-top: 7px;
+        padding-right: 15px;
         font-size: 1em;
 
         &::placeholder {
@@ -229,7 +230,38 @@
   }
 }
 
+@media only screen and (max-width: 400px) {
+  .BoxTop {
+
+    .Inputs {
+      .PostInput {
+        padding-right: 15px;
+        padding-top: 7px;
+        font-size: 0.9em;
+
+        &::placeholder {
+          font-size:0.9em;
+        }
+      }
+    }
+  }
+}
+
+
 @media only screen and (max-width: 350px) {
+  .BoxTop {
+
+    .Inputs {
+      .PostInput {
+        padding-top: 7px;
+        font-size: 0.8em;
+
+        &::placeholder {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
   .BoxBottom {
     .RightPart {
       .SmileIcon {
