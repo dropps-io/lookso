@@ -88,7 +88,7 @@ const PostInput: FC<PostInputProps> = (props) => {
 
 
       if (!permissions) {
-        setLoadingMessage('First, you need to grant the permissions to our post validator to set data on your profile');
+        setLoadingMessage('Your first post will require you to grant LOOKSO permission to save posts on your Universal Profile');
         await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, {SETDATA: true});
       }
 
@@ -112,7 +112,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
       const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
 
-      setLoadingMessage('Last step, send your post to the blockchain! ⛓️');
+      setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
       await setNewRegistryPostedOnProfile(account, resJWT);
 

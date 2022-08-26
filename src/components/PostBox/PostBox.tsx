@@ -11,8 +11,8 @@ import repostIcon from "../../assets/icons/repost.svg";
 import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
-import {connectToAPI} from "../../core/web3";
-import {setProfileJwt} from "../../store/profile-reducer";
+import {connectToAPI, connectWeb3} from "../../core/web3";
+import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import {insertLike, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -25,6 +25,8 @@ import RepostModal from "../Modals/RepostModal/RepostModal";
 import FourOhFour from "../../pages/404";
 import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
+import ActionModal from "../Modals/ActionModal/ActionModal";
+import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 
 export interface FeedPost {
   hash: string,
@@ -110,6 +112,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showRepostModal, setShowRepostModal] = useState(false);
+  const [showActionModal, setShowActionModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
 
 
@@ -136,7 +139,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function likeOrUnlikePost() {
-    if (props.static || !account) return;
+    if (props.static) return;
+    if (!account) setShowActionModal(true);
 
     const newLikes = !isLiked ? 1 : - 1;
     setLikes(existing => existing + newLikes);
@@ -201,11 +205,34 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n\n${WEBSITE_URL}/Post/${props.post.hash}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
+  
+  function openCommentModal() {
+    if (!account) setShowActionModal(true);
+    else setShowCommentModal(true);
+  }
+
+  function openRepostModal() {
+    if (!account) setShowActionModal(true);
+    else setShowRepostModal(true);
+  }
+
+  async function connectToWeb3() {
+    const web3Info = await connectWeb3();
+
+    if (web3Info) {
+      dispatch(setWeb3(web3Info.web3));
+      dispatch(setAccount(web3Info.account));
+      dispatch(setBalance(web3Info.balance));
+      dispatch(setNetworkId(web3Info.networkId));
+      dispatch(setProfileInfo(web3Info.profileInfo));
+    }
+  }
 
   //TODO in UserTag component add max length name prop number
 
   if (props.post) return (
     <>
+      <ActionModal open={showActionModal} onClose={() => setShowActionModal(false)} textToDisplay={'Please log in first'} btnText={'Log in'} callback={() => connectToWeb3()}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
@@ -261,11 +288,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div className={styles.IconNumber} onClick={() => setShowCommentModal(true)}>
+              <div className={styles.IconNumber} onClick={openCommentModal}>
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>
-              <div className={styles.IconNumber}  onClick={() => setShowRepostModal(true)}>
+              <div className={styles.IconNumber}  onClick={openRepostModal}>
                 <img src={repostIcon.src} alt=""/>
                 <span>{props.post.reposts}</span>
               </div>
