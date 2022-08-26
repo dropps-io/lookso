@@ -16,12 +16,12 @@ const Footer: FC<FooterProps> = () => (
         <span>Made by DROPPS,<br/>powered by LUKSO</span>
       </div>
       <div className={styles.FooterLinks}>
-          <div>
+          <a href={"https://discord.gg/GGJcvRw2uS"} target={"_blank"} rel={'noreferrer'}>
               <Image src={discordLogo.src} width={40} height={30} alt=""/>
-          </div>
-          <div>
+          </a>
+          <a href={"https://twitter.com/dropps_io"} target={"_blank"} rel={'noreferrer'}>
               <Image src={twitterLogo.src} width={40} height={30} alt=""/>
-          </div>
+          </a>
       </div>
     </div>
   </div>

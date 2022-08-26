@@ -41,8 +41,9 @@
   .FooterLinks {
     display: flex;
     align-items: center;
-    & > div {
+    & > a {
       margin: 0 1rem;
+      cursor: pointer;
     }
   }
 }
