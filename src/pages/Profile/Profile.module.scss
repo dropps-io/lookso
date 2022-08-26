@@ -1,7 +1,9 @@
 .Profile {
   background-color: var(--color-background-main);
-  min-height: 200vh;
+  min-height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   .ProfilePageHeader {
     position: sticky;
@@ -12,9 +14,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-shrink: 0;
   }
 
   .ProfilePageContent {
+    flex: 1 0 auto;
     padding: 0 30px;
     color: var(--color-text-default);
 
@@ -132,6 +136,10 @@
     .Activity {
       padding: 0 30px;
     }
+  }
+
+  .ProfilePageFooter {
+    flex-shrink: 0;
   }
 }
 

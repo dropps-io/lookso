@@ -258,7 +258,9 @@ const Profile: FC<ProfileProps> = (props) => {
             <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
           </div>
         </div>
-        <Footer/>
+        <div className={styles.ProfilePageFooter}>
+          <Footer/>
+        </div>
       </div>
     </>
   );

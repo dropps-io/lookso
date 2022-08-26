@@ -4,6 +4,7 @@ import styles from './Activity.module.scss';
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {timer} from "../../core/utils/timer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface ActivityProps {
   feed: FeedPost[],
@@ -87,7 +88,9 @@ const Activity: FC<ActivityProps> = (props) => {
             }
           </div>
           :
-          <></>
+          <div className={styles.Loading}>
+            <CircularProgress size={60}/>
+          </div>
       }
     </div>
   );

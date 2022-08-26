@@ -104,7 +104,9 @@ const Feed: FC<FeedProps> = (props) => {
           newPost={handleNewPost}
           loadNext={(filter) => loadMorePosts(filter)}></Activity>
       </div>
-      <Footer/>
+      <div className={styles.FeedPageFooter}>
+        <Footer/>
+      </div>
     </div>
   );
 }
