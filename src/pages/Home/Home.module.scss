@@ -638,7 +638,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 600px;
+        min-height: 800px;
         h1 {
           text-align: center;
           line-height: normal;
@@ -667,6 +667,7 @@
 
         .ImpactImgPhoneSize {
           display: block;
+          width: 90%;
         }
 
         .CallAction {
@@ -724,7 +725,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 550px;
+        min-height: 650px;
         h1 {
           font-size: 1.7em;
 
@@ -749,7 +750,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 550px;
+        min-height: 600px;
       }
     }
   }
@@ -768,6 +769,10 @@
             left: 175px;
             top: 22px
           }
+        }
+
+        .ImpactImgPhoneSize {
+          width: 100%;
         }
 
         h2 {
@@ -818,8 +823,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 450px;
-        min-height: 450px;
+        min-height: 550px;
         h1 {
           font-size: 1.3em;
           img {

@@ -19,6 +19,7 @@ import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal"
 import Web3 from "web3";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import ActionModal from "../Modals/ActionModal/ActionModal";
+import {router} from "next/client";
 
 interface NavbarProps {}
 
@@ -104,7 +105,9 @@ const Navbar: FC<NavbarProps> = () => {
         <div className={styles.Search}>
           <SearchBar></SearchBar>
         </div>
-        <h1 className={styles.Title}>LOOKSO</h1>
+        {
+          router.asPath === '/' || router.asPath === '' ? <></> : <h1 className={styles.Title}>LOOKSO</h1>
+        }
         <ul className={styles.Buttons}>
           {
             account ?
