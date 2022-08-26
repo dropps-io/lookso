@@ -146,7 +146,7 @@ const Navbar: FC<NavbarProps> = () => {
                     :
                     <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
                 }
-                <ProfileDropdown showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
+                <ProfileDropdown onClose={() => setShowDropdown(false)} showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
               </li>
               :
               <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
@@ -193,7 +193,7 @@ const Navbar: FC<NavbarProps> = () => {
                         :
                         <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
                     }
-                    <ProfileDropdown showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
+                    <ProfileDropdown onClose={() => setShowDropdown(false)} showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
                   </li>
                   :
                   <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
