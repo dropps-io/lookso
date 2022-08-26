@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import styles from './Footer.module.scss';
 import discordLogo from '../../assets/icons/Discord.svg';
+import twitterLogo from '../../assets/icons/Twitter.svg';
 import Image from "next/image";
 
 interface FooterProps {}
@@ -14,7 +15,14 @@ const Footer: FC<FooterProps> = () => (
         <span>Ⓒ</span>
         <span>Made by DROPPS,<br/>powered by LUKSO</span>
       </div>
-      <Image src={discordLogo.src} width={40} height={30} alt=""/>
+      <div className={styles.FooterLinks}>
+          <div>
+              <Image src={discordLogo.src} width={40} height={30} alt=""/>
+          </div>
+          <div>
+              <Image src={twitterLogo.src} width={40} height={30} alt=""/>
+          </div>
+      </div>
     </div>
   </div>
 );
