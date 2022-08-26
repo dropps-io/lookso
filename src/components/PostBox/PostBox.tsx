@@ -260,6 +260,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function handleClick(e: any, value?: string) {
+
+    // stop process if user is highlighting something
+    if (window.getSelection()?.toString()) return
     if (clickLoading) return;
     clickLoading = true;
     
@@ -282,6 +285,13 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }, 10);
   }
 
+  async function onClickProfile() {
+    // stop process if user is highlighting something
+    if (window.getSelection()?.toString()) return
+    // redirect to pro
+    goToProfile(props?.post?.author?.address)
+  }
+
   //TODO in UserTag component add max length name prop number
 
   if (props.post) return (
@@ -298,7 +308,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
               <div className={styles.ProfileImageMedium} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
             </Link>
             <div className={styles.UserTag}>
-              <UserTag username={props.post.author.name} address={props.post.author.address} onClick={() => goTo(`/Profile/${props.post.author.address}`)}/>
+              <UserTag username={props.post.author.name} address={props.post.author.address} onClick={onClickProfile}/>
             </div>
           </div>
           <div className={styles.RightPart}>
