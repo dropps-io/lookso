@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Profile} from "../models/profile";
+import {ProfileInfo} from "../models/profile";
 
-interface ProfileWithJWT extends Profile{
+interface ProfileWithJWT extends ProfileInfo{
     jwt: string
 }
 
@@ -19,7 +19,7 @@ export const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-        setProfileInfo: (state, action: PayloadAction<Profile>) => {
+        setProfileInfo: (state, action: PayloadAction<ProfileInfo>) => {
             state.profileImage = action.payload.profileImage;
             state.backgroundImage = action.payload.backgroundImage;
             state.name = action.payload.name;

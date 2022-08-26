@@ -19,9 +19,9 @@ const RepostModal: FC<RepostModalProps> = (props) => {
   }
 
   return (
-    <CustomModal open={props.open} onClose={props.onClose}>
+    <CustomModal open={props.open} onClose={() => props.onClose()}>
       <div className={styles.RepostModal}>
-        <PostInput onNewPost={handleNewRepost} childPost={props.post}/>
+        <PostInput key={'RepostInput'} onNewPost={handleNewRepost} childPost={props.post}/>
       </div>
     </CustomModal>
   );

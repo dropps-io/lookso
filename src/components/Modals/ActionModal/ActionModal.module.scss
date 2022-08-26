@@ -1,0 +1,15 @@
+.ActionModal {
+  width: 95vw;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+    font-size: 0.9em;
+  }
+}

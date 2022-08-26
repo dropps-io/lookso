@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Post.module.scss';
-import PostBox, {FeedPost, initialFeedPost} from "../../components/PostBox/PostBox";
-import {fetchPost, fetchPostComments} from "../../core/api";
+import PostBox, {FeedPost} from "../../components/PostBox/PostBox";
+import {fetchIsLikedPost, fetchPostComments} from "../../core/api";
 import Navbar from "../../components/Navbar/Navbar";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -9,21 +9,24 @@ import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
 
 interface PostProps {
-  hash: string
+  hash: string,
+  post: FeedPost
 }
 
 const Post: FC<PostProps> = (props) => {
   const router = useRouter();
   const account = useSelector((state: RootState) => state.web3.account);
-  const [post, setPost] = useState<FeedPost>(initialFeedPost);
   const [comments, setComments] = useState<FeedPost[]>([]);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     async function init() {
-      if (router.query.post) {
-        setPost(JSON.parse(router.query.post as string));
-      } else {
-        setPost(await fetchPost(props.hash, account));
+      if (account && !isLiking) {
+        const isLiking = await fetchIsLikedPost(account, props.hash);
+        if (isLiking) {
+          console.log('isLiking')
+          setIsLiking(true);
+        }
       }
       const comments = await fetchPostComments(props.hash, 30, 0, account);
       if (router.query.newComment) {
@@ -37,7 +40,6 @@ const Post: FC<PostProps> = (props) => {
   }, [props.hash, account]);
 
   function newComment(comment: FeedPost) {
-    console.log(comment)
     setComments(existing => [comment].concat(existing));
   }
 
@@ -45,7 +47,7 @@ const Post: FC<PostProps> = (props) => {
     <div className={styles.PostPage} data-testid="Post">
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PageContent}>
-        <PostBox newComment={newComment} post={post}/>
+        <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
         <Comments feed={comments} loadNext={() => {}}/>
       </div>
     </div>

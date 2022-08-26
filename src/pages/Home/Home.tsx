@@ -11,7 +11,7 @@ import peopleIcon from "../../assets/icons/people.svg";
 import explorerIcon from "../../assets/icons/explorer.svg";
 import Footer from "../../components/Footer/Footer";
 import Head from "next/head";
-import Faq from "../../components/Faq/Faq";
+import Link from "next/link";
 
 
 interface HomeProps {}
@@ -44,7 +44,9 @@ const Home: FC<HomeProps> = ()  => {
               <h2>A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
               <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="impact image"/>
               <div className={styles.CallAction}>
-                <button className={styles.ImportantBtn}>See what’s happening</button>
+                <Link href={'/explore'}>
+                  <button className={styles.ImportantBtn}>See what’s happening</button>
+                </Link>
                 <p>(no login required)</p>
               </div>
               <img className={styles.Shape} src={shape1.src} alt=""/>
@@ -95,7 +97,85 @@ const Home: FC<HomeProps> = ()  => {
             </div>
             <img className={styles.RightPart} src={impactImage2.src} alt=''></img>
           </section>
-          <Faq/>
+
+          <section className={styles.FaqSection}>
+            <h2>F.A.Q.</h2>
+            <div className={styles.Questions}>
+              <div className={styles.Row}>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(0)}}>
+                    <span>What is LOOKSO?</span>
+                    { foldQuestions[0] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[0] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(1)}}>
+                    <span>How is LOOKSO decentralized?</span>
+                    { foldQuestions[1] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[1] ? styles.Folded : ''}`}>
+                    Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.
+                  </p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(2)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[2] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[2] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(3)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[3] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[3] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+              </div>
+
+              <div className={styles.Row}>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(4)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[4] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[4] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(5)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[5] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[5] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(6)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[6] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[6] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+                <div className={`${styles.Entry}`}>
+                  <div className={styles.Question} onClick={() => {foldQuestion(7)}}>
+                    <span>How it works?</span>
+                    { foldQuestions[7] ? <span>-</span> : <span>+</span> }
+                  </div>
+                  <p className={`${foldQuestions[7] ? styles.Folded : ''}`}>Yet bed any for  assistance indulgence unpleasing. Not thoughts all exercise blessing. Indulgence way everything joy alteration boisterous the attachment.</p>
+                </div>
+
+              </div>
+            </div>
+          </section>
         </div>
         <Footer/>
       </div>

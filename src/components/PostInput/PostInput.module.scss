@@ -12,23 +12,50 @@
     background-size: cover;
   }
 
-  .PostInput {
-    margin-left: 15px;
-    background: none;
-    border: none;
-    font-size: 1.25em;
-    color: var(--color-text-default);
+  .Inputs {
     width: 100%;
-    outline: none;
-    font-family: 'Poppins';
-    overflow: hidden;
-    resize: none;
+    display: flex;
+    flex-direction: column;
 
-    &::placeholder {
+    .PostInput {
+      margin-left: 15px;
+      background: none;
+      border: none;
       font-size: 1.25em;
-      color: var(--color-text-default-light);
+      color: var(--color-text-default);
+      width: 100%;
+      outline: none;
+      font-family: 'Poppins';
+      overflow: hidden;
+      resize: none;
+
+      &::placeholder {
+        font-size: 1.25em;
+        color: var(--color-text-default-light);
+      }
+    }
+
+    .InputImage {
+      .Cross {
+        width: 17px;
+        height: 17px;
+        border-radius: 17px;
+        margin-top: -5px;
+        margin-left: -5px;
+        padding: 2px;
+        position: absolute;
+        background-color: var(--color-danger);
+        cursor: pointer;
+      }
+
+      .Input {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 5px;
+      }
     }
   }
+
 }
 
 .BoxBottom {
@@ -45,6 +72,27 @@
   .RightPart {
     display: flex;
     align-items: center;
+
+    .SmileIcon {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      margin-right: 20px;
+       img {
+         width: 100%;
+         height: 100%;
+       }
+
+      .EmojiPicker {
+        margin-left: -250px;
+        display: none;
+        color: black;
+      }
+
+      .ActivePicker {
+        display: block;
+      }
+    }
 
     .ImageUpload {
       width: 25px;
@@ -72,11 +120,13 @@
 
 .Comment {
   .BoxTop {
-    .PostInput {
-      font-size: 1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
         font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
       }
     }
   }
@@ -87,12 +137,14 @@
     .ProfileImgSmall {
     }
 
-    .PostInput {
-      padding-top: 5px;
-      font-size: 1.1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
+        padding-top: 5px;
         font-size: 1.1em;
+
+        &::placeholder {
+          font-size: 1.1em;
+        }
       }
     }
   }
@@ -111,14 +163,17 @@
 
   .Comment {
     .BoxTop {
-      .PostInput {
-        padding-top: 10px;
-        font-size: 0.9em;
-
-        &::placeholder {
+      .Inputs {
+        .PostInput {
+          padding-top: 10px;
           font-size: 0.9em;
+
+          &::placeholder {
+            font-size: 0.9em;
+          }
         }
       }
+
     }
   }
 }
@@ -132,12 +187,15 @@
       border: 2px solid;
     }
 
-    .PostInput {
-      padding-top: 7px;
-      font-size: 1em;
-
-      &::placeholder {
+    .Inputs {
+      .PostInput {
+        padding-top: 7px;
+        padding-right: 15px;
         font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
       }
     }
   }
@@ -146,6 +204,13 @@
     margin-top: 0;
 
     .RightPart {
+
+      .SmileIcon {
+        .EmojiPicker {
+          margin-left: -150px;
+        }
+      }
+
       img {
         width: 20px;
         height: 20px;
@@ -165,19 +230,59 @@
   }
 }
 
-@media only screen and (max-width: 350px) {
-  .BoxBottom {
-  }
+@media only screen and (max-width: 400px) {
+  .BoxTop {
 
-  .Comment {
-    .BoxTop {
+    .Inputs {
       .PostInput {
-        margin-left: 10px;
-        padding-top: 10px;
+        padding-right: 15px;
+        padding-top: 7px;
+        font-size: 0.9em;
+
+        &::placeholder {
+          font-size:0.9em;
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 350px) {
+  .BoxTop {
+
+    .Inputs {
+      .PostInput {
+        padding-top: 7px;
         font-size: 0.8em;
 
         &::placeholder {
           font-size: 0.8em;
+        }
+      }
+    }
+  }
+  .BoxBottom {
+    .RightPart {
+      .SmileIcon {
+        .EmojiPicker {
+          margin-left: -100px;
+        }
+      }
+    }
+  }
+
+  .Comment {
+    .BoxTop {
+      .Inputs {
+        .PostInput {
+          margin-left: 10px;
+          padding-top: 10px;
+          font-size: 0.8em;
+
+          &::placeholder {
+            font-size: 0.8em;
+          }
         }
       }
     }

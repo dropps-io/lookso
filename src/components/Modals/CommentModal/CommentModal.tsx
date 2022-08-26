@@ -81,7 +81,7 @@ const CommentModal: FC<CustomModalProps> = (props) => {
           <PostBox post={props.post} static/>
           <div className={styles.Separator}></div>
           <div className={styles.CommentSection}>
-            <PostInput onNewPost={handleNewPost} parentHash={props.post.hash}/>
+            <PostInput key={'CommentInput'} onNewPost={handleNewPost} parentHash={props.post.hash}/>
           </div>
         </div>
       </Box>

@@ -7,13 +7,13 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
-import {fetchIsProfileFollower,
+import {
+  fetchIsProfileFollower,
   fetchProfileActivity,
   fetchProfileFollowersCount,
   fetchProfileFollowingCount,
-  fetchProfileInfo,
   insertFollow,
-  insertUnfollow
+  insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile
 } from "../../core/api";
 import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
@@ -22,11 +22,15 @@ import Footer from "../../components/Footer/Footer";
 import {FeedPost} from "../../components/PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
-import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
+import {ProfileInfo} from "../../models/profile";
+import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
+import {updateRegistry} from "../../core/update-registry";
 
 interface ProfileProps {
-  address: string
+  address: string,
+  profileInfo: ProfileInfo,
+  userTag: string
 }
 
 const Profile: FC<ProfileProps> = (props) => {
@@ -40,10 +44,6 @@ const Profile: FC<ProfileProps> = (props) => {
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
 
-  const [account, setAccount] = useState('');
-  const [username, setUsername] = useState('');
-  const [profileImage, setProfileImage] = useState('');
-  const [backgroundImage, setBackgroundImage] = useState('');
   const [following, setFollowing] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -51,38 +51,28 @@ const Profile: FC<ProfileProps> = (props) => {
   const [copied, setCopied] = useState([false, false]);
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
+  const [bgColor, setBgColor] = useState('fff');
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   let loading = false;
 
   useEffect(() => {
+    if (props.address) setBgColor(props.address.slice(2, 6));
     async function initPageData() {
       setFeed([]);
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
       if (connected.account === props.address) {
-        await initConnectedAccount();
       } else if (props.address && props.address.length === 42) {
         await initProfile();
       } else {
       }
-      setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0));
+      await fetchPosts('all');
     }
 
     async function initProfile() {
-      setAccount(props.address);
-      const profileData = await fetchProfileInfo(props.address);
-      setUsername(profileData.name);
-      setProfileImage(profileData.profileImage);
-      setBackgroundImage(profileData.backgroundImage);
       setIsFollowing(await fetchIsProfileFollower(props.address, connected.account));
-    }
-
-    async function initConnectedAccount() {
-      setAccount(connected.account);
-      setUsername(connected.username);
-      setProfileImage(connected.profileImage);
-      setBackgroundImage(connected.backgroundImage);
     }
 
     initPageData();
@@ -115,7 +105,15 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertFollow(connected.account, account, headersJWT);
+      try {
+        const res: any = await insertFollow(connected.account, props.address, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
+      } catch (e: any) {
+        setIsFollowing(false);
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain(headersJWT)
+        }
+      }
     }
     catch (e) {
       console.error(e);
@@ -131,7 +129,15 @@ const Profile: FC<ProfileProps> = (props) => {
       if (!headersJWT) {
         headersJWT = await requestJWT();
       }
-      await insertUnfollow(connected.account, account, headersJWT);
+      try {
+        const res: any  = await insertUnfollow(connected.account, props.address, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
+      } catch (e: any) {
+        setIsFollowing(true);
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain(headersJWT)
+        }
+      }
     }
     catch (e) {
       console.error(e);
@@ -139,16 +145,29 @@ const Profile: FC<ProfileProps> = (props) => {
     }
   }
 
+  async function pushRegistryToTheBlockchain(_jwt: string, jsonUrl?: string) {
+    setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
+
+    try {
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account, _jwt)).jsonUrl
+      await updateRegistry(connected.account, JSONURL, web3);
+      await setNewRegistryPostedOnProfile(connected.account, _jwt);
+      setLoadingMessage('');
+    } catch (e) {
+      setLoadingMessage('');
+    }
+  }
+
   function openExplorer(address: string) {
     window.open ( EXPLORER_URL + '/address/' + address, '_blank');
   }
 
-  async function loadMorePosts() {
+  async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
-      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset);
+      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account);
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
@@ -159,83 +178,91 @@ const Profile: FC<ProfileProps> = (props) => {
       console.error(e);
       loading = false;
     }
-    console.log(feed);
+  }
+
+  async function fetchPosts(filter: 'all' | 'post' | 'event') {
+    setFeed([]);
+    setFullyLoadedActivity(false);
+    setOffset(POSTS_PER_LOAD);
+    setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account));
   }
 
   return (
-    <div className={styles.Profile} data-testid="Profile">
-      <Head>
-        <title>{`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`} | Lookso</title>
-      </Head>
-      <div className={styles.ProfilePageHeader}>
-        <Navbar/>
-      </div>
-       <div className={styles.ProfilePageContent}>
-         <div className={styles.BackgroundImage} style={ backgroundImage ? { backgroundImage: `url(${formatUrl(backgroundImage)})`} : {backgroundColor: `#${(account.slice(2, 8))}`}}></div>
-         <div className={styles.ProfileBasicInfo}>
+    <>
+      <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
+      <div className={styles.Profile} data-testid="Profile">
+        <div className={styles.ProfilePageHeader}>
+          <Navbar/>
+        </div>
+        <div className={styles.ProfilePageContent}>
+          <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
-             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+             <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-           <div className={styles.ProfileImage} style={{backgroundImage: profileImage ? `url(${formatUrl(profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
-           <div className={styles.ProfileAddress}>
-             <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
-             <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
-           </div>
-           {
-             connected.account && props.address !== connected.account ?
-               <div className={styles.ProfileButtons}>
-                 {
-                   isFollowing ?
-                     <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
-                     :
-                     <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
-                 }
-                 <button className={'btn btn-secondary-no-fill'}>...</button>
-               </div>
-               :
-               <></>
-           }
-         </div>
-         <span className={styles.UserTagMobile}>
-             <UserTag onClick={() => copyToClipboard(`@${username ? username : 'unnamed'}#${account.slice(2, 6).toUpperCase()}`, 0)} username={username} address={account} />
+            <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            <div className={styles.ProfileAddress}>
+              <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+              <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
+            </div>
+            {
+              connected.account && props.address !== connected.account ?
+                <div className={styles.ProfileButtons}>
+                  {
+                    isFollowing ?
+                      <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                      :
+                      <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                  }
+                  <button className={'btn btn-secondary-no-fill'}>...</button>
+                </div>
+                :
+                <></>
+            }
+          </div>
+          <span className={styles.UserTagMobile}>
+             <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-         <div className={styles.ProfileAddressMobile}>
-           <img onClick={() => openExplorer(account)} src={chainIcon.src} alt=""/>
-           <span onClick={() => openExplorer(account)}>{shortenAddress(account, 3)}</span>
-         </div>
-         <div className={styles.ProfileInfluence}>
-           <div className={styles.ProfileFollow}>
-             <strong>{following}</strong>
-             <span>Following</span>
-           </div>
-           <div className={styles.Sep}></div>
-           <div className={styles.ProfileFollow}>
-             <strong>{followers}</strong>
-             <span>Followers</span>
-           </div>
-         </div>
-         {
-           connected.account && props.address !== connected.account ?
-             <div className={styles.ProfileButtons}>
-               {
-                 isFollowing ?
-                   <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
-                   :
-                   <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
-               }
-               <button className={'btn btn-secondary-no-fill'}>...</button>
-             </div>
-             :
-             <></>
-         }
-         <div className={styles.Activity}>
-           <Activity headline='Activity' feed={feed} loadNext={loadMorePosts}></Activity>
-         </div>
-       </div>
-      <Footer/>
-    </div>
+          <div className={styles.ProfileAddressMobile}>
+            <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
+            <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
+          </div>
+          <div className={styles.ProfileInfluence}>
+            <div className={styles.ProfileFollow}>
+              <strong>{following}</strong>
+              <span>Following</span>
+            </div>
+            <div className={styles.Sep}></div>
+            <div className={styles.ProfileFollow}>
+              <strong>{followers}</strong>
+              <span>Follower{followers > 1 ? 's' : ''}</span>
+            </div>
+          </div>
+          {
+            connected.account && props.address !== connected.account ?
+              <div className={styles.ProfileButtons}>
+                {
+                  isFollowing ?
+                    <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                    :
+                    <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                }
+                <button className={'btn btn-secondary-no-fill'}>...</button>
+              </div>
+              :
+              <></>
+          }
+          <div className={styles.Activity}>
+            <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
+          </div>
+        </div>
+        <div className={styles.ProfilePageFooter}>
+          <Footer/>
+        </div>
+      </div>
+    </>
   );
 }
 

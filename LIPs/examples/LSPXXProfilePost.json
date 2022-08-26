@@ -1,8 +1,9 @@
 {
   "LSPXXProfilePost": {
-    "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
-    "date": "2022-07-27T13:54:18.127Z",
+    "version":"0.0.1",
+    "validator": "0x049bAfA4bF69bCf6FcB7246409bc92a43f0a7264",
     "message": "This is the first Lookso post.",
+    "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
     "links": [
       {
         "title": "Our website",
@@ -11,8 +12,8 @@
     ],
     "asset": {
       "hashFunction": "keccak256(bytes)",
-      "hash": "0x18ae4c402118c69595eb0f266e83cb0c502e44d5bef38ce706d4061272bec82a",
-      "url": "ipfs://bafybeif3fhjbbawum4mpvt6wuqbwwuzubqqao4mqhcsb3b5n5lckec7fzi",
+      "hash": "0x813a0027c9201ccdec5324aa32ddf0e8b9400479662b6f243500a42f2f85d2eb",
+      "url": "ar://gkmVUoHE4Ay6ScIlgV4E7Fs1m13LfpAXSuwuRGRQbeA",
       "fileType": "jpg"
     }
   },

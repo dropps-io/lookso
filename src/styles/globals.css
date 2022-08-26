@@ -56,3 +56,8 @@ a, li, ul {
   opacity: 0.5;
   margin-left: 0;
 }
+
+/*Quick fix for emoji picker*/
+.emoji-categories {
+  display: none !important;
+}

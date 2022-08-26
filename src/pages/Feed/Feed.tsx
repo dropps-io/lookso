@@ -32,23 +32,23 @@ const Feed: FC<FeedProps> = (props) => {
       if (account && props.type === 'Feed') {
         setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0));
       } else {
-        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0));
+        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, undefined, account));
       }
     }
 
     if (web3Initialized) initPageData();
   }, [web3Initialized, account, props.type]);
 
-  async function loadMorePosts() {
+  async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     console.log('Loading posts... from' + offset);
     try {
       loading = true;
       let newPosts: FeedPost[];
       if (account && props.type === 'Feed') {
-        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, undefined);
+        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
       } else {
-        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined);
+        newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, account);
       }
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
@@ -62,13 +62,17 @@ const Feed: FC<FeedProps> = (props) => {
     }
   }
 
-  async function fetchFeedWithFilter(type?: 'post' | 'event') {
+  async function fetchFeedWithFilter(type: 'all' | 'post' | 'event') {
     setFeed([]);
     setOffset(POSTS_PER_LOAD);
+    setFullyLoadedActivity(false);
     if (account) {
-      setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0, type));
+      if (props.type === 'Feed') setFeed(await fetchProfileFeed(account, POSTS_PER_LOAD, 0, type === 'all' ? undefined : type));
+      else {
+        setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, type === 'all' ? undefined : type));
+      }
     } else {
-      setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, type));
+      if (props.type === 'Explore') setFeed(await fetchAllFeed(POSTS_PER_LOAD, 0, type === 'all' ? undefined : type));
     }
   }
 
@@ -79,7 +83,7 @@ const Feed: FC<FeedProps> = (props) => {
   return (
     <div className={styles.Feed} data-testid="Feed">
       <Head>
-        <title>Feed | Lookso</title>
+        <title>{props.type} | Lookso</title>
       </Head>
       <div className={styles.FeedPageHeader}>
         <Navbar/>
@@ -88,14 +92,21 @@ const Feed: FC<FeedProps> = (props) => {
         {
           account ?
             <div className={styles.PostWritingBox}>
-              <PostInput onNewPost={handleNewPost}/>
+              <PostInput key={'FeedInput'} onNewPost={handleNewPost}/>
             </div>
             :
             <></>
         }
-        <Activity newPost={handleNewPost} feed={feed} headline={props.type} loadNext={() => loadMorePosts()}></Activity>
+        <Activity
+          feed={feed}
+          headline={props.type}
+          onFilterChange={(filterValue) => fetchFeedWithFilter(filterValue)}
+          newPost={handleNewPost}
+          loadNext={(filter) => loadMorePosts(filter)}></Activity>
       </div>
-      <Footer/>
+      <div className={styles.FeedPageFooter}>
+        <Footer/>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {fileToBase64} from "./utils/file-to-base64";
+import {ProfileDisplay, ProfileInfo} from "../models/profile";
 
 const headers = {
   Accept: 'application/json',
@@ -40,11 +41,14 @@ export async function insertFollow(followerAddress: string, followingAddress: st
     following: followingAddress
   };
 
-  await fetch(API_URL + '/lookso/follow', {
+  const res = await fetch(API_URL + '/lookso/follow', {
     method: 'POST',
     body: JSON.stringify(content),
     headers: headersWithJWT(jwt)
   });
+
+  if(!res.ok) throw await res.json();
+  else return await res.json();
 }
 
 export async function insertUnfollow(followerAddress: string, followingAddress: string, jwt: string): Promise<void> {
@@ -53,47 +57,43 @@ export async function insertUnfollow(followerAddress: string, followingAddress: 
     following: followingAddress
   };
 
-  await fetch(API_URL + '/lookso/unfollow', {
+  const res = await fetch(API_URL + '/lookso/unfollow', {
     method: 'DELETE',
     body: JSON.stringify(content),
     headers: headersWithJWT(jwt)
   });
+
+  if(!res.ok) throw await res.json();
+  else return await res.json();
 }
 
 export async function insertLike(address: string, postHash: string, jwt: string): Promise<void> {
-  const content = {
-    sender: address,
-    postHash
-  };
+    const content = {
+      sender: address,
+      postHash
+    };
 
-  await fetch(API_URL + '/lookso/like', {
-    method: 'POST',
-    body: JSON.stringify(content),
-    headers: headersWithJWT(jwt)
-  });
+    const res = await fetch(API_URL + '/lookso/like', {
+      method: 'POST',
+      body: JSON.stringify(content),
+      headers: headersWithJWT(jwt)
+    });
+
+    if(!res.ok) throw await res.json();
+    else return await res.json();
 }
 
-export async function deleteLike(address: string, postHash: string, jwt: string): Promise<void> {
-  const content = {
-    sender: address,
-    postHash
-  };
-
-  await fetch(API_URL + '/lookso/like', {
-    method: 'DELETE',
-    body: JSON.stringify(content),
-    headers: headersWithJWT(jwt)
-  });
-}
-
-export async function FetchIsLikedPost(sender: string, postHash: string) {
-  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json()).followers;
+export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
+  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json());
+  console.log(likes);
   return likes && likes.length > 0;
 }
 
 
-export async function fetchProfileInfo(address: string) {
-  return await (await fetch(API_URL + '/lookso/profile/' + address + '/info')).json();
+export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/info');
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchProfileFollowingCount(address: string): Promise<number> {
@@ -109,8 +109,8 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/profile/' + address + '/activity?limit=' + limit + '&offset=' + offset;
+export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/profile/' + address + '/activity?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }
@@ -121,15 +121,16 @@ export async function fetchProfileFeed(address: string, limit: number, offset: n
   return await (await fetch(url)).json();
 }
 
-export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/feed?limit=' + limit + '&offset=' + offset;
+export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
+  let url = API_URL + '/lookso/feed?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }
 
 export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {
-  let url = API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf;
-  return await (await fetch(url)).json();
+  let res = await fetch(API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf);
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
@@ -175,6 +176,10 @@ export async function fetchProfileNotifications(address: string, limit: number, 
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications?limit=' + limit + '&offset=' + offset)).json()) as Notification[];
 }
 
+export async function searchProfiles(input: string, limit: number, offset: number): Promise<ProfileDisplay[]> {
+  return (await (await fetch(API_URL + '/lookso/search/' + input + '?limit=' + limit + '&offset=' + offset)).json()) as ProfileDisplay[];
+}
+
 export async function setProfileNotificationsToViewed(address: string, jwt: string): Promise<void> {
   await fetch(API_URL + '/lookso/profile/' + address + '/notifications',
     {
@@ -182,4 +187,23 @@ export async function setProfileNotificationsToViewed(address: string, jwt: stri
       body: JSON.stringify({}),
       headers: headersWithJWT(jwt)
     });
+}
+
+export async function requestNewRegistryJsonUrl(address: string, jwt: string): Promise<{jsonUrl: string}> {
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/registry', {
+    method: 'POST',
+    body: JSON.stringify({}),
+    headers: headersWithJWT(jwt)
+  });
+  if (res.ok) return await res.json();
+  else throw await res.json();
+}
+
+export async function setNewRegistryPostedOnProfile(address: string, jwt: string): Promise<void> {
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/registry/uploaded', {
+    method: 'POST',
+    body: JSON.stringify({}),
+    headers: headersWithJWT(jwt)
+  });
+  if (!res.ok) throw await res.json();
 }

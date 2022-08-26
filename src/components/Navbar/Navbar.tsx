@@ -1,34 +1,35 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Navbar.module.scss';
 import SearchBar from "../SearchBar/SearchBar";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/icons/logo.svg";
 import burgerMenuIcon from "../../assets/icons/burger-menu.svg";
 import crossIcon from "../../assets/icons/cross.svg";
 import searchIcon from "../../assets/icons/search.svg";
 import bellIcon from "../../assets/icons/bell.svg";
 import bellIconFilled from "../../assets/icons/bell-filled.svg";
-import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
 import {connectToAPI, connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import {shortenAddress} from "../../core/utils/address-formating";
-import {EXPLORER_URL, NATIVE_TOKEN} from "../../environment/endpoints";
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import Link from "next/link";
-import UserTag from "../UserTag/UserTag";
 import {fetchProfileNotificationsCount} from "../../core/api";
 import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
 import Web3 from "web3";
+import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
+import ActionModal from "../Modals/ActionModal/ActionModal";
+import {useRouter} from "next/router";
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
   const [showNotificationsModal, setShowNotificationsModal] = useState(false);
+  const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
   const [notificationsCount, setNotificationsCount] = useState(0);
   const account: string = useSelector((state: RootState) => state.web3.account);
   const balance: string = useSelector((state: RootState) => state.web3.balance);
@@ -36,7 +37,14 @@ const Navbar: FC<NavbarProps> = () => {
   const profileImage: string = useSelector((state: RootState) => state.profile.profileImage);
 
   async function connectToWeb3() {
-    const web3Info = await connectWeb3();
+    let web3Info;
+    try {
+      web3Info = await connectWeb3();
+    } catch (e: any) {
+      console.error(e.message);
+      if ((e.message as string).includes('Provider')) setShowUpInstallationModal(true);
+      return;
+    }
 
     if (web3Info) {
       dispatch(setWeb3(web3Info.web3));
@@ -60,8 +68,18 @@ const Navbar: FC<NavbarProps> = () => {
   }
 
   function displayNotifications() {
+    setShowBurgerMenu(false);
     setNotificationsCount(0);
     setShowNotificationsModal(true);
+  }
+
+  function goToUpInstallationGuide() {
+    window.open('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/', '_blank');
+    setShowUpInstallationModal(false);
+  }
+
+  function goTo(url: string) {
+    window.open(url, '_blank');
   }
 
   useEffect(() => {
@@ -73,175 +91,125 @@ const Navbar: FC<NavbarProps> = () => {
   }, [account]);
 
   return (
-    <div className={styles.Navbar} data-testid="Navbar">
-      <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
-      <Link href='/'>
-        <div className={styles.Logo}>
-          <img src={logo.src} alt="Logo"/>
+    <>
+      <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
+      <div className={styles.Navbar} data-testid="Navbar">
+        <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
+        <Link href='/'>
+          <div className={styles.Logo}>
+            <img src={logo.src} alt="Logo"/>
+          </div>
+        </Link>
+        <div className={styles.SearchIcon}>
+          <img src={searchIcon.src} alt="Search"/>
         </div>
-      </Link>
-      <div className={styles.SearchIcon}>
-        <img src={searchIcon.src} alt="Search"/>
-      </div>
-      <div className={styles.Search}>
-        <SearchBar></SearchBar>
-      </div>
-      <ul className={styles.Buttons}>
+        <div className={styles.Search}>
+          <SearchBar></SearchBar>
+        </div>
         {
-          account ?
-            <></>
-            :
-            <li><a href="">Discord</a></li>
+          router.asPath === '/' || router.asPath === '' ? <></> : <h1 className={styles.Title}>LOOKSO</h1>
         }
-        <li><Link href='/explore'><a href="">Explore</a></Link></li>
-        {
-          account ?
-            <li><Link href='/feed'><a href="">My Feed</a></Link></li>
-            :
-            <></>
-        }
-        {
-          account ?
-            <li>
-              <a className={styles.Notifications} onClick={() => displayNotifications()}>
+        <ul className={styles.Buttons}>
+          {
+            account ?
+              <></>
+              :
+              <>
+                <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+              </>
+          }
+          <li><Link href='/explore'><a href="">Explore</a></Link></li>
+          {
+            account ?
+              <li><Link href='/feed'><a href="">My feed</a></Link></li>
+              :
+              <></>
+          }
+          {
+            account ?
+              <li>
+                <a className={styles.Notifications} onClick={() => displayNotifications()}>
+                  {
+                    notificationsCount > 0 ?
+                      <>
+                        <img className={styles.BellIcon} src={bellIconFilled.src} alt=""/>
+                        <div className={styles.NotificationsCount}>{notificationsCount}</div>
+                      </>
+                      :
+                      <img className={styles.BellIcon} src={bellIcon.src} alt=""/>
+                  }
+                </a>
+              </li> : <></>
+          }
+          {
+            account ?
+              <li className={styles.Profile}>
                 {
-                  notificationsCount > 0 ?
-                    <>
-                      <img className={styles.BellIcon} src={bellIconFilled.src} alt=""/>
-                      <div className={styles.NotificationsCount}>{notificationsCount}</div>
-                    </>
+                  profileImage ?
+                    <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
                     :
-                    <img className={styles.BellIcon} src={bellIcon.src} alt=""/>
+                    <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
                 }
-              </a>
-            </li> : <></>
-        }
-        {
-          account ?
-            <li className={styles.Profile}>
+                <ProfileDropdown onClose={() => setShowDropdown(false)} showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
+              </li>
+              :
+              <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
+                <a>Login</a>
+              </li>
+          }
+        </ul>
+        <div className={styles.BurgerMenu}>
+          {
+            showBurgerMenu ?
+              <img onClick={() => setShowBurgerMenu(false)} src={crossIcon.src} alt=""/>
+              :
+              <img onClick={() => setShowBurgerMenu(true)} src={burgerMenuIcon.src} alt=""/>
+          }
+          <div className={`${styles.Menu} ${showBurgerMenu ? styles.ShowMenu : ''}`}>
+            <ul className={styles.Buttons}>
+              <li><Link href={'/'}><a href="">Home</a></Link></li>
               {
-                profileImage ?
-                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
+                account ?
+                  <></>
                   :
-                  <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
+                  <>
+                    <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                    <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+                  </>
               }
-              <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
-                <div className={styles.DropdownHeader}>
-                  <Link href={`/Profile/${account}`}>
-                  {
-                    profileImage ?
-                      <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
-                      :
-                      <div className={styles.ProfilePicMedium}/>
-                  }
-                  </Link>
-                  <Link href={`/Profile/${account}`}>
-                  <div className={styles.ProfileContext}>
-                    <strong className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></strong>
-                    <span className={styles.Network}>L16 testnet</span>
-                  </div>
-                  </Link>
-                </div>
-                <Link href={`/Profile/${account}`}>
-                  <div className={styles.MyProfile}>
-                    <button className={'btn btn-dark'}>My profile</button>
-                  </div>
-                </Link>
-                <div className={styles.DropdownButtons}>
-                  <div className={styles.Balance}>
-                    <img src={miniLogoLukso.src} alt={''}/>
-                    <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
-                  </div>
-                  <div className={styles.TopButtons}>
-                    <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
-                    <button className={'btn btn-secondary'}>UP.cloud</button>
-                  </div>
-                  <button className={'btn btn-main'}>Disconnect</button>
-                </div>
-              </div>
-            </li>
-            :
-            <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
-              <a>Login</a>
-            </li>
-        }
-      </ul>
-      <div className={styles.BurgerMenu}>
-        {
-          showBurgerMenu ?
-          <img onClick={() => setShowBurgerMenu(false)} src={crossIcon.src} alt=""/>
-          :
-          <img onClick={() => setShowBurgerMenu(true)} src={burgerMenuIcon.src} alt=""/>
-        }
-        <div className={`${styles.Menu} ${showBurgerMenu ? styles.ShowMenu : ''}`}>
-          <ul className={styles.Buttons}>
-            <li><a href="">Home</a></li>
-            {
-              account ?
-                <></>
-                :
-                <li><a href="">Discord</a></li>
-            }
-            <li><Link href='/explore'><a href="">Explore</a></Link></li>
-            {
-              account ?
-                <li><Link href='/feed'><a href="">My Feed</a></Link></li>
-                :
-                <></>
-            }
-            {
-              account ?
-                <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li> : <></>
-            }
-            {
-              account ?
-                <li className={styles.Profile}>
-                  {
-                    profileImage ?
-                      <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
-                      :
-                      <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
-                  }
-                  <div className={`${styles.ProfileDropdown} ${!showDropdown ? styles.InactiveDropdown : ''}`}>
-                    <div className={styles.DropdownHeader}>
-                      <Link href={`/Profile/${account}`}>
-                        {
-                          profileImage ?
-                            <div className={styles.ProfilePicMedium} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}/>
-                            :
-                            <div className={styles.ProfilePicMedium}/>
-                        }
-                      </Link>
-                      <Link href={`/Profile/${account}`}>
-                        <div className={styles.ProfileContext}>
-                          <strong>{ shortenAddress(account, 3) }</strong>
-                          <span>L16 Testnet</span>
-                        </div>
-                      </Link>
-                    </div>
-                    <p className={styles.ProfileName}><UserTag username={username} address={account} colorReversed/></p>
-                    <div className={styles.Balance}>
-                      <img src={miniLogoLukso.src} alt={''}/>
-                      <span>{balance.slice(0, 7)} {NATIVE_TOKEN}</span>
-                    </div>
-                    <div className={styles.DropdownButtons}>
-                      <div className={styles.TopButtons}>
-                        <button className={'btn btn-secondary'}><a href={EXPLORER_URL + 'address/' + account} target='_blank' rel="noopener noreferrer">Explorer</a></button>
-                        <button className={'btn btn-secondary'}>UP.cloud</button>
-                      </div>
-                      <button className={'btn btn-main'}>Disconnect</button>
-                    </div>
-                  </div>
-                </li>
-                :
-                <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
-                  <a>Login</a>
-                </li>
-            }
-          </ul>
+              <li><Link href='/explore'><a href="">Explore</a></Link></li>
+              {
+                account ?
+                  <li><Link href='/feed'><a href="">My feed</a></Link></li>
+                  :
+                  <></>
+              }
+              {
+                account ?
+                  <li><a className={styles.Notifications} onClick={() => displayNotifications()}>Notifications</a></li> : <></>
+              }
+              {
+                account ?
+                  <li className={styles.Profile}>
+                    {
+                      profileImage ?
+                        <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall} style={{backgroundImage: `url(${formatUrl(profileImage)})`}}></div>
+                        :
+                        <div onClick={() => {setShowDropdown(!showDropdown)}} className={styles.ProfilePicSmall}></div>
+                    }
+                    <ProfileDropdown onClose={() => setShowDropdown(false)} showDropdown={showDropdown} account={account} username={username} profileImage={profileImage} balance={balance}/>
+                  </li>
+                  :
+                  <li className={styles.ImportantBtn} onClick={() => {connectToWeb3()}}>
+                    <a>Login</a>
+                  </li>
+              }
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

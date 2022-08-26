@@ -1,37 +1,37 @@
 .Feed {
-
-  $header-height: 66px;
-  $padding-side: 30px;
-
-  $max-width-feed: 700px;
-
   background-color: var(--color-background-main);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  // overflow: hidden;
+  overflow: hidden;
+
+  $header-height: 66px;
+  --padding-feed: 30px;
 
   .FeedPageHeader {
+    flex-shrink: 0;
     position: fixed;
     top: 0;
-    padding: 0 $padding-side;
+    padding: 0 var(--padding-feed);
     width: 100%;
     height: $header-height;
-    background-color: var(--color-background-main);
     border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-background-main);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    z-index: 10;
   }
 
   .FeedPageContent {
-    padding: $header-height $padding-side;
+    padding: calc(#{$header-height} * 1.25) var(--padding-feed) 0 var(--padding-feed);
+    flex: 1 0 auto;
     color: var(--color-text-default);
 
     .FeedHeader {
       width: 100%;
-      max-width: $max-width-feed;
+      max-width: 700px;
       margin: 40px auto 0 auto;
       border-bottom: 1px solid var(--color-border);
 
@@ -63,15 +63,15 @@
     .PostWritingBox {
       background-color: var(--color-background-main-l2);
       width: 100%;
-      max-width: $max-width-feed;
+      max-width: 700px;
       margin: 20px auto;
       border-radius: 24px;
       padding: 25px;
     }
   }
 
-  .Footer {
-    justify-self: flex-end;
+  .FeedPageFooter {
+    flex-shrink: 0;
   }
 }
 
@@ -85,11 +85,8 @@
   }
 }
 
-@media only screen and (max-width: 400px) {
-  $padding-side: 10px;
+@media only screen and (max-width: 450px) {
   .Feed {
-    .FeedPageContent {
-      padding: 0 $padding-side;
-    }
+    --padding-feed: 10px;
   }
 }

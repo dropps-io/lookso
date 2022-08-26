@@ -1,12 +1,6 @@
 .NotificationsModal {
-  display: flex;
-  margin-top: 20px;
-
-  .LeftPart {
-    margin-top: 10px;
-    margin-right: 20px;
-    margin-left: -20px;
-  }
+  margin-top: -20px;
+  margin-left: -20px;
 
   .Notifications {
     font-size: 0.9em;
@@ -25,6 +19,7 @@
         border: 2px solid var(--color-border-light);
         margin-right: 15px;
         width: 40px;
+        min-width: 40px;
         height: 40px;
         border-radius: 40px;
         background-size: cover;
@@ -74,6 +69,7 @@
 
         .ProfileImgMedium {
           width: 35px;
+          min-width: 35px;
           height: 35px;
           border-radius: 35px;
         }
@@ -85,17 +81,21 @@
 
 @media only screen and (max-width: 450px) {
   .NotificationsModal {
-    flex-direction: column;
+    margin-left: -10px;
 
-    .LeftPart {
-      margin: -35px 0 10px;
+    .Notifications {
+      margin-right: -25px;
+      padding-right: 30px;
     }
   }
 }
 
 @media only screen and (max-width: 400px) {
   .NotificationsModal {
+    margin-left: 0;
     .Notifications {
+      margin-right: -10px;
+      padding-right: 20px;
       font-size: 0.7em;
       .Notification {
         min-height: 40px;
@@ -103,6 +103,7 @@
         .ProfileImgMedium {
           width: 30px;
           height: 30px;
+          min-width: 30px;
           border-radius: 30px;
         }
       }

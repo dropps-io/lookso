@@ -4,28 +4,41 @@ import {fetchProfileAuthJwtToken, fetchProfileAuthNonce, fetchProfileInfo} from 
 declare const window: any;
 
 export function listenChanges() {
-  window.ethereum.on('chainChanged', () => {
-    getWeb3Info();
-  });
-  window.ethereum.on('accountsChanged', () => {
-    getWeb3Info();
-  });
+  // console.log('listening')
+  // window.ethereum.on('chainChanged', async () => {
+  //   await getWeb3Info();
+  // });
+  // window.ethereum.on('accountsChanged', async (account: any) => {
+  //   console.log(account)
+  //   await getWeb3Info();
+  // });
 }
 
-export async function getWeb3Info() {
+export async function getAccount(): Promise<string> {
   const web3 = new Web3(window.ethereum);
   const accounts: string[] = await web3.eth.getAccounts();
   if (accounts.length === 0) throw 'No account connected';
-  const balance = Web3.utils.fromWei(await web3.eth.getBalance(accounts[0]), 'ether');
+  else return accounts[0];
+}
+
+export async function getWeb3Info(account?: string) {
+  let address = account;
+  const web3 = new Web3(window.ethereum);
+  if (!address) {
+    const accounts: string[] = await web3.eth.getAccounts();
+    if (accounts.length === 0) throw 'No account connected';
+    address = accounts[0];
+  }
+  const balance = Web3.utils.fromWei(await web3.eth.getBalance(address), 'ether');
   // TODO verify how to fetch network id
   // const networkId = await web3.eth.net.getId();
   const networkId = 0;
 
-  const profileInfo = await fetchProfileInfo(accounts[0]);
+  const profileInfo = await fetchProfileInfo(address);
 
   return {
     web3,
-    account: accounts[0],
+    account: address,
     balance,
     networkId,
     profileInfo

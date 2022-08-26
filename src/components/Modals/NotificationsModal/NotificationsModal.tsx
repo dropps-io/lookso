@@ -54,13 +54,13 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
   }
 
   function goToProfile(account: string) {
-    props.onClose();
     router.push('/Profile/' + account);
+    onClose();
   }
 
   function goToPost(hash?: string) {
-    props.onClose();
     if (hash) router.push('/Post/' + hash);
+    onClose();
   }
 
   return (
@@ -70,7 +70,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
           <img src={bell.src} alt=""/>
         </div>
         <div className={styles.Notifications}>
-          {
+          { notifications.length > 0 ?
             notifications.map((notification, index) =>
               <div key={index} className={`${styles.Notification} ${notification.viewed ? styles.Viewed : ''}`}>
                 <div onClick={() => goToProfile(notification.sender.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${notification.sender.image ? formatUrl(notification.sender.image) : DEFAULT_PROFILE_IMAGE})`}}/>
@@ -81,7 +81,8 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
                   {notification.type === 'comment' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>commented your post</span></span> : <></>}
                 </p>
               </div>
-            )
+            ) :
+            <p>No notifications yet 🤷‍</p>
           }
         </div>
       </div>
