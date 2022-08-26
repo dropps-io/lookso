@@ -47,7 +47,8 @@ export async function insertFollow(followerAddress: string, followingAddress: st
     headers: headersWithJWT(jwt)
   });
 
-  if (!res.ok) throw await res.json();
+  if(!res.ok) throw await res.json();
+  else return await res.json();
 }
 
 export async function insertUnfollow(followerAddress: string, followingAddress: string, jwt: string): Promise<void> {
@@ -62,7 +63,8 @@ export async function insertUnfollow(followerAddress: string, followingAddress: 
     headers: headersWithJWT(jwt)
   });
 
-  if (!res.ok) throw await res.json();
+  if(!res.ok) throw await res.json();
+  else return await res.json();
 }
 
 export async function insertLike(address: string, postHash: string, jwt: string): Promise<void> {
@@ -78,19 +80,7 @@ export async function insertLike(address: string, postHash: string, jwt: string)
     });
 
     if(!res.ok) throw await res.json();
-}
-
-export async function deleteLike(address: string, postHash: string, jwt: string): Promise<void> {
-  const content = {
-    sender: address,
-    postHash
-  };
-
-  await fetch(API_URL + '/lookso/like', {
-    method: 'DELETE',
-    body: JSON.stringify(content),
-    headers: headersWithJWT(jwt)
-  });
+    else return await res.json();
 }
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {

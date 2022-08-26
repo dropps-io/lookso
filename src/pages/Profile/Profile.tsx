@@ -106,11 +106,12 @@ const Profile: FC<ProfileProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        await insertFollow(connected.account, props.address, headersJWT);
+        const res: any = await insertFollow(connected.account, props.address, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setIsFollowing(false);
         if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain()
+          await pushRegistryToTheBlockchain(headersJWT)
         }
       }
     }
@@ -129,11 +130,12 @@ const Profile: FC<ProfileProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        await insertUnfollow(connected.account, props.address, headersJWT);
+        const res: any  = await insertUnfollow(connected.account, props.address, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setIsFollowing(true);
         if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain()
+          await pushRegistryToTheBlockchain(headersJWT)
         }
       }
     }
@@ -143,19 +145,13 @@ const Profile: FC<ProfileProps> = (props) => {
     }
   }
 
-  async function pushRegistryToTheBlockchain() {
+  async function pushRegistryToTheBlockchain(_jwt: string, jsonUrl?: string) {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      let headersJWT = jwt;
-
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-
-      const res = await requestNewRegistryJsonUrl(connected.account, headersJWT);
-      await updateRegistry(connected.account, res.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(connected.account, jwt);
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account, _jwt)).jsonUrl
+      await updateRegistry(connected.account, JSONURL, web3);
+      await setNewRegistryPostedOnProfile(connected.account, _jwt);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');

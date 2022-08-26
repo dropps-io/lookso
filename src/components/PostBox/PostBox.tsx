@@ -150,34 +150,31 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       }
 
       try {
-        await insertLike(account, props.post.hash, headersJWT);
+        const res: any = await insertLike(account, props.post.hash, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
+        console.error(e);
         setLikes(existing => existing - newLikes);
         setIsLiked(newLikes < 0);
         if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain()
+          await pushRegistryToTheBlockchain(headersJWT)
         }
       }
     }
     catch (e: any) {
+      console.error(e);
       setLikes(existing => existing - newLikes);
       setIsLiked(newLikes < 0);
     }
   }
 
-  async function pushRegistryToTheBlockchain() {
+  async function pushRegistryToTheBlockchain(_jwt: string, jsonUrl?: string) {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      let headersJWT = jwt;
-
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-
-      const res = await requestNewRegistryJsonUrl(account, headersJWT);
-      await updateRegistry(account, res.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account, headersJWT);
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account, _jwt)).jsonUrl
+      await updateRegistry(account, JSONURL, web3);
+      await setNewRegistryPostedOnProfile(account, _jwt);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');
