@@ -21,7 +21,7 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
   async function initApp() {
     try {
       const account = await getAccount();
-      await router.push('/feed');
+      if (router.asPath === '/' || router.asPath === '') await router.push('/feed');
       const web3Info = await getWeb3Info(account);
       dispatch(setWeb3(web3Info.web3));
       dispatch(setAccount(web3Info.account));
