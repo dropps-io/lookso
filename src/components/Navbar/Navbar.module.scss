@@ -36,6 +36,13 @@
     width: 600px;
   }
 
+  .Title {
+    color: var(--color-text-default);
+    font-family: 'Clash Display';
+    font-weight: 600;
+    display: none;
+  }
+
   .Buttons {
     color: var(--color-text-default);
     margin: auto 0 auto 20px;
@@ -208,19 +215,28 @@
 }
 
 @media only screen and (max-width: 640px) {
+  .Navbar {
+    .SearchIcon {
+      display: block;
+      margin-right: 0;
+    }
 
-  .SearchIcon {
-    display: block !important;
+    .Search {
+      display: none;
+    }
+
+    .Title {
+      display: block;
+    }
+
+    .Logo {
+      display: none;
+    }
+
+    .BurgerMenu {
+      margin-left: 0;
+    }
   }
-
-  .Search {
-    display: none;
-  }
-
-  .Logo {
-    display: none;
-  }
-
 }
 
 @media only screen and (max-width: 450px) {

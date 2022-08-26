@@ -104,6 +104,7 @@ const Navbar: FC<NavbarProps> = () => {
         <div className={styles.Search}>
           <SearchBar></SearchBar>
         </div>
+        <h1 className={styles.Title}>LOOKSO</h1>
         <ul className={styles.Buttons}>
           {
             account ?
