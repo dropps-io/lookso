@@ -48,6 +48,7 @@ export interface FeedPost {
   isLiked: boolean,
   inRegistry?: boolean,
   childPost?: FeedPost,
+  parentPost?: FeedPost,
   trusted?: boolean
 }
 
@@ -332,11 +333,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             :
               <></>
           }
-          {
-            props.post.childPost ?
-              <PostBox post={props.post.childPost} static repost/> : <></>
-          }
         </div>
+        {
+          props.post.childPost ?
+            <PostBox post={props.post.childPost} static repost/> : <></>
+        }
         {props.static ?
           <></> :
           <div className={styles.PostFooter}>
