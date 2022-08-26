@@ -66,6 +66,7 @@ const Navbar: FC<NavbarProps> = () => {
   }
 
   function displayNotifications() {
+    setShowBurgerMenu(false);
     setNotificationsCount(0);
     setShowNotificationsModal(true);
   }
@@ -73,6 +74,10 @@ const Navbar: FC<NavbarProps> = () => {
   function goToUpInstallationGuide() {
     window.open('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/', '_blank');
     setShowUpInstallationModal(false);
+  }
+
+  function goTo(url: string) {
+    window.open(url, '_blank');
   }
 
   useEffect(() => {
@@ -104,7 +109,10 @@ const Navbar: FC<NavbarProps> = () => {
             account ?
               <></>
               :
-              <li><a href="">Discord</a></li>
+              <>
+                <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+              </>
           }
           <li><Link href='/explore'><a href="">Explore</a></Link></li>
           {
@@ -155,12 +163,15 @@ const Navbar: FC<NavbarProps> = () => {
           }
           <div className={`${styles.Menu} ${showBurgerMenu ? styles.ShowMenu : ''}`}>
             <ul className={styles.Buttons}>
-              <li><a href="">Home</a></li>
+              <li><Link href={'/'}><a href="">Home</a></Link></li>
               {
                 account ?
                   <></>
                   :
-                  <li><a href="">Discord</a></li>
+                  <>
+                    <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                    <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+                  </>
               }
               <li><Link href='/explore'><a href="">Explore</a></Link></li>
               {
@@ -171,7 +182,7 @@ const Navbar: FC<NavbarProps> = () => {
               }
               {
                 account ?
-                  <li><Link href=''><a className={styles.Notifications} href="">Notifications</a></Link></li> : <></>
+                  <li><a className={styles.Notifications} onClick={() => displayNotifications()}>Notifications</a></li> : <></>
               }
               {
                 account ?
