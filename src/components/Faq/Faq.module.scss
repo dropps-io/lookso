@@ -136,6 +136,10 @@
   }
 }
 @media only screen and (max-width: 500px) {
+  .FaqQuestion {
+    $question-close-height: 80px;
+    min-height: $question-close-height!important;
+  }
   .FaqWrapper {
     & > div:first-child {
       .FaqQuestion {
@@ -160,6 +164,17 @@
         }
         &:nth-child(4) {
           min-height: 120px!important;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 300px) {
+  .FaqWrapper {
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2) {
+          min-height: 180px !important;
         }
       }
     }

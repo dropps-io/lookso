@@ -85,7 +85,7 @@ const Faq: FC<FaqProps> = () => {
                                 { question.title }
                                 { foldQuestions[index + numberOfQuestion] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`}>{ question.response }</p>
+                            <p className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
 
                     }) }
