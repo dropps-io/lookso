@@ -1,11 +1,8 @@
 import React, { FC } from 'react';
+import FourOhFour from "../components/FourOhFour/FourOhFour";
 
-interface FourOhFourProps {}
+const fourOhFour = () => {
+  return <FourOhFour/>
+}
 
-const FourOhFour: FC<FourOhFourProps> = () => (
-  <div data-testid="FourOhFour">
-    FourOhFour Component
-  </div>
-);
-
-export default FourOhFour;
+export default fourOhFour;

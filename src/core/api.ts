@@ -91,7 +91,9 @@ export async function fetchIsLikedPost(sender: string, postHash: string): Promis
 
 
 export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
-  return await (await fetch(API_URL + '/lookso/profile/' + address + '/info')).json();
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/info');
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchProfileFollowingCount(address: string): Promise<number> {
@@ -126,8 +128,9 @@ export async function fetchAllFeed(limit: number, offset: number, type?: 'event'
 }
 
 export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {
-  let url = API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf;
-  return await (await fetch(url)).json();
+  let res = await fetch(API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf);
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
