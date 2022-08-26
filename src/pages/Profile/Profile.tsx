@@ -237,7 +237,7 @@ const Profile: FC<ProfileProps> = (props) => {
             <div className={styles.Sep}></div>
             <div className={styles.ProfileFollow}>
               <strong>{followers}</strong>
-              <span>Followers</span>
+              <span>Follower{followers > 1 ? 's' : ''}</span>
             </div>
           </div>
           {
