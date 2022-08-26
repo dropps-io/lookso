@@ -86,14 +86,15 @@ A Profile Post can be an original message, a comment on another post or a repost
       },
       ...
     ],
-    "asset": { // Each post can have up to 1 media file attached. 
+    "asset": { // Each post can have up to 1 media file attached
       "hashFunction": "keccak256(bytes)",
       "hash": "string",
       "url": "string", 
       "fileType": "string"
     },
-    "parentHash": "string" // or null. A post with a parent is a comment.
-    "childHash": "string" // or null. A post with a child is a repost. 
+    "parentHash": "string", // or null. A post with a parent is a comment
+    "childHash": "string", // or null. A post with a child is a repost
+    "nonce":"string",
   },
   "LSPXXProfilePostHash": {// Hash of the LSPXXProfilePost object
     "hashFunction": 'keccak256(bytes)',
