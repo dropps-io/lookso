@@ -19,11 +19,12 @@ import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal"
 import Web3 from "web3";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import ActionModal from "../Modals/ActionModal/ActionModal";
-import {router} from "next/client";
+import {useRouter} from "next/router";
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
