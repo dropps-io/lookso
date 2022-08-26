@@ -64,7 +64,7 @@ const Home: FC<HomeProps> = ()  => {
               </div>
               <h3>Transparency</h3>
               <p onClick={() => foldHeadline(0)} className={!foldHeadlines[0] ? styles.UnfoldedHeadline : ''}>
-                The data associated with a Universal Profile is always accessible regardless of the owner’s or the platform’s intentions. This is made possible through the use of decentralised platforms, namely LUKSO (blockchain) and Arweave (decentralised storage)              </p>
+                The data associated with a Universal Profile is always accessible regardless of the owner’s or the platform’s intentions. This is made possible through the use of decentralised platforms, namely <a href={"https://lukso.network/"} target={"_blank"} rel={"noreferrer"}>LUKSO</a> (blockchain) and <a href={"https://www.arweave.org/"} target={"_blank"} rel={"noreferrer"}>Arweave</a> (decentralised storage)              </p>
               <div onClick={() => foldHeadline(0)} className={styles.ToggleHeadline}>{foldHeadlines[0] ? '+' : '-'}</div>
             </div>
             <div className={styles.Headline}>
