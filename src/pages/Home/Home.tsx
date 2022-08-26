@@ -11,6 +11,7 @@ import peopleIcon from "../../assets/icons/people.svg";
 import explorerIcon from "../../assets/icons/explorer.svg";
 import Footer from "../../components/Footer/Footer";
 import Head from "next/head";
+import Link from "next/link";
 
 
 interface HomeProps {}
@@ -43,7 +44,9 @@ const Home: FC<HomeProps> = ()  => {
               <h2>A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
               <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="impact image"/>
               <div className={styles.CallAction}>
-                <button className={styles.ImportantBtn}>See what’s happening</button>
+                <Link href={'/explore'}>
+                  <button className={styles.ImportantBtn}>See what’s happening</button>
+                </Link>
                 <p>(no login required)</p>
               </div>
               <img className={styles.Shape} src={shape1.src} alt=""/>
