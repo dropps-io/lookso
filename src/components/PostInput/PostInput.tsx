@@ -1,4 +1,4 @@
-import React, {createRef, FC, useState} from 'react';
+import React, {createRef, FC, useEffect, useRef, useState} from 'react';
 import styles from './PostInput.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
 import {IPFS_GATEWAY, POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
@@ -47,6 +47,8 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showEmojiPicker , setShowEmojiPicker] = useState(false);
 
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account, web3);
@@ -171,6 +173,29 @@ const PostInput: FC<PostInputProps> = (props) => {
     setInputValue(value => value + emojiObject.emoji);
   };
 
+  /**
+   * Hook that alerts clicks outside of the passed ref
+   */
+  function useOutsideAlerter(ref: any) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setShowEmojiPicker(false)
+        }
+      }
+
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref])
+  }
+
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
@@ -197,7 +222,7 @@ const PostInput: FC<PostInputProps> = (props) => {
           <div className={styles.RightPart}>
             <div className={styles.SmileIcon}>
               <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>
-              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`}>
+              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`} ref={wrapperRef}>
                 <Picker onEmojiClick={onEmojiClick} disableSearchBar native/>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
+import React, {ForwardedRef, forwardRef, useEffect, useState, useRef} from 'react';
 import styles from './PostBox.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
@@ -7,6 +7,7 @@ import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
+import repostComment from '../../assets/icons/repost_comment.svg'
 import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
@@ -27,6 +28,7 @@ import {updateRegistry} from "../../core/update-registry";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import ExtendImage from "../ExtendImage/ExtendImage";
+import PopupButton from "../PopupButton/PopupButton";
 
 export interface FeedPost {
   hash: string,
@@ -105,8 +107,11 @@ interface PostProps {
   static?: boolean;
   noPadding?: boolean;
 }
+
+
 // eslint-disable-next-line react/display-name
 const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
+
   const router = useRouter();
   const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
@@ -121,6 +126,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
   // extra button with "Explore" | "Hide"
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
+
+  const [isOpenRepostAction, setIsOpenRepostAction] = useState(false);
+
   let clickLoading = false;
 
   const [isExtendPostImage, setIsExtendPostImage] = useState(false);
@@ -342,6 +350,28 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     goToProfile(props?.post?.author?.address)
   }
 
+  /**
+   * Hook that alerts clicks outside of the passed ref
+   */
+  function useOutsideAlerter(ref: any) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setIsOpenRepostAction(false)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
   //TODO in UserTag component add max length name prop number
 
   if (props.post) return (
@@ -388,21 +418,21 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                            <div>
+                            <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
-                                router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
-                                      <span>Unfollow </span>
-                                      <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                                  router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                    <span>Unfollow </span>
+                                    <UserTag username={props.post.author.name} address={props.post.author.address}/>
                                   </div>
                               }
                               {
-                                router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
-                                      <span>Follow </span>
-                                      <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                                  router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                    <span>Follow </span>
+                                    <UserTag username={props.post.author.name} address={props.post.author.address}/>
                                   </div>
                               }
-                            </div>
+                            </PopupButton>
                         )
                     }
                   </div>
@@ -460,9 +490,23 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>
-              <div title={'Repost'} className={styles.IconNumber}  onClick={openRepostModal}>
+              <div title={'Repost'} className={styles.IconNumber}  onClick={() => setIsOpenRepostAction(!isOpenRepostAction)}>
                 <img src={repostIcon.src} alt=""/>
                 <span>{props.post.reposts}</span>
+                {
+                    isOpenRepostAction && (
+                        <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
+                          <div onClick={() => openRepostModal()} className={styles.PopupButtonItem}>
+                            <img src={repostIcon.src} alt="Repost"/>
+                            <span>Repost </span>
+                          </div>
+                          <div onClick={() => openRepostModal()} className={styles.PopupButtonItem}>
+                            <img src={repostComment.src} alt="Repost"/>
+                            <span>Repost with comment </span>
+                          </div>
+                        </PopupButton>
+                    )
+                }
               </div>
               <div title={'Like'} onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
                 {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}

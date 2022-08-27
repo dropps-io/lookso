@@ -53,37 +53,6 @@
         font-size: 30px;
         padding-left: 20px;
       }
-      & > div {
-        position: absolute;
-        left: 16px;
-        top: calc(100% + 4px);
-        display: flex;
-        flex-direction: column;
-        background: var(--color-background-main);
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        border-radius: 24px;
-        padding: 24px;
-        .RightPartButtonUnfollow, & > a {
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-          font-style: normal;
-          font-weight: 400;
-          font-size: 16px;
-          line-height: 16px;
-          &:first-child {
-            margin-bottom: 32px;
-          }
-        }
-        // Unfollow button
-        .RightPartButtonUnfollow {
-          display: inline-flex;
-          align-items: center;
-          & > span:first-child {
-            margin-right: 0.5rem;
-          }
-        }
-      }
     }
   }
 
@@ -143,10 +112,11 @@
       max-width: 50%;
 
       .IconNumber {
+        position: relative;
         cursor: pointer;
         display: flex;
         align-items: inherit;
-
+        z-index: 6;
         img {
           height: 16px;
         }
@@ -228,7 +198,6 @@
   }
 }
 
-
 .Popup {
   width: 100%;
   height: 100%;
@@ -274,11 +243,16 @@
   cursor: pointer;
 }
 
+
+@media only screen and (max-width: 450px) {
+  .RepostPopup {
+    transform: translateX(-50%);
+  }
+}
+
 @media only screen and (max-width: 1100px) {
-  .RightPartButton {
-    & > div {
-      transform: translateX(-100%);
-    }
+  .MoreActionPopup {
+    transform: translateX(-100%);
   }
 }
 
