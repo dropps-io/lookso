@@ -32,9 +32,17 @@
         border-radius: 100px;
         cursor: pointer;
 
+        &:hover {
+          background-color: var(--color-text-reverse-light);
+        }
+
         &.ActiveFilter {
           border: 1px solid var(--color-highlight);
           background-color: var(--color-highlight);
+
+          &:hover {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+          }
         }
       }
     }
