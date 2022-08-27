@@ -423,7 +423,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             props.post.type === 'event' ?
               props.post.display.image ?
                   <>
-                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(true)} />
+                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(false)} />
                     {
                       isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                     }
@@ -438,7 +438,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             props.post.type === 'post' && props.post.display.image ?
 
                 <>
-                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(true)} />
+                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(false)} />
                   {
                       isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                   }

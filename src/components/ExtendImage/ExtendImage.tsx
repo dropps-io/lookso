@@ -16,7 +16,7 @@ const ExtendImage: FC<MoreInfoProps> = (props) => {
     useEffect(() => {
         return () => {
             // block body overflow when image is open
-            document.body.style.overflowY = document.body.style.overflowY === 'hidden' ? 'auto' : 'hidden'
+            // document.body.style.overflowY = document.body.style.overflowY === 'hidden' ? 'auto' : 'hidden'
         };
     }, []);
 

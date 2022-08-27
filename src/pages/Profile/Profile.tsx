@@ -238,7 +238,7 @@ const Profile: FC<ProfileProps> = (props) => {
           <Navbar/>
         </div>
         <div className={styles.ProfilePageContent}>
-          <div onClick={() => setIsExtendBannerImage(true)} className={`${styles.BackgroundImage} ${props.profileInfo?.backgroundImage && styles.BackgroundImageClick}`} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          <div onClick={() => setIsExtendBannerImage(false)} className={`${styles.BackgroundImage} ${props.profileInfo?.backgroundImage && styles.BackgroundImageClick}`} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
           {
               isExtendBannerImage && props.profileInfo.backgroundImage && <ExtendImage image={props.profileInfo?.backgroundImage} alt={`Banner of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded={false}/>
           }
@@ -247,7 +247,7 @@ const Profile: FC<ProfileProps> = (props) => {
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-            <div onClick={() => setIsExtendProfileImage(true)} className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            <div onClick={() => setIsExtendProfileImage(false)} className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
             {
               isExtendProfileImage && <ExtendImage image={props.profileInfo?.profileImage ? props.profileInfo.profileImage : DEFAULT_PROFILE_IMAGE} alt={`Profile of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded/>
             }
