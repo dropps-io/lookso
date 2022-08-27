@@ -26,8 +26,6 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
-import reportIcon from "../../assets/icons/report.svg";
-import blockIcon from "../../assets/icons/block.svg";
 
 export interface FeedPost {
   hash: string,
@@ -50,7 +48,8 @@ export interface FeedPost {
   inRegistry?: boolean,
   childPost?: FeedPost,
   parentPost?: FeedPost,
-  trusted?: boolean
+  trusted?: boolean,
+  hided?: boolean
 }
 
 export const initialFeedPost: FeedPost = {

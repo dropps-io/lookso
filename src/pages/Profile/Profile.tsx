@@ -189,7 +189,7 @@ const Profile: FC<ProfileProps> = (props) => {
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       loading = false;
-      setOffset(existing => existing + POSTS_PER_LOAD);
+      setOffset(existing => existing + newPosts.length);
     }
     catch (e) {
       console.error(e);
@@ -199,19 +199,23 @@ const Profile: FC<ProfileProps> = (props) => {
 
   async function fetchPosts(filter: 'all' | 'post' | 'event') {
     setFeed([]);
+    const newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account);
     setFullyLoadedActivity(false);
-    setOffset(POSTS_PER_LOAD);
-    setFeed(await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account));
+    setOffset(newPosts.length);
+    setFeed(newPosts);
   }
 
   async function reportUser() {
+    setIsOpenExtraAction(false);
     // TODO add api call
   }
   async function blockUser() {
+    setIsOpenExtraAction(false);
     // TODO add api call
   }
 
   function shareOnTwitter() {
+    setIsOpenExtraAction(false);
     const content: string = `Checkout ${connected.account === props.address ? 'my' : 'this'} Universal Profile on @lookso_io! \n\n${WEBSITE_URL}/Profile/${props.address}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
@@ -341,7 +345,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <></>
           }
           <div className={styles.Activity}>
-            <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
+            <Activity headline='Activity' feed={feed.filter(p => !p.hided)} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>
