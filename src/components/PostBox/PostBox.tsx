@@ -102,6 +102,7 @@ interface PostProps {
   comment?: boolean;
   repost?: boolean;
   static?: boolean;
+  noPadding?: boolean;
 }
 // eslint-disable-next-line react/display-name
 const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
@@ -138,10 +139,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     else {
       throw 'Failed to connect';
     }
-  }
-
-  function goTo(path: string) {
-    router.push(path);
   }
 
   async function likeOrUnlikePost() {
@@ -328,7 +325,14 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
-      <div ref={ref} className={`${styles.FeedPost} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment || props.repost  ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
+      <div ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment || props.repost  ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
+        {props.post.parentPost &&
+          <div className={styles.ParentPost}>
+            <div className={styles.Post}>
+              <PostBox key={'parent-post'} post={props.post.parentPost} comment static noPadding/>
+            </div>
+          </div>
+        }
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>

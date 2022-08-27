@@ -5,6 +5,16 @@
   border-radius: 24px;
   color: var(--color-text-default);
 
+  .ParentPost {
+    margin-bottom: 50px;
+    border-left: 2px solid var(--color-border-light);
+    margin-left: 38px;
+
+    .Post {
+      margin-left: -30px;
+    }
+  }
+
   .PostHeader {
     display: flex;
     justify-content: space-between;
@@ -104,6 +114,7 @@
     .EventIcon {
       width: 64px;
       height: 64px;
+      margin-bottom: 5px;
     }
 
     .PostImage {
@@ -148,6 +159,10 @@
       cursor: pointer;
     }
   }
+}
+
+.NoPadding {
+  padding: 0 !important;
 }
 
 .PostType {

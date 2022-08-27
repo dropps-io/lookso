@@ -144,7 +144,7 @@
       }
 
       & > button:nth-child(1) {
-        width: 150px;
+        width: 100px;
         margin-right: 20px;
       }
     }
@@ -155,14 +155,15 @@
         width: 40px;
         padding-bottom: 5px;
       }
-      & > div {
+      & > .ExtraActionsPopup {
+        z-index: 3;
         position: absolute;
         left: 16px;
         top: calc(100% + 4px);
         display: flex;
         flex-direction: column;
         background: var(--color-background-main);
-        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         border-radius: 24px;
         padding: 16px 16px;
         width: 160px;
@@ -170,11 +171,14 @@
           display: flex;
           align-items: center;
           cursor: pointer;
-          &:first-child {
-            margin-bottom: 16px;
+          margin-bottom: 10px;
+
+          &:last-child {
+            margin-bottom: 0;
           }
           img {
-            margin-right: 0.5rem;
+            height: 22px;
+            margin-right: 0.8rem;
           }
         }
       }
@@ -192,7 +196,7 @@
 
 @media only screen and (max-width: 1000px) {
   .Profile {
-    --padding-profile: 0;
+    --padding-profile: 20px;
     .ProfilePageHeader {
     }
     .ProfilePageContent {
@@ -402,6 +406,23 @@
         }
       }
       .ProfileExtraActions {
+          & > .ExtraActionsPopup {
+            width: 100px;
+            span {
+              font-size: 0.8em;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+              img {
+                height: 15px;
+                margin-right: 0.7rem;
+              }
+            }
+          }
+
+
+
         & > button {
           width: 30px;
         }
