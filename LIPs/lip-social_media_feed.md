@@ -71,6 +71,7 @@ A Profile Post can be an original message, a comment on another post or a repost
     "version": "0.0.1",
     "author": "Address", // The Universal Profile who authored the post
     "validator": "Address", // Address of a time stamper smart contract which will certify the post date
+    "nonce": "string", // Random value to avoid having same hash for different posts
     "message": "string", // The post original content
     "links": [
       {
