@@ -15,7 +15,7 @@ const MoreInfo: FC<MoreInfoProps> = (props) => {
     return (
         <div className={styles.MoreInfo}>
             <button className={`${styles.MoreInfoButton} ${isOpen && styles.MoreInfoButtonOpen}`}
-                    onClick={() => setIsOpen(!isOpen)}>More Info <img src={arrowUpIcon.src} alt="Open More Info"/></button>
+                    onClick={() => setIsOpen(!isOpen)}>More info <img src={arrowUpIcon.src} alt="Open More Info"/></button>
             {
                 isOpen &&
                 <div className={styles.MoreInfoWrapper}>

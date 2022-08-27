@@ -30,7 +30,6 @@ import {POSTS_PER_LOAD} from "../../environment/constants";
 import {ProfileInfo} from "../../models/profile";
 import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
-import StickyButton from "../../components/StickyButton/StickyButton";
 import {useRouter} from "next/router";
 import MoreInfo from "../../components/MoreInfo/MoreInfo";
 import ExtendImage from "../../components/ExtendImage/ExtendImage";
