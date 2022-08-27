@@ -1,5 +1,6 @@
 import React, {FC, useState} from 'react';
 import styles from './Faq.module.scss';
+import {useRouter} from "next/router";
 
 interface FaqProps {
 }
@@ -19,7 +20,7 @@ const questions = [
     },
     {
         title: 'Will there be a cost associated with using LOOKSO once LUKSO’s mainnet goes live?',
-        response: 'Uploading data to decentralized storage networks like Arweave has costs. There is also the cost of referencing such data on the LUKSO blockchain, under each Universal Profile\'s keystore. In the beginning, we will cover the storage costs for you, as we develop novel techniques and optimizations to make the blockchain as inexpensive as it can be.'
+        response: "Uploading data to decentralized storage networks like <a href='https://www.arweave.org/' target='_blank'><a href='https://www.arweave.org/' target='_blank'>Arweave</a></a> has costs. There is also the cost of referencing such data on the LUKSO blockchain, under each Universal Profile\'s keystore. In the beginning, we will cover the storage costs for you, as we develop novel techniques and optimizations to make the blockchain as inexpensive as it can be."
     },
     {
         title: 'Who is LOOKSO?',
@@ -27,8 +28,8 @@ const questions = [
             "The core team is made up by Carlos Caldas (CEO), Samuel Videau (Head of Development), António Silva (Head of Research), Rui Pereira (UI/UX Lead) and João Figueira (General Counsel)."
     },
     {
-        title: 'Why Arweave instead of IPFS?',
-        response: 'While IPFS is a decentralized storage network. Arweave is a blockchain tailored for storage. With built-in economic incentives, the cost of long-term storage is paid upfront by its users and the accessibility of content is guaranteed for as long as the network is alive. Furthermore, Arweave transactions offer searchable information such as tags and timestamps for the data uploaded. A degree of traceability and metadata that IPFS lacks.'
+        title: "Why Arweave instead of IPFS?",
+        response: "While IPFS is a decentralized storage network. <a href='https://www.arweave.org/' target='_blank'>Arweave</a> is a blockchain tailored for storage. With built-in economic incentives, the cost of long-term storage is paid upfront by its users and the accessibility of content is guaranteed for as long as the network is alive. Furthermore, <a href='https://www.arweave.org/' target='_blank'>Arweave</a> transactions offer searchable information such as tags and timestamps for the data uploaded. A degree of traceability and metadata that IPFS lacks."
     },
     {
         title: 'Can I delete a post from LOOKSO?',
@@ -44,21 +45,37 @@ const questions = [
     },
     {
         title: 'Why Lukso?',
-        response: "Lukso offers an ecosystem and a complete set of tools to simplify the experience of using the blockchain, while improving upon scalability and transaction costs. The two most relevant are the Browser Extension, which helps you interact with your Universal Profile, and the Transaction Relayer, which grants great flexibility and ease of use for handling transaction costs.\n"+
-            "The Lukso ecosystem, geared towards the creative industries, provides a promising landscape of interoperability and partnerships for a project such as LOOKSO."
+        response: "<a href='https://lukso.network/' target='_blank'>Lukso</a> offers an ecosystem and a complete set of tools to simplify the experience of using the blockchain, while improving upon scalability and transaction costs. The two most relevant are the Browser Extension, which helps you interact with your Universal Profile, and the Transaction Relayer, which grants great flexibility and ease of use for handling transaction costs.\n"+
+            "The <a href='https://lukso.network/' target='_blank'>Lukso</a> ecosystem, geared towards the creative industries, provides a promising landscape of interoperability and partnerships for a project such as LOOKSO."
     }
 ]
 
 const Faq: FC<FaqProps> = () => {
+
+    const router = useRouter()
 
     const [foldQuestions, setFoldQuestions] = useState(new Array(questions.length).fill(true));
 
     const [numberOfQuestion, setNumberOfQuestion] = useState(questions.length / 2);
 
     function foldQuestion(n: number) {
-        console.log(n)
         setFoldQuestions(existing => existing.map((x, i) => i === n ? !x : x ));
     }
+
+    /**
+     * Detect click event on faq response
+     * @param e
+     * @param index
+     */
+    const contentClickHandler = (e: any, index: number) => {
+
+        const targetLink = e.target.closest('a');
+        if(!targetLink) return;
+        e.preventDefault();
+        if(foldQuestions[index]) return;
+        // @ts-ignore
+        window?.open(targetLink.href, '_blank').focus();
+    };
 
     return (
         <section className={styles.Faq}>
@@ -72,20 +89,20 @@ const Faq: FC<FaqProps> = () => {
                                 { question.title }
                                 { foldQuestions[index] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`}>{ question.response }</p>
+                            <p onClick={(e) => contentClickHandler(e, index)} className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
 
                     }) }
                 </div>
                 <div className={styles.FaqRow}>
                     {/* For each question between size question / 2 to end */}
-                    { questions.slice(numberOfQuestion, questions.length - 1).map(function(question, index){
+                    { questions.slice(numberOfQuestion, questions.length).map(function(question, index){
                         return <div key={index + numberOfQuestion}  className={`${styles.FaqQuestion} ${!foldQuestions[index + numberOfQuestion] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index + numberOfQuestion)}}>
                                 { question.title }
                                 { foldQuestions[index + numberOfQuestion] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
+                            <p onClick={(e) => contentClickHandler(e, index + numberOfQuestion)} className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
 
                     }) }

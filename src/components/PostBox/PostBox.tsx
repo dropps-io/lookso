@@ -26,6 +26,7 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
+import ExtendImage from "../ExtendImage/ExtendImage";
 
 export interface FeedPost {
   hash: string,
@@ -121,6 +122,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
   let clickLoading = false;
 
+  const [isExtendPostImage, setIsExtendPostImage] = useState(false);
 
   useEffect(() => {
     setLikes(props.post.likes);
@@ -346,7 +348,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             {
               props.post.author.address === account ?
                   <div className={styles.RightPartButton}>
-                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
                             <div>
@@ -358,7 +360,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                   </div>
                   :
                   <div className={styles.RightPartButton}>
-                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
                             <div>
@@ -387,7 +389,12 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           {
             props.post.type === 'event' ?
               props.post.display.image ?
-                <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} />
+                  <>
+                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(true)} />
+                    {
+                      isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
+                    }
+                  </>
                 :
                 <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
               :
@@ -396,7 +403,13 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           {props.post.display.text ? <PostContent onClick={handleClick} text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
-              <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt='' />
+
+                <>
+                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(true)} />
+                  {
+                      isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
+                  }
+                </>
             :
               <></>
           }

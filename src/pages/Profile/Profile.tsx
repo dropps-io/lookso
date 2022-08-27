@@ -71,6 +71,10 @@ const Profile: FC<ProfileProps> = (props) => {
 
   const [showPostModal, setShowPostModal] = useState(false);
 
+  const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
+  const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
+
+
   let loading = false;
 
   useEffect(() => {
@@ -181,7 +185,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    console.log('Loading new posts from offset ' + offset);
+    // console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
       let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account);
@@ -248,9 +252,15 @@ const Profile: FC<ProfileProps> = (props) => {
     // TODO create a new post
   }
 
+  function onClickCloseExtendImage() {
+    setIsExtendProfileImage(false)
+    setIsExtendBannerImage(false)
+  }
+
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
+      <PostModal open={showPostModal} onClose={onClickClosePostModal}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
       }
@@ -264,13 +274,19 @@ const Profile: FC<ProfileProps> = (props) => {
           <Navbar/>
         </div>
         <div className={styles.ProfilePageContent}>
-          <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          <div onClick={() => setIsExtendBannerImage(true)} className={`${styles.BackgroundImage} ${props.profileInfo?.backgroundImage && styles.BackgroundImageClick}`} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          {
+              isExtendBannerImage && props.profileInfo.backgroundImage && <ExtendImage image={props.profileInfo?.backgroundImage} alt={`Banner of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded={false}/>
+          }
           <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-            <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            <div onClick={() => setIsExtendProfileImage(true)} className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            {
+              isExtendProfileImage && <ExtendImage image={props.profileInfo?.profileImage ? props.profileInfo.profileImage : DEFAULT_PROFILE_IMAGE} alt={`Profile of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded/>
+            }
             <div className={styles.ProfileAddress}>
               <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
               <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
@@ -288,10 +304,11 @@ const Profile: FC<ProfileProps> = (props) => {
                     <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
                     {
                         isOpenExtraAction && (
-                            <div>
-                              <span><img onClick={() => reportUser()} src={reportIcon.src} alt="Report user"/>Report</span>
-                              <span><img onClick={() => blockUser()} src={blockIcon.src} alt="Block user"/>Block</span>
-                            </div>
+                        <div className={styles.ExtraActionsPopup}>
+                          <span onClick={() => shareOnTwitter()}><img src={shareIcon.src} alt="Share profile"/>Share</span>
+                          <span onClick={() => reportUser()}><img src={reportIcon.src} alt="Report user"/>Report</span>
+                          <span onClick={() => blockUser()}><img src={blockIcon.src} alt="Block user"/>Block</span>
+                        </div>
                         )
                     }
                   </div>
@@ -343,6 +360,10 @@ const Profile: FC<ProfileProps> = (props) => {
               </div>
               :
               <></>
+          }
+          {
+            (props.profileInfo.links?.length > 0 || props.profileInfo.description || props.profileInfo.tags?.length > 0) &&
+              <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
             <Activity headline='Activity' feed={feed.filter(p => !p.hided)} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>

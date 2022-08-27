@@ -69,6 +69,10 @@
       letter-spacing: 1px;
       display: block;
       transition: all .3s;
+
+      a {
+        font-weight: 600;
+      }
     }
   }
   .FaqQuestionFolded {

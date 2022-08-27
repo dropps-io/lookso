@@ -80,7 +80,6 @@ const PostInput: FC<PostInputProps> = (props) => {
 
   async function createPost() {
     setShowEmojiPicker(false);
-    console.log(inputValue)
     try {
       setLoadingMessage(' ');
       const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);

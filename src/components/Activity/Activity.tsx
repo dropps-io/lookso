@@ -37,9 +37,7 @@ const Activity: FC<ActivityProps> = (props) => {
 
   async function setActive(i: number) {
     if (filters[i].value !== activeFilter) {
-      console.log(0)
       props.onFilterChange(filters[i].value);
-      console.log(1);
       setActiveFilter(filters[i].value);
     }
   }

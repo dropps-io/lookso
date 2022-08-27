@@ -43,7 +43,7 @@ const Feed: FC<FeedProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    console.log('Loading posts... from' + offset);
+    // console.log('Loading posts... from' + offset);
     try {
       loading = true;
       let newPosts: FeedPost[];
