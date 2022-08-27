@@ -13,7 +13,7 @@
     flex-shrink: 0;
     position: fixed;
     top: 0;
-    padding: 0 var(--padding-feed);
+    padding: 0 var(--padding-feed) 0 70px;
     width: 100%;
     height: $header-height;
     border-bottom: 1px solid var(--color-border);
@@ -75,6 +75,14 @@
   }
 }
 
+@media only screen and (max-width: 640px) {
+  .Feed {
+    .FeedPageHeader {
+      padding: 0 30px;
+    }
+  }
+}
+
 @media only screen and (max-width: 500px) {
   .Feed {
     .FeedPageContent {
@@ -87,6 +95,6 @@
 
 @media only screen and (max-width: 450px) {
   .Feed {
-    --padding-feed: 10px;
+    --padding-feed: var(--padding-feed);
   }
 }
