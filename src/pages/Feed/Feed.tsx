@@ -11,6 +11,7 @@ import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
+import Link from "next/link";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -35,6 +36,7 @@ const Feed: FC<FeedProps> = (props) => {
       } else {
         newFeed = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined, account);
       }
+      if(newFeed.length === 0) setFullyLoadedActivity(true);
       setOffset(newFeed.length);
       setFeed(newFeed);
     }
@@ -109,14 +111,23 @@ const Feed: FC<FeedProps> = (props) => {
             :
             <></>
         }
-        <Activity
-          feed={feed.filter(p => !p.hided)}
-          headline={props.type}
-          onFilterChange={(filterValue) => fetchFeedWithFilter(filterValue)}
-          newPost={handleNewPost}
-          loadNext={(filter) => loadMorePosts(filter)}
-          onUnfollow={handleUnfollow}
-        />
+        {
+          props.type === 'Feed' && account && fullyLoadedActivity && feed.length === 0 ?
+            <div className={styles.NoFollowing}>
+              <p>It seems you don’t follow any UP’s yet!</p>
+              <span className={styles.Tip}>(tip: you can find new ones through our Explore section or use the search bar to find specific ones)</span>
+              <Link href={'/explore'}><button className={'btn btn-main'}>Start exploring!</button></Link>
+            </div>
+            :
+            <Activity
+              feed={feed.filter(p => !p.hided)}
+              headline={props.type}
+              onFilterChange={(filterValue) => fetchFeedWithFilter(filterValue)}
+              newPost={handleNewPost}
+              loadNext={(filter) => loadMorePosts(filter)}
+              onUnfollow={handleUnfollow}
+            />
+        }
       </div>
       <div className={styles.FeedPageFooter}>
         <Footer/>
