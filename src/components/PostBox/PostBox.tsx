@@ -1,8 +1,8 @@
-import React, {ForwardedRef, forwardRef, useEffect, useState, useRef} from 'react';
+import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
 import styles from './PostBox.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
-import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
+import {EXPLORER_URL, IPFS_GATEWAY, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import commentIcon from "../../assets/icons/comment.svg";
@@ -11,9 +11,15 @@ import repostComment from '../../assets/icons/repost_comment.svg'
 import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
-import {connectToAPI, connectWeb3} from "../../core/web3";
+import {connectToAPI, connectWeb3, signMessage} from "../../core/web3";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
-import {insertFollow, insertLike, insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
+import {
+  insertFollow,
+  insertLike,
+  insertUnfollow,
+  requestNewRegistryJsonUrl,
+  setNewRegistryPostedOnProfile, uploadPostObject
+} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
@@ -24,11 +30,13 @@ import CommentModal from "../Modals/CommentModal/CommentModal";
 import RepostModal from "../Modals/RepostModal/RepostModal";
 import FourOhFour from "../../pages/404";
 import LoadingModal from "../Modals/LoadingModal/LoadingModal";
-import {updateRegistry} from "../../core/update-registry";
+import {updateRegistry, updateRegistryWithPost} from "../../core/update-registry";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import ExtendImage from "../ExtendImage/ExtendImage";
 import PopupButton from "../PopupButton/PopupButton";
+import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
+import {LSPXXProfilePost} from "../../models/profile-post";
 
 export interface FeedPost {
   hash: string,
@@ -115,6 +123,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const router = useRouter();
   const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
+  const profileImage = useSelector((state: RootState) => state.profile.profileImage);
+  const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const [likes, setLikes] = useState(0);
@@ -372,6 +382,74 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }, [ref]);
   }
 
+  async function createPost(childHash?: string) {
+    try {
+      setLoadingMessage(' ');
+      const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
+      const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
+
+
+      if (!permissions) {
+        setLoadingMessage('Your first post will require you to grant LOOKSO permission to save posts on your Universal Profile');
+        await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, {SETDATA: true});
+      }
+
+      let post: LSPXXProfilePost = {
+        version: '0.0.1',
+        message: '',
+        author: account,
+        validator: POST_VALIDATOR_ADDRESS,
+        nonce: Math.floor(Math.random() * 1000000000).toString(),
+        links: [],
+        childHash: childHash,
+      };
+
+      const resJWT = jwt ? jwt : await requestJWT();
+
+      setLoadingMessage('Please sign your post');
+      const signedMessage = await signMessage(account, JSON.stringify(post), web3);
+      setLoadingMessage('Thanks, we\'re uploading your post 😎');
+      const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
+
+      setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
+      const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(account, resJWT);
+
+      if (props.newRepost) {
+        props.newRepost({
+          date: new Date(),
+          author: {
+            address: account,
+            name: username,
+            image: profileImage
+          },
+          name: '',
+          type: 'post',
+          display: {
+            text: '',
+            params: {},
+            image: '',
+            tags: {standard: null, standardType: null, copies: null}
+          },
+          hash: postUploaded.postHash,
+          transactionHash: receipt.transactionHash,
+          blockNumber: receipt.blockNumber,
+          comments: 0,
+          likes: 0,
+          isLiked: false,
+          reposts: 0,
+          childPost: childHash ? props.post : undefined
+        });
+      }
+
+      setLoadingMessage('');
+
+    } catch (e) {
+      setLoadingMessage('');
+    }
+  }
+
+
   //TODO in UserTag component add max length name prop number
 
   if (props.post) return (
@@ -496,7 +574,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 {
                     isOpenRepostAction && (
                         <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
-                          <div onClick={() => openRepostModal()} className={styles.PopupButtonItem}>
+                          <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
                             <img src={repostIcon.src} alt="Repost"/>
                             <span>Repost </span>
                           </div>
