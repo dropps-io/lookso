@@ -38,9 +38,10 @@
 
   .Title {
     color: var(--color-text-default);
-    font-family: 'Clash Display';
+    font-family: 'Clash Display', serif;
     font-weight: 600;
     display: none;
+    font-size: 2em;
   }
 
   .Buttons {
@@ -117,7 +118,7 @@
     display: none;
     align-items: center;
     margin-left: 60px;
-    
+
     img {
       position: relative;
       cursor: pointer;
