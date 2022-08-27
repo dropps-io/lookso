@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
+import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 
 interface PostProps {
   hash: string,
@@ -44,6 +45,7 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <div className={styles.PostPage} data-testid="Post">
+      <SidebarButtons/>
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PageContent}>
         <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>

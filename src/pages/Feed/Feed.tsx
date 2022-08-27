@@ -10,6 +10,7 @@ import {FeedPost} from "../../components/PostBox/PostBox";
 import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
+import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -88,6 +89,7 @@ const Feed: FC<FeedProps> = (props) => {
       <div className={styles.FeedPageHeader}>
         <Navbar/>
       </div>
+      <SidebarButtons/>
       <div className={styles.FeedPageContent}>
         {
           account ?
