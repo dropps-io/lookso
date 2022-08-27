@@ -327,7 +327,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <></>
           }
           {
-            (props.profileInfo.links?.length > 0 || props.profileInfo.description || props.profileInfo.tags?.length > 0) &&
+            (props.profileInfo && (props.profileInfo.links && props.profileInfo.links?.length > 0 || props.profileInfo.description || props.profileInfo.tags?.length > 0)) &&
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
