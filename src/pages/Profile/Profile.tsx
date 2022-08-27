@@ -36,6 +36,7 @@ import StickyButton from "../../components/StickyButton/StickyButton";
 import {useRouter} from "next/router";
 import PostModal from "../../components/Modals/PostModal/PostModal";
 import MoreInfo from "../../components/MoreInfo/MoreInfo";
+import ExtendImage from "../../components/ExtendImage/ExtendImage";
 
 interface ProfileProps {
   address: string,
@@ -71,6 +72,10 @@ const Profile: FC<ProfileProps> = (props) => {
   const [loadingMessage, setLoadingMessage] = useState('');
 
   const [showPostModal, setShowPostModal] = useState(false);
+
+  const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
+  const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
+
 
   let loading = false;
 
@@ -244,6 +249,10 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
 
+  function onClickCloseExtendImage() {
+    setIsExtendProfileImage(false)
+    setIsExtendBannerImage(false)
+  }
 
   return (
     <>
@@ -261,13 +270,19 @@ const Profile: FC<ProfileProps> = (props) => {
           <Navbar/>
         </div>
         <div className={styles.ProfilePageContent}>
-          <div className={styles.BackgroundImage} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          <div onClick={() => setIsExtendBannerImage(true)} className={`${styles.BackgroundImage} ${props.profileInfo?.backgroundImage && styles.BackgroundImageClick}`} style={ props.profileInfo?.backgroundImage ? { backgroundImage: `url(${formatUrl(props.profileInfo?.backgroundImage)})`} : {backgroundColor: `#${bgColor}`}}></div>
+          {
+              isExtendBannerImage && props.profileInfo.backgroundImage && <ExtendImage image={props.profileInfo?.backgroundImage} alt={`Banner of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded={false}/>
+          }
           <div className={styles.ProfileBasicInfo}>
            <span className={styles.UserTag}>
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
              <span className={`copied ${copied[0] ? 'copied-active' : ''}`}>Copied to clipboard</span>
            </span>
-            <div className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            <div onClick={() => setIsExtendProfileImage(true)} className={styles.ProfileImage} style={{backgroundImage: props.profileInfo?.profileImage ? `url(${formatUrl(props.profileInfo?.profileImage)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+            {
+              isExtendProfileImage && <ExtendImage image={props.profileInfo?.profileImage ? props.profileInfo.profileImage : DEFAULT_PROFILE_IMAGE} alt={`Profile of user ${props.profileInfo.name}`} callback={onClickCloseExtendImage} rounded/>
+            }
             <div className={styles.ProfileAddress}>
               <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
               <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
