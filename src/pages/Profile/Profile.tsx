@@ -35,6 +35,7 @@ import {updateRegistry} from "../../core/update-registry";
 import StickyButton from "../../components/StickyButton/StickyButton";
 import {useRouter} from "next/router";
 import PostModal from "../../components/Modals/PostModal/PostModal";
+import MoreInfo from "../../components/MoreInfo/MoreInfo";
 
 interface ProfileProps {
   address: string,
@@ -340,6 +341,10 @@ const Profile: FC<ProfileProps> = (props) => {
               </div>
               :
               <></>
+          }
+          {
+            (props.profileInfo.links?.length > 0 || props.profileInfo.description || props.profileInfo.tags?.length > 0) &&
+              <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
             <Activity headline='Activity' feed={feed} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>

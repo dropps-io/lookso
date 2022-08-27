@@ -89,7 +89,7 @@ const Faq: FC<FaqProps> = () => {
                                 { question.title }
                                 { foldQuestions[index] ? <span>-</span> : <span>+</span> }
                             </h3>
-                            <p onClick={contentClickHandler} className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
+                            <p onClick={(e) => contentClickHandler(e, index)} className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
 
                     }) }
