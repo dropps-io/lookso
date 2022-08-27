@@ -96,6 +96,7 @@ const PostInput: FC<PostInputProps> = (props) => {
         message: inputValue,
         author: account,
         validator: POST_VALIDATOR_ADDRESS,
+        nonce: Math.floor(Math.random() * 1000000000).toString(),
         links: [],
         childHash: props.childPost?.hash,
         parentHash: props.parentHash
