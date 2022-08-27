@@ -35,6 +35,8 @@ import {updateRegistry} from "../../core/update-registry";
 import StickyButton from "../../components/StickyButton/StickyButton";
 import {useRouter} from "next/router";
 import PostModal from "../../components/Modals/PostModal/PostModal";
+import ExtendImage from "../../components/ExtendImage/ExtendImage";
+import MoreInfo from "../../components/MoreInfo/MoreInfo";
 
 interface ProfileProps {
   address: string,
