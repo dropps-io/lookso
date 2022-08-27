@@ -2,8 +2,6 @@ import React, {FC, useEffect, useState} from 'react';
 import styles from './Profile.module.scss';
 import blockIcon from '../../assets/icons/block.svg'
 import reportIcon from '../../assets/icons/report.svg'
-import newPostIcon from '../../assets/icons/newpostsvg.svg'
-import returnIcon from '../../assets/icons/return.svg'
 import shareIcon from '../../assets/icons/share.svg'
 
 import Navbar from "../../components/Navbar/Navbar";
@@ -34,9 +32,9 @@ import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
 import StickyButton from "../../components/StickyButton/StickyButton";
 import {useRouter} from "next/router";
-import PostModal from "../../components/Modals/PostModal/PostModal";
-import ExtendImage from "../../components/ExtendImage/ExtendImage";
 import MoreInfo from "../../components/MoreInfo/MoreInfo";
+import ExtendImage from "../../components/ExtendImage/ExtendImage";
+import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 
 interface ProfileProps {
   address: string,
@@ -70,8 +68,6 @@ const Profile: FC<ProfileProps> = (props) => {
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
   const [bgColor, setBgColor] = useState('fff');
   const [loadingMessage, setLoadingMessage] = useState('');
-
-  const [showPostModal, setShowPostModal] = useState(false);
 
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
@@ -195,7 +191,7 @@ const Profile: FC<ProfileProps> = (props) => {
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       loading = false;
-      setOffset(existing => existing + newPosts.length);
+      setOffset(existing => existing + POSTS_PER_LOAD);
     }
     catch (e) {
       console.error(e);
@@ -226,34 +222,6 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
 
-  /**
-   * When user click on StickyButton to get the previous page
-   */
-  function onClickReturn() {
-    router.back()
-  }
-
-  /**
-   * When user click on StickyButton to create a new post
-   */
-  async function onClickNewPost() {
-    if (!connected.account) setShowPostModal(true);
-    else setShowPostModal(true);
-  }
-
-  /**
-   * When user close the post modal
-   * 1 - Close if not post wrote
-   * 2 - Save post and close
-   * @param newPost
-   */
-  function onClickClosePostModal(newPost?: FeedPost) {
-    setShowPostModal(false);
-
-    if (!connected.account) return;
-    // TODO create a new post
-  }
-
   function onClickCloseExtendImage() {
     setIsExtendProfileImage(false)
     setIsExtendBannerImage(false)
@@ -262,16 +230,11 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
-      <PostModal open={showPostModal} onClose={onClickClosePostModal}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
       }
-      <PostModal open={showPostModal} onClose={onClickClosePostModal}/>
       <div className={styles.Profile} data-testid="Profile">
-        <div className={styles.ProfileStickButtons}>
-          <StickyButton icon={returnIcon} alt={"Return"} callback={onClickReturn} color={"--color-background-main-l3"}/>
-          <StickyButton icon={newPostIcon} alt={"New post"} callback={onClickNewPost} color={"--color-buttons"}/>
-        </div>
+        <SidebarButtons/>
         <div className={styles.ProfilePageHeader}>
           <Navbar/>
         </div>

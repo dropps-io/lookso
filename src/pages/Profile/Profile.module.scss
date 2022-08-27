@@ -8,18 +8,6 @@
   $header-height: 66px;
   --padding-profile: 30px;
 
-
-  .ProfileStickButtons {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    top: 25vh;
-    left: 0;
-    & > button {
-      margin-bottom: 24px;
-    }
-  }
-
   .ProfilePageHeader {
     position: fixed;
     top: 0;

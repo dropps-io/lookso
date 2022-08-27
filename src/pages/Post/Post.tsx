@@ -8,6 +8,7 @@ import {RootState} from "../../store/store";
 import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
 import {POSTS_PER_LOAD} from "../../environment/constants";
+import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 
 interface PostProps {
   hash: string,
@@ -46,6 +47,7 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <div className={styles.PostPage} data-testid="Post">
+      <SidebarButtons/>
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PageContent}>
         <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
