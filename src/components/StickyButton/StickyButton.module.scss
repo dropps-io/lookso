@@ -1,0 +1,17 @@
+.StickyButton {
+  border: none;
+  $stick-size: 75px;
+  width: $stick-size;
+  height: $stick-size;
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  img {
+    margin-right: 0.5rem;
+  }
+  @media only screen and (max-width: 1280px) {
+    display: none;
+  }
+}

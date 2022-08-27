@@ -4,7 +4,6 @@ import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
-import externalLinkIcon from "../../assets/icons/external-link.svg";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
@@ -13,7 +12,7 @@ import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import {connectToAPI, connectWeb3} from "../../core/web3";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
-import {insertLike, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
+import {insertLike, insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
@@ -27,6 +26,8 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
+import reportIcon from "../../assets/icons/report.svg";
+import blockIcon from "../../assets/icons/block.svg";
 
 export interface FeedPost {
   hash: string,
@@ -117,7 +118,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [showLogInModal, setShowLogInModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
-
+  // extra button with "Explore" | "Hide"
+  const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
   let clickLoading = false;
 
 
@@ -206,7 +208,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n\n${WEBSITE_URL}/Post/${props.post.hash}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
-  
+
   function openCommentModal() {
     if (!account) setShowLogInModal(true);
     else setShowCommentModal(true);
@@ -262,7 +264,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     if (window.getSelection()?.toString()) return
     if (clickLoading) return;
     clickLoading = true;
-    
+
     const el: HTMLElement = e.target as HTMLElement;
 
     if (value) {
@@ -280,6 +282,31 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setTimeout(() => {
       clickLoading = false;
     }, 10);
+  }
+
+  /**
+   * When user click on "Unfollow"
+   * TODO Samuel review my code
+   * @param address
+   */
+  async function unfollowUser(address: string) {
+    try {
+      let headersJWT = jwt;
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+      try {
+        const res: any  = await insertUnfollow(account, address, headersJWT);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
+      } catch (e: any) {
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain(headersJWT)
+        }
+      }
+    }
+    catch (e) {
+      console.error(e);
+    }
   }
 
   async function onClickProfile() {
@@ -317,9 +344,36 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           </div>
           <div className={styles.RightPart}>
             <span>{dateDifference(new Date(Date.now()), new Date(props.post.date))} ago</span>
-            <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">
-              <img src={externalLinkIcon.src} alt=""/>
-            </a>
+            {
+              props.post.author.address === account ?
+                  <div className={styles.RightPartButton}>
+                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    {
+                        isOpenExtraAction && (
+                            <div>
+                              <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">Explorer</a>
+                              <span>Hide</span>
+                            </div>
+                        )
+                    }
+                  </div>
+                  :
+                  <div className={styles.RightPartButton}>
+                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    {
+                        isOpenExtraAction && (
+                            <div>
+                              <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">Explorer</a>
+                              <div className={styles.RightPartButtonUnfollow}>
+                                <span onClick={() => unfollowUser(props.post.author.address)}>Unfollow </span>
+                                <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                              </div>
+                            </div>
+                        )
+                    }
+                  </div>
+            }
+
           </div>
         </div>
         <div className={styles.PostTags}>
