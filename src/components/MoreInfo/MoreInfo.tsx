@@ -24,9 +24,9 @@ const MoreInfo: FC<MoreInfoProps> = (props) => {
                         <div className={styles.MoreInfoTags}>
                             {
                                 // filter empty tags
-                                props.tags.filter(tag => tag.replace(/\s+/g, '').length > 0).map(tag => {
+                                props.tags.filter(tag => tag.replace(/\s+/g, '').length > 0).map((tag, index) => {
                                     return (
-                                        <div className={styles.MoreInfoTag} key={tag}>{ tag }</div>
+                                        <div className={styles.MoreInfoTag} key={index}>{ tag }</div>
                                     )
                                 })
                             }
@@ -39,9 +39,9 @@ const MoreInfo: FC<MoreInfoProps> = (props) => {
                         props.links?.length > 0 &&
                         <div className={styles.MoreInfoLinks}>
                             {
-                                props.links.map(link => {
+                                props.links.map((link, index) => {
                                     return (
-                                        <a className={styles.MoreInfoLink} key={link.title} href={link.url} target={"_blank"} rel={"noreferrer"}>{ link.title }</a>
+                                        <a className={styles.MoreInfoLink} key={index} href={link.url} target={"_blank"} rel={"noreferrer"}>{ link.title }</a>
                                     )
                                 })
                             }
