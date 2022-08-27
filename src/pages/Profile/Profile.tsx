@@ -2,12 +2,13 @@ import React, {FC, useEffect, useState} from 'react';
 import styles from './Profile.module.scss';
 import blockIcon from '../../assets/icons/block.svg'
 import reportIcon from '../../assets/icons/report.svg'
+import shareIcon from '../../assets/icons/share.svg'
 
 import Navbar from "../../components/Navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
-import {EXPLORER_URL} from "../../environment/endpoints";
+import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
 import {
@@ -200,10 +201,18 @@ const Profile: FC<ProfileProps> = (props) => {
     // TODO add api call
   }
 
+  function shareOnTwitter() {
+    const content: string = `Checkout ${connected.account === props.address ? 'my' : 'this'} Universal Profile on @lookso_io! \n\n${WEBSITE_URL}/Profile/${props.address}`
+    window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
+  }
+
 
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
+      {
+        isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
+      }
       <div className={styles.Profile} data-testid="Profile">
         <div className={styles.ProfilePageHeader}>
           <Navbar/>
@@ -233,10 +242,11 @@ const Profile: FC<ProfileProps> = (props) => {
                     <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
                     {
                         isOpenExtraAction && (
-                            <div>
-                              <span><img onClick={() => reportUser()} src={reportIcon.src} alt="Report user"/>Report</span>
-                              <span><img onClick={() => blockUser()} src={blockIcon.src} alt="Block user"/>Block</span>
-                            </div>
+                        <div className={styles.ExtraActionsPopup}>
+                          <span onClick={() => shareOnTwitter()}><img src={shareIcon.src} alt="Share profile"/>Share</span>
+                          <span onClick={() => reportUser()}><img src={reportIcon.src} alt="Report user"/>Report</span>
+                          <span onClick={() => blockUser()}><img src={blockIcon.src} alt="Block user"/>Block</span>
+                        </div>
                         )
                     }
                   </div>
@@ -277,10 +287,11 @@ const Profile: FC<ProfileProps> = (props) => {
                   <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
                   {
                     isOpenExtraAction && (
-                          <div>
-                            <span><img onClick={() => reportUser()} src={reportIcon.src} alt="Report user"/>Report</span>
-                            <span><img onClick={() => blockUser()} src={blockIcon.src} alt="Block user"/>Block</span>
-                          </div>
+                        <div className={styles.ExtraActionsPopup}>
+                          <span onClick={() => shareOnTwitter()}><img src={shareIcon.src} alt="Share profile"/>Share</span>
+                          <span onClick={() => reportUser()}><img src={reportIcon.src} alt="Report user"/>Report</span>
+                          <span onClick={() => blockUser()}><img src={blockIcon.src} alt="Block user"/>Block</span>
+                        </div>
                       )
                   }
                 </div>
