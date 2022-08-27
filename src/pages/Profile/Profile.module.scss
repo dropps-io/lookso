@@ -37,7 +37,7 @@
 
 
   .ProfilePageContent {
-    padding: calc(#{$header-height} * 1.25) var(--padding-profile) 0 var(--padding-profile);
+    padding: calc(#{$header-height} * 1) var(--padding-profile) 0 var(--padding-profile);
     flex: 1 0 auto;
     color: var(--color-text-default);
 
@@ -200,7 +200,8 @@
     .ProfilePageHeader {
     }
     .ProfilePageContent {
-      padding: 30px 0 0;
+      padding-left: 0;
+      padding-right: 0;
       .BackgroundImage {
         margin-top: 0;
         border-radius: 0;
