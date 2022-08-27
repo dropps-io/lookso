@@ -30,10 +30,10 @@ import {POSTS_PER_LOAD} from "../../environment/constants";
 import {ProfileInfo} from "../../models/profile";
 import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
-import {useRouter} from "next/router";
 import MoreInfo from "../../components/MoreInfo/MoreInfo";
 import ExtendImage from "../../components/ExtendImage/ExtendImage";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
+import FollowModal from "../../components/Modals/FollowModal/FollowModal";
 
 interface ProfileProps {
   address: string,
@@ -43,8 +43,6 @@ interface ProfileProps {
 
 const Profile: FC<ProfileProps> = (props) => {
   const dispatch = useDispatch();
-
-  const router = useRouter()
 
   const connected = {
     account: useSelector((state: RootState) => state.web3.account),
@@ -60,6 +58,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isFollowing, setIsFollowing] = useState(false);
   // extra button with "report" and "block" user
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
+  const [isOpenFollowModal, setIsOpenFollowModal] = useState<'' | 'followers' | 'following'>('');
 
   const [feed, setFeed]: [FeedPost[], any] = useState([]);
   const [copied, setCopied] = useState([false, false]);
@@ -226,8 +225,15 @@ const Profile: FC<ProfileProps> = (props) => {
     setIsExtendBannerImage(false)
   }
 
+  function handleFollowChange(type: 'followers' | 'following', value: -1 | 1) {
+    if (type === 'followers') setFollowers(followers + value);
+    else setFollowing(following + value);
+  }
+
   return (
     <>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
@@ -290,12 +296,12 @@ const Profile: FC<ProfileProps> = (props) => {
             <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
           </div>
           <div className={styles.ProfileInfluence}>
-            <div className={styles.ProfileFollow}>
+            <div className={styles.ProfileFollow} onClick={() => setIsOpenFollowModal('following')}>
               <strong>{following}</strong>
               <span>Following</span>
             </div>
             <div className={styles.Sep}></div>
-            <div className={styles.ProfileFollow}>
+            <div className={styles.ProfileFollow} onClick={() => setIsOpenFollowModal('followers')}>
               <strong>{followers}</strong>
               <span>Follower{followers > 1 ? 's' : ''}</span>
             </div>

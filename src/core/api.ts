@@ -3,7 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {fileToBase64} from "./utils/file-to-base64";
-import {ProfileDisplay, ProfileInfo} from "../models/profile";
+import {ProfileDisplay, ProfileFollowingDisplay, ProfileInfo} from "../models/profile";
 
 const headers = {
   Accept: 'application/json',
@@ -104,8 +104,20 @@ export async function fetchProfileFollowersCount(address: string): Promise<numbe
 }
 
 export async function fetchIsProfileFollower(followingAddress: string, followerAddress: string): Promise<boolean> {
-  const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json()).followers;
+  const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json());
   return followers && followers.length > 0;
+}
+
+export async function fetchProfileFollowers(address: string, limit: number, offset: number): Promise<ProfileFollowingDisplay[]> {
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/followers?limit=' + limit + '&offset=' + offset);
+  if (res.ok) return await res.json();
+  else throw await res.json();
+}
+
+export async function fetchProfileFollowing(address: string, limit: number, offset: number): Promise<ProfileFollowingDisplay[]> {
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/following?limit=' + limit + '&offset=' + offset);
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
