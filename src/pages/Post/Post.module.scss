@@ -3,8 +3,11 @@
   width: 100%;
   background-color: var(--color-background-main);
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 
   .Header {
+    flex-shrink: 0;
     position: sticky;
     padding: 0 30px 0 70px;
     width: 100%;
@@ -15,12 +18,20 @@
     justify-content: center;
   }
 
-  .PageContent {
-    max-width: 700px;
-    width: 100%;
-    margin: 0 auto;
-    background-color: var(--color-background-main-l2);
-    border-radius: 24px;
+  .PostPageContent {
+    flex: 1 0 auto;
+
+    .Content {
+      max-width: 700px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: var(--color-background-main-l2);
+      border-radius: 24px;
+    }
+  }
+
+  .Footer {
+    flex-shrink: 0;
   }
 }
 
