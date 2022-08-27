@@ -187,7 +187,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    console.log('Loading new posts from offset ' + offset);
+    // console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
       let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account);
