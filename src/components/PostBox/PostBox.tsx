@@ -347,7 +347,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             {
               props.post.author.address === account ?
                   <div className={styles.RightPartButton}>
-                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
                             <div>
@@ -359,7 +359,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                   </div>
                   :
                   <div className={styles.RightPartButton}>
-                    <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
+                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
                             <div>

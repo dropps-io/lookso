@@ -44,9 +44,14 @@
     }
     .RightPartButton {
       position: relative;
-      & > button {
+      transform: translateY(-7.5px);
+      z-index: 5;
+      & > span {
         width: 40px;
         padding-bottom: 5px;
+        border: none!important;
+        font-size: 30px;
+        padding-left: 20px;
       }
       & > div {
         position: absolute;
@@ -297,14 +302,23 @@
         & > span {
           font-size: 0.8em;
         }
+        .RightPartButton {
+          & > div {
+            a, span {
+              font-size: 0.8em;
+            }
+          }
+        }
         img {
           height: 15px;
           width: 15px;
         }
       }
       .RightPartButton {
-        span, a {
-          font-size: 0.8em!important;
+        & > div {
+          a, span {
+            font-size: 0.8em!important;
+          }
         }
       }
     }
@@ -383,9 +397,20 @@
       .RightPart {
         display: flex;
         align-items: center;
-        span {
-          font-size: 0.6em;
+        & > span {
           margin-right: 10px;
+          font-size: 0.6em;
+        }
+        .RightPartButton {
+          transform: translateY(-5px);
+          & > span {
+            font-size: 1.2em;
+          }
+          & > div {
+            a, span {
+              font-size: 0.6em;
+            }
+          }
         }
         img {
           height: 10px;
