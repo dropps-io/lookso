@@ -11,7 +11,8 @@ interface ActivityProps {
   headline: string,
   onFilterChange: (filter: 'all' | 'event' | 'post') => void
   loadNext: (filter: 'all' | 'event' | 'post') => void,
-  newPost?: (post: FeedPost) => any
+  newPost?: (post: FeedPost) => any,
+  onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any)
 }
 
 const Activity: FC<ActivityProps> = (props) => {
@@ -79,9 +80,11 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <PostBox newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                           newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
                   :
-                  <PostBox newRepost={props.newPost} key={post.hash + index} post={post}/>
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                           newRepost={props.newPost} key={post.hash + index} post={post}/>
               )
             }
           </div>

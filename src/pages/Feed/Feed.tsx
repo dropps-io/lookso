@@ -86,6 +86,11 @@ const Feed: FC<FeedProps> = (props) => {
     setFeed(existing => [post].concat(existing));
   }
 
+  function handleUnfollow (address: string, filter: 'all' | 'event' | 'post') {
+    setFeed(existing => existing.filter(post => post.author.address !== address));
+    loadMorePosts(filter);
+  }
+
   return (
     <div className={styles.Feed} data-testid="Feed">
       <Head>
@@ -109,7 +114,9 @@ const Feed: FC<FeedProps> = (props) => {
           headline={props.type}
           onFilterChange={(filterValue) => fetchFeedWithFilter(filterValue)}
           newPost={handleNewPost}
-          loadNext={(filter) => loadMorePosts(filter)}></Activity>
+          loadNext={(filter) => loadMorePosts(filter)}
+          onUnfollow={handleUnfollow}
+        />
       </div>
       <div className={styles.FeedPageFooter}>
         <Footer/>

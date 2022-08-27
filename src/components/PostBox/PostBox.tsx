@@ -12,7 +12,7 @@ import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import {connectToAPI, connectWeb3} from "../../core/web3";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
-import {insertLike, insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
+import {insertFollow, insertLike, insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile} from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
@@ -99,6 +99,7 @@ interface PostProps {
   isLiked?: boolean;
   newComment?: ((comment: FeedPost) => any);
   newRepost?: ((repost: FeedPost) => any);
+  onUnfollow?: ((address: string) => any);
   comment?: boolean;
   repost?: boolean;
   static?: boolean;
@@ -220,9 +221,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     else setShowRepostModal(true);
   }
 
-  function goToUpInstallationGuide() {
-    window.open('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/', '_blank');
+  function goTo(url : string) {
+    window.open(url, '_blank');
     setShowUpInstallationModal(false);
+    setIsOpenExtraAction(false);
   }
 
   async function connectToWeb3() {
@@ -291,6 +293,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
    * @param address
    */
   async function unfollowUser(address: string) {
+    setIsOpenExtraAction(false);
     try {
       let headersJWT = jwt;
       if (!headersJWT) {
@@ -298,6 +301,28 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       }
       try {
         const res: any  = await insertUnfollow(account, address, headersJWT);
+        if (props.onUnfollow) props.onUnfollow(address);
+        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
+      } catch (e: any) {
+        if (e.message.includes('registry')) {
+          await pushRegistryToTheBlockchain(headersJWT)
+        }
+      }
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function followUser(address: string) {
+    setIsOpenExtraAction(false);
+    try {
+      let headersJWT = jwt;
+      if (!headersJWT) {
+        headersJWT = await requestJWT();
+      }
+      try {
+        const res: any  = await insertFollow(account, address, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         if (e.message.includes('registry')) {
@@ -321,7 +346,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   if (props.post) return (
     <>
-      <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
+      <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={() => goTo('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/')}/>
       <ActionModal open={showLogInModal} onClose={() => setShowLogInModal(false)} textToDisplay={'Please log in first'} btnText={'Log in'} callback={() => connectToWeb3()}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
@@ -352,7 +377,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     {
                         isOpenExtraAction && (
                             <div>
-                              <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">Explorer</a>
+                              <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
                             </div>
                         )
@@ -364,11 +389,19 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     {
                         isOpenExtraAction && (
                             <div>
-                              <a title={'Explorer'} href={EXPLORER_URL + 'tx/' + props.post.transactionHash} target='_blank' rel="noopener noreferrer">Explorer</a>
-                              <div className={styles.RightPartButtonUnfollow}>
-                                <span onClick={() => unfollowUser(props.post.author.address)}>Unfollow </span>
-                                <UserTag username={props.post.author.name} address={props.post.author.address}/>
-                              </div>
+                              <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
+                              {
+                                router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                      <span>Unfollow </span>
+                                      <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                                  </div>
+                              }
+                              {
+                                router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                      <span>Follow </span>
+                                      <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                                  </div>
+                              }
                             </div>
                         )
                     }
