@@ -126,8 +126,10 @@ const Feed: FC<FeedProps> = (props) => {
               newPost={handleNewPost}
               loadNext={(filter) => loadMorePosts(filter)}
               onUnfollow={handleUnfollow}
+              end={fullyLoadedActivity && feed.length > 0}
             />
         }
+
       </div>
       <div className={styles.FeedPageFooter}>
         <Footer/>

@@ -9,6 +9,7 @@ import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
+import Footer from "../../components/Footer/Footer";
 
 interface PostProps {
   hash: string,
@@ -49,10 +50,13 @@ const Post: FC<PostProps> = (props) => {
     <div className={styles.PostPage} data-testid="Post">
       <SidebarButtons/>
       <div className={styles.Header}><Navbar/></div>
-      <div className={styles.PageContent}>
-        <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
-        <Comments feed={comments} loadNext={() => {}}/>
+      <div className={styles.PostPageContent}>
+        <div className={styles.Content}>
+          <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
+          <Comments feed={comments} loadNext={() => {}}/>
+        </div>
       </div>
+      <div className={styles.Footer}><Footer/></div>
     </div>
   );
 }

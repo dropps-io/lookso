@@ -12,7 +12,8 @@ interface ActivityProps {
   onFilterChange: (filter: 'all' | 'event' | 'post') => void
   loadNext: (filter: 'all' | 'event' | 'post') => void,
   newPost?: (post: FeedPost) => any,
-  onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any)
+  onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
+  end?: boolean
 }
 
 const Activity: FC<ActivityProps> = (props) => {
@@ -91,6 +92,13 @@ const Activity: FC<ActivityProps> = (props) => {
           :
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
+          </div>
+      }
+      {
+        props.end &&
+          <div className={styles.FeedEnd}>
+              <p>Looks like you reached the end of the feed 😔</p>
+              <button onClick={() => props.onFilterChange(activeFilter)} className={'btn btn-secondary'}>Refresh</button>
           </div>
       }
     </div>
