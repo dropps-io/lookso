@@ -34,6 +34,7 @@ import MoreInfo from "../../components/MoreInfo/MoreInfo";
 import ExtendImage from "../../components/ExtendImage/ExtendImage";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import FollowModal from "../../components/Modals/FollowModal/FollowModal";
+import ActionModal from "../../components/Modals/ActionModal/ActionModal";
 
 interface ProfileProps {
   address: string,
@@ -69,6 +70,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
+  const [isOpenFeatureSoonModal, setIsOpenFeatureSoonModal] = useState(false);
 
 
   let loading = false;
@@ -207,10 +209,12 @@ const Profile: FC<ProfileProps> = (props) => {
 
   async function reportUser() {
     setIsOpenExtraAction(false);
+    setIsOpenFeatureSoonModal(true)
     // TODO add api call
   }
   async function blockUser() {
     setIsOpenExtraAction(false);
+    setIsOpenFeatureSoonModal(true)
     // TODO add api call
   }
 
@@ -232,6 +236,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   return (
     <>
+      <ActionModal open={isOpenFeatureSoonModal} onClose={() => setIsOpenFeatureSoonModal(false)} textToDisplay={"Sorry, this functionality will be added soon!"} btnText={"Close"} callback={() => setIsOpenFeatureSoonModal(false)}/>
       <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
       <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
