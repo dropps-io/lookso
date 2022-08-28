@@ -65,7 +65,7 @@ const Feed: FC<FeedProps> = (props) => {
 
     if (initialized && needToScrollOnNextFeedChange && feed.length === storedFeed.length) {
       setNeedToScrollOnNextFeedChange(false);
-      window.scrollTo(0, storedFeedCurrentTopPosition - 100);
+      window.scrollTo(0, storedFeedCurrentTopPosition);
     }
 
     if (!initialized && web3Initialized && storedFeedCurrentType && storedFeed) initPageData();
@@ -73,7 +73,7 @@ const Feed: FC<FeedProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    // console.log('Loading posts... from' + offset);
+    console.log('Loading posts... from' + offset);
     try {
       loading = true;
       let newPosts: FeedPost[];
@@ -156,7 +156,7 @@ const Feed: FC<FeedProps> = (props) => {
               loadNext={(filter) => loadMorePosts(filter)}
               onUnfollow={handleUnfollow}
               end={fullyLoadedActivity && feed.length > 0}
-              onScroll={(scrollPosition) => dispatch(setCurrentFeedTopPosition(scrollPosition))}
+              onScroll={() => dispatch(setCurrentFeedTopPosition(window.scrollY))}
             />
         }
 

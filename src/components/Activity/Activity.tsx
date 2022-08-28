@@ -14,7 +14,7 @@ interface ActivityProps {
   newPost?: (post: FeedPost) => any,
   onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
   end?: boolean,
-  onScroll?: (e: any) => any
+  onScroll?: () => any
 }
 
 const Activity: FC<ActivityProps> = (props) => {
@@ -48,13 +48,13 @@ const Activity: FC<ActivityProps> = (props) => {
   useEffect(() => {
     if (isListening) {
       const listener = async () => {
-        if (props.onScroll) props.onScroll(window.scrollY);
         if (isScrolledIntoView(ref)) {
           setIsListening(!isListening);
           props.loadNext(activeFilter);
           await timer(1000);
           setIsListening(true);
         }
+        if (props.onScroll) props.onScroll();
       }
 
       document.addEventListener("scroll", listener);
