@@ -13,6 +13,7 @@ import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
 import {addToStoredFeed, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
+import {timer} from "../../core/utils/timer";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -36,15 +37,11 @@ const Feed: FC<FeedProps> = (props) => {
     async function initPageData() {
       setInitialized(true);
       if (storedFeed.length > 0 && storedFeedCurrentType === props.type) {
-        console.log('inIf');
-        console.log(storedFeed.length)
-        console.log(storedFeedCurrentTopPosition)
         setFeed(storedFeed);
         setFullyLoadedActivity(false);
         setOffset(storedFeed.length);
         setNeedToScrollOnNextFeedChange(true);
       } else {
-        console.log('inElse')
         setFeed([]);
         setFullyLoadedActivity(false);
 
@@ -63,9 +60,12 @@ const Feed: FC<FeedProps> = (props) => {
       }
     }
 
-    if (initialized && needToScrollOnNextFeedChange && feed.length === storedFeed.length) {
-      setNeedToScrollOnNextFeedChange(false);
+    if (initialized && needToScrollOnNextFeedChange && feed.length === storedFeed.length) scrollTo();
+
+    async function scrollTo() {
       window.scrollTo(0, storedFeedCurrentTopPosition);
+      await timer(50);
+      setNeedToScrollOnNextFeedChange(false);
     }
 
     if (!initialized && web3Initialized && storedFeedCurrentType && storedFeed) initPageData();
@@ -73,7 +73,7 @@ const Feed: FC<FeedProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    console.log('Loading posts... from' + offset);
+    // console.log('Loading posts... from' + offset);
     try {
       loading = true;
       let newPosts: FeedPost[];
@@ -156,7 +156,11 @@ const Feed: FC<FeedProps> = (props) => {
               loadNext={(filter) => loadMorePosts(filter)}
               onUnfollow={handleUnfollow}
               end={fullyLoadedActivity && feed.length > 0}
-              onScroll={() => dispatch(setCurrentFeedTopPosition(window.scrollY))}
+              onScroll={() => {
+                if (initialized && !needToScrollOnNextFeedChange) {
+                  dispatch(setCurrentFeedTopPosition(window.scrollY))
+                }
+              }}
             />
         }
 
