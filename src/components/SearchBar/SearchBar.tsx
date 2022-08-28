@@ -38,6 +38,10 @@ const  SearchBar: FC<SearchBarProps> = () => {
 
   return (
     <div className={styles.SearchBar}>
+      {
+        searchInput !== '' &&
+        <div className={'backdrop'} onClick={handleClose}></div>
+      }
       <img src={searchIcon.src} alt="search"/>
       <input ref={ref} onChange={handleChange} data-testid="SearchBar" placeholder='Search by address or username'></input>
       <SearchResults loading={profilesLoading} profiles={profiles} onClose={handleClose} open={!!searchInput}/>
