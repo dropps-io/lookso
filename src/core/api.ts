@@ -108,14 +108,18 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export async function fetchProfileFollowers(address: string, limit: number, offset: number): Promise<ProfileFollowingDisplay[]> {
-  const res = await fetch(API_URL + '/lookso/profile/' + address + '/followers?limit=' + limit + '&offset=' + offset);
+export async function fetchProfileFollowers(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
+  let url = API_URL + '/lookso/profile/' + address + '/followers?limit=' + limit + '&offset=' + offset;
+  if (viewOf) url += '&viewOf=' + viewOf;
+  const res = await fetch(url);
   if (res.ok) return await res.json();
   else throw await res.json();
 }
 
-export async function fetchProfileFollowing(address: string, limit: number, offset: number): Promise<ProfileFollowingDisplay[]> {
-  const res = await fetch(API_URL + '/lookso/profile/' + address + '/following?limit=' + limit + '&offset=' + offset);
+export async function fetchProfileFollowing(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
+let url = API_URL + '/lookso/profile/' + address + '/following?limit=' + limit + '&offset=' + offset;
+  if (viewOf) url += '&viewOf=' + viewOf;
+  const res = await fetch(url);
   if (res.ok) return await res.json();
   else throw await res.json();
 }

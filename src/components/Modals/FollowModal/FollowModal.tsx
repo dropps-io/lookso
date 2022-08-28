@@ -20,6 +20,7 @@ import {setProfileJwt} from "../../../store/profile-reducer";
 
 interface FollowModalProps {
   account: string,
+  connectedAccount: string,
   type: 'following' | 'followers',
   open: boolean,
   onClose: () => any,
@@ -66,8 +67,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     setLoading(true);
     let profiles: ProfileFollowingDisplay[] = [];
     try {
-      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.account, PROFILES_PER_LOAD, offset);
-      if (props.type === 'following') profiles = await fetchProfileFollowing(props.account, PROFILES_PER_LOAD, offset);
+      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.account, PROFILES_PER_LOAD, offset, props.connectedAccount);
+      if (props.type === 'following') profiles = await fetchProfileFollowing(props.account, PROFILES_PER_LOAD, offset, props.connectedAccount);
       if (profiles.length < PROFILES_PER_LOAD) setFullyLoaded(true);
       setOffset(offset + profiles.length);
       setProfiles(existing => existing.concat(profiles));

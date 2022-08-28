@@ -237,8 +237,8 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <ActionModal open={isOpenFeatureSoonModal} onClose={() => setIsOpenFeatureSoonModal(false)} textToDisplay={"Sorry, this functionality will be added soon!"} btnText={"Close"} callback={() => setIsOpenFeatureSoonModal(false)}/>
-      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
-      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal connectedAccount={connected.account} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal connectedAccount={connected.account} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} account={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
