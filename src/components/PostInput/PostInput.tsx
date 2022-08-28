@@ -203,7 +203,17 @@ const PostInput: FC<PostInputProps> = (props) => {
         <div className={`${styles.BoxTop}`}>
           <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
           <div className={styles.Inputs}>
-            <textarea onClick={() => setShowEmojiPicker(false)} disabled={!!loadingMessage} onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
+            <textarea onClick={() => setShowEmojiPicker(false)}
+                      disabled={!!loadingMessage}
+                      onChange={handleChangeMessage}
+                      maxLength={256}
+                      ref={postInput}
+                      className={styles.PostInput}
+                      style={{height: `${inputHeight}px`}}
+                      onKeyDown={() => textAreaAdjust()}
+                      onKeyUp={() => textAreaAdjust()}
+                      name="textValue"
+                      placeholder={props.childPost ? "Add comment" : "What's happening?"}/>
             {
               inputFile ?
                 <div className={styles.InputImage}>
@@ -214,8 +224,12 @@ const PostInput: FC<PostInputProps> = (props) => {
           </div>
         </div>
         {
-          props.childPost ?
-            <PostBox post={props.childPost} static repost/> : <></>
+          props.childPost &&
+            <>
+                <br/>
+              <PostBox post={props.childPost} static repost/>
+            </>
+
         }
         <div className={styles.BoxBottom}>
           <span>{inputValue.length} / 256</span>
