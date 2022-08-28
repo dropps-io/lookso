@@ -11,6 +11,7 @@ import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Footer from "../../components/Footer/Footer";
 import CircularProgress from "@mui/material/CircularProgress";
+import PostInput from "../../components/PostInput/PostInput";
 
 interface PostProps {
   hash: string,
@@ -67,11 +68,17 @@ const Post: FC<PostProps> = (props) => {
       <SidebarButtons/>
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PostPageContent}>
-        <div className={styles.Content}>
+        <div className={`${styles.Content} ${props.post.type === 'post' ? styles.PostType : ''}`}>
           <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
+          <div className={styles.NewComment}>
+            <PostInput onNewPost={() => {}} parentHash={props.hash}/>
+          </div>
+          <div className={styles.Separator}></div>
           <Comments feed={comments} loadNext={loadMoreComments}/>
-          {
-            (!fullyLoadedComments) && <div className={styles.Loading}><CircularProgress size={60}/></div>
+          {(!fullyLoadedComments) && <div className={styles.NoComments}><CircularProgress size={60}/></div>}
+          {(fullyLoadedComments && comments.length === 0) && <div className={styles.NoComments}>
+            <p>No comments yet 🤷</p>
+            </div>
           }
         </div>
       </div>

@@ -199,7 +199,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
-      <form onSubmit={handleSubmit} className={`${props.parentHash || props.childPost ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
+      <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
         <div className={`${styles.BoxTop}`}>
           <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
           <div className={styles.Inputs}>
@@ -213,7 +213,7 @@ const PostInput: FC<PostInputProps> = (props) => {
                       onKeyDown={() => textAreaAdjust()}
                       onKeyUp={() => textAreaAdjust()}
                       name="textValue"
-                      placeholder={props.childPost ? "Add comment" : "What's happening?"}/>
+                      placeholder={props.childPost ? "Add comment" : props.parentHash ? "Add comment" : "What's happening?"}/>
             {
               inputFile ?
                 <div className={styles.InputImage}>

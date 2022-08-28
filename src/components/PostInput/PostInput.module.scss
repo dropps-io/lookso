@@ -2,7 +2,7 @@
   display: flex;
 
   .ProfileImgSmall {
-    border: 3px solid var(--color-border-light);
+    border: 2px solid var(--color-border-light);
     border-radius: 40px;
     height: 40px;
     width: 40px;
@@ -65,6 +65,7 @@
   align-items: end;
 
   span {
+    color: var(--color-text-default);
     height: max-content;
     font-size: 0.7em;
   }
@@ -123,6 +124,7 @@
   .BoxTop {
     .Inputs {
       .PostInput {
+        padding-top: 10px;
         font-size: 1em;
 
         &::placeholder {
@@ -131,11 +133,25 @@
       }
     }
   }
+
+  .BoxBottom {
+    margin-top: 0;
+  }
 }
 
 .Repost {
   .BoxTop {
     margin-left: -40px;
+    .Inputs {
+      .PostInput {
+        padding-top: 10px;
+        font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
+      }
+    }
   }
 
   .BoxBottom {
@@ -206,7 +222,7 @@
       height: 35px;
       width: 35px;
       min-width: 35px;
-      border: 2px solid;
+      border: 2px solid var(--color-border-light);
     }
 
     .Inputs {

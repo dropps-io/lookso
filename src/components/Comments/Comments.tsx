@@ -50,7 +50,9 @@ const Comments: FC<CommentsProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 <>
-                  <div className={styles.Separator}/>
+                  {
+                    index !== 0 && <div className={styles.Separator}/>
+                  }
                   {
                     index === props.feed.length - (POSTS_PER_LOAD / 2) ?
                       <PostBox ref={ref} key={post.hash} post={post} comment/> :

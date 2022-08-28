@@ -459,11 +459,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
-      <div ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${props.comment || props.repost  ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
+      <div ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${(props.comment) ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
         {props.post.parentPost &&
           <div className={styles.ParentPost}>
             <div className={styles.Post}>
-              <PostBox key={'parent-post'} post={props.post.parentPost} comment static noPadding/>
+              <PostBox key={'parent-post'} post={props.post.parentPost} comment noPadding/>
             </div>
           </div>
         }
@@ -484,10 +484,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                            <div>
+                        <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
-                            </div>
+                        </PopupButton>
                         )
                     }
                   </div>
