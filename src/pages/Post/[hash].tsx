@@ -31,10 +31,10 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
 
   if (hash && props.success) return (<>
       <Head>
-        <title>{post.type === 'event' ? 'Event' : 'Post'} from {userTag} | Lookso</title>
+        <title>{post.type === 'event' ? 'Event' : 'Post'} from {userTag} | LOOKSO</title>
         <meta name="twitter:card" content={post.display.image ? 'summary_large_image' : 'summary'} />
         <meta name="twitter:site" content="@lookso_io" />
-        <meta name="twitter:title" content={`${post.type === 'event' ? 'Event' : 'Post'} from ${userTag} | Lookso`} />
+        <meta name="twitter:title" content={`${post.type === 'event' ? 'Event' : 'Post'} from ${userTag} | LOOKSO`} />
         <meta property='twitter:description' content={description} />
         <meta property='twitter:creator' content='@undeveloped' />
         <meta name='description' content={description} />
