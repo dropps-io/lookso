@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
 import styles from './FollowModal.module.scss';
 import {formatUrl} from "../../../core/utils/url-formating";
 import {DEFAULT_PROFILE_IMAGE} from "../../../core/utils/constants";
@@ -27,6 +27,8 @@ interface FollowModalProps {
   onFollowChange: (type: 'followers' | 'following', value: -1 | 1) => any;
 }
 
+const PROFILES_PER_LOAD: number = 50;
+
 const FollowModal: FC<FollowModalProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -35,28 +37,46 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   const [profiles, setProfiles] = useState<ProfileFollowingDisplay[]>([]);
   const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fullyLoaded, setFullyLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
+
+  let ref: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
     const init = async () => {
       setInitialized(true);
-      setLoading(true);
-      let profiles: ProfileFollowingDisplay[] = [];
-      try {
-        if (props.type === 'followers') profiles = await fetchProfileFollowers(props.account, 30, offset);
-        if (props.type === 'following') profiles = await fetchProfileFollowing(props.account, 30, offset);
-      }
-      catch (e) {
-        setLoading(false);
-        setInitialized(false);
-      }
-      setLoading(false);
-      setOffset(profiles.length);
-      setProfiles(profiles);
+      loadProfiles();
     }
 
     if(props.account && !initialized && props.open) init();
-  }, [props.open, props.account, web3, jwt])
+  }, [props.open, props.account, web3, jwt]);
+
+  function handleScroll() {
+    if (ref.current && !loading && !fullyLoaded) {
+      const rect = ref.current.getBoundingClientRect();
+      const elemTop = rect.top;
+      if (elemTop < 0) {
+        loadProfiles();
+      }
+    }
+  }
+
+  async function loadProfiles() {
+    if (fullyLoaded) return;
+    setLoading(true);
+    let profiles: ProfileFollowingDisplay[] = [];
+    try {
+      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.account, PROFILES_PER_LOAD, offset);
+      if (props.type === 'following') profiles = await fetchProfileFollowing(props.account, PROFILES_PER_LOAD, offset);
+      if (profiles.length < PROFILES_PER_LOAD) setFullyLoaded(true);
+      setOffset(offset + profiles.length);
+      setProfiles(existing => existing.concat(profiles));
+      setLoading(false);
+    }
+    catch (e) {
+      setLoading(false);
+    }
+  }
 
   function goToProfile(account: string) {
     router.push('/Profile/' + account);
@@ -125,29 +145,43 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   return (
     <CustomModal open={props.open} onClose={props.onClose}>
       <div className={styles.FollowModal}>
-        <div className={styles.Profiles}>
+        <div className={styles.Profiles} onScroll={handleScroll}>
           {
-            loading ?
-              <CircularProgress size={60}/>
-              :
-              profiles.length > 0 ?
-              profiles.map((profile, index) =>
-                <div key={index} className={`${styles.Profile}`}>
-                  <div className={styles.ProfileDisplay}>
-                    <div onClick={() => goToProfile(profile.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${profile.image ? formatUrl(profile.image) : DEFAULT_PROFILE_IMAGE})`}}/>
-                    <span onClick={() => goToProfile(profile.address)} className={styles.NotificationText}><UserTag username={profile.name} address={profile.address}/></span>
-                  </div>
-                  {
-                    profile.following ?
-                    <button onClick={() => unfollowUser(profile.address)} className={`btn btn-secondary-no-fill`}>Following</button>
-                      :
-                    <button onClick={() => followUser(profile.address)} className={`btn btn-secondary`}>Follow</button>
-                  }
+            profiles.length > 0 ?
+            profiles.map((profile, index) =>
+              index === profiles.length - PROFILES_PER_LOAD / 2 ?
+              <div ref={ref} key={index} className={`${styles.Profile}`}>
+                <div className={styles.ProfileDisplay}>
+                  <div onClick={() => goToProfile(profile.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${profile.image ? formatUrl(profile.image) : DEFAULT_PROFILE_IMAGE})`}}/>
+                  <span onClick={() => goToProfile(profile.address)} className={styles.NotificationText}><UserTag username={profile.name} address={profile.address}/></span>
                 </div>
-              ) :
-              props.type === 'followers' ?
-                <p>No followers yet 🤷‍</p> :
-                <p>{`You don't follow anyone yet 🤷`}</p>
+                {
+                  profile.following ?
+                  <button onClick={() => unfollowUser(profile.address)} className={`btn btn-secondary-no-fill`}>Following</button>
+                    :
+                  <button onClick={() => followUser(profile.address)} className={`btn btn-secondary`}>Follow</button>
+                }
+              </div>
+                :
+              <div key={index} className={`${styles.Profile}`}>
+                <div className={styles.ProfileDisplay}>
+                  <div onClick={() => goToProfile(profile.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${profile.image ? formatUrl(profile.image) : DEFAULT_PROFILE_IMAGE})`}}/>
+                  <span onClick={() => goToProfile(profile.address)} className={styles.NotificationText}><UserTag username={profile.name} address={profile.address}/></span>
+                </div>
+                {
+                  profile.following ?
+                    <button onClick={() => unfollowUser(profile.address)} className={`btn btn-secondary-no-fill`}>Following</button>
+                    :
+                    <button onClick={() => followUser(profile.address)} className={`btn btn-secondary`}>Follow</button>
+                }
+              </div>
+            ) :
+            !loading && (props.type === 'followers' ?
+              <p>No followers yet 🤷‍</p> :
+              <p>{`You don't follow anyone yet 🤷`}</p>)
+          }
+          {
+            loading && <div className={styles.Loading}><CircularProgress size={60}/></div>
           }
         </div>
       </div>
