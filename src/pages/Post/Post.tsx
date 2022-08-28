@@ -68,7 +68,7 @@ const Post: FC<PostProps> = (props) => {
       <SidebarButtons/>
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PostPageContent}>
-        <div className={`${styles.Content} ${props.post.type === 'post' ? styles.PostType : ''}`}>
+        <div className={`${styles.Content} ${props.post && props.post.type === 'post' ? styles.PostType : ''}`}>
           <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
           <div className={styles.NewComment}>
             <PostInput onNewPost={() => {}} parentHash={props.hash}/>
