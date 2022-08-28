@@ -60,7 +60,7 @@ const SidebarButtons: FC<SidebarButtonsProps> = (props) => {
             <PostModal open={showPostModal} onClose={onClickClosePostModal}/>
             <StickyButton icon={returnIcon} alt={"Return"} callback={onClickReturn} color={"--color-background-main-l3"}/>
             {
-                !props.disableEdit && <StickyButton icon={newPostIcon} alt={"New post"} callback={onClickNewPost} color={"--color-buttons"}/>
+                !props.disableEdit && <div className={styles.WritePost}><StickyButton icon={newPostIcon} alt={"New post"} callback={onClickNewPost} color={"--color-buttons"}/></div>
             }
         </div>
     )
