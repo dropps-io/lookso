@@ -12,3 +12,16 @@
     margin-right: 0.5rem;
   }
 }
+
+@media only screen and (max-width: 900px) {
+  .StickyButton {
+    $stick-size: 40px;
+    width: $stick-size;
+    height: $stick-size;
+    border-radius: 0 10px 10px 0;
+    img {
+      width: 15px;
+      margin-right: 0;
+    }
+  }
+}
