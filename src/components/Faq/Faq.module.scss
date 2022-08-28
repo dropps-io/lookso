@@ -70,8 +70,12 @@
       display: block;
       transition: all .3s;
 
-      a {
+      a, strong {
         font-weight: 600;
+      }
+      a {
+        cursor: pointer;
+        text-decoration: underline;
       }
     }
   }
