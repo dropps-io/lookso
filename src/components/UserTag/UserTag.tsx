@@ -11,7 +11,7 @@ interface UserTagProps {
 const UserTag: FC<UserTagProps> = (props) => (
   <span onClick={() => { if (props.onClick) props.onClick() }}
         className={`${props.colorReversed ? styles.UserTagReverse : styles.UserTag} ${props.onClick ? styles.Pointer : ''}`}
-        title={props.username.length > 15 ? ((props.username ? '@' + props.username : 'unnamed') + '#' + (props.address ? props.address.slice(2, 6).toUpperCase() : '')) : undefined}
+        title={props.username.length > 12 ? ((props.username ? '@' + props.username : 'unnamed') + '#' + (props.address ? props.address.slice(2, 6).toUpperCase() : '')) : undefined}
   >
     {
       props.username ?

@@ -59,7 +59,7 @@ const Feed: FC<FeedProps> = (props) => {
         setOffset(newFeed.length);
         setFeed(newFeed);
 
-        dispatch(setCurrentFeedFilter('all'));
+        // dispatch(setCurrentFeedFilter('all'));
         dispatch(setCurrentFeedType(props.type));
         dispatch(setStoredFeed(newFeed));
       }
@@ -79,6 +79,7 @@ const Feed: FC<FeedProps> = (props) => {
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     // console.log('Loading posts... from' + offset);
+    dispatch(setCurrentFeedFilter(filter));
     try {
       loading = true;
       let newPosts: FeedPost[];
@@ -102,6 +103,7 @@ const Feed: FC<FeedProps> = (props) => {
   }
 
   async function fetchFeedWithFilter(type: 'all' | 'post' | 'event') {
+    dispatch(setCurrentFeedFilter(type));
     setFeed([]);
     setFullyLoadedActivity(false);
 

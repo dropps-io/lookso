@@ -5,9 +5,9 @@ import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {timer} from "../../core/utils/timer";
 import CircularProgress from "@mui/material/CircularProgress";
-import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 import {RootState} from "../../store/store";
-import {setCurrentFeedFilter} from "../../store/feed-reducer";
+import {useSelector} from "react-redux";
 
 interface ActivityProps {
   feed: FeedPost[],
@@ -21,9 +21,10 @@ interface ActivityProps {
 }
 
 const Activity: FC<ActivityProps> = (props) => {
-  const dispatch = useDispatch();
-  const activeFilter = useSelector((state: RootState) => state.feed.currentFilter);
+  const router = useRouter();
+  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
   const [isListening, setIsListening] = useState(true);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'post' | 'event'>('all');
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   const filters: {display: string, value: 'all' | 'post' | 'event'}[] = [
@@ -45,16 +46,16 @@ const Activity: FC<ActivityProps> = (props) => {
   async function setActive(i: number) {
     if (filters[i].value !== activeFilter) {
       props.onFilterChange(filters[i].value);
-      dispatch(setCurrentFeedFilter(filters[i].value));
+      setActiveFilter(filters[i].value);
     }
   }
 
   useEffect(() => {
     if (isListening) {
       const listener = async () => {
-        if (isScrolledIntoView(ref)) {
+        if (isScrolledIntoView(ref) && storedFilter) {
           setIsListening(!isListening);
-          props.loadNext(activeFilter);
+          props.loadNext(router.asPath.includes('Profile') ? activeFilter : storedFilter);
           await timer(1000);
           setIsListening(true);
         }
@@ -66,6 +67,10 @@ const Activity: FC<ActivityProps> = (props) => {
       return () => {
         document.removeEventListener("scroll", listener);
       };
+    }
+
+    if (!router.asPath.includes('Profile')) {
+      setActiveFilter(storedFilter);
     }
   }, [props.loadNext, isListening, props.onFilterChange])
 
