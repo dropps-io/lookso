@@ -5,12 +5,14 @@ interface FeedStore{
     feed: FeedPost[],
     currentTopPosition: number,
     currentType: 'Explore' | 'Feed'
+    currentFilter: 'all' | 'event' | 'post'
 }
 
 const initialState: FeedStore = {
     feed: [],
     currentTopPosition: 0,
-    currentType: 'Explore'
+    currentType: 'Explore',
+    currentFilter: 'all',
 };
 
 export const feedSlice = createSlice({
@@ -28,11 +30,14 @@ export const feedSlice = createSlice({
         },
         setCurrentFeedType: (state, action: PayloadAction<'Explore' | 'Feed'>) => {
             state.currentType = action.payload;
+        },
+        setCurrentFeedFilter: (state, action: PayloadAction<'all' | 'event' | 'post'>) => {
+            state.currentFilter = action.payload;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentFeedTopPosition, setStoredFeed, addToStoredFeed, setCurrentFeedType } = feedSlice.actions;
+export const { setCurrentFeedTopPosition, setStoredFeed, addToStoredFeed, setCurrentFeedType, setCurrentFeedFilter } = feedSlice.actions;
 
 export default feedSlice.reducer;

@@ -5,6 +5,9 @@ import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {timer} from "../../core/utils/timer";
 import CircularProgress from "@mui/material/CircularProgress";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/store";
+import {setCurrentFeedFilter} from "../../store/feed-reducer";
 
 interface ActivityProps {
   feed: FeedPost[],
@@ -18,8 +21,9 @@ interface ActivityProps {
 }
 
 const Activity: FC<ActivityProps> = (props) => {
+  const dispatch = useDispatch();
+  const activeFilter = useSelector((state: RootState) => state.feed.currentFilter);
   const [isListening, setIsListening] = useState(true);
-  const [activeFilter, setActiveFilter]: ['all' | 'post' | 'event', any] = useState('all');
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   const filters: {display: string, value: 'all' | 'post' | 'event'}[] = [
@@ -41,7 +45,7 @@ const Activity: FC<ActivityProps> = (props) => {
   async function setActive(i: number) {
     if (filters[i].value !== activeFilter) {
       props.onFilterChange(filters[i].value);
-      setActiveFilter(filters[i].value);
+      dispatch(setCurrentFeedFilter(filters[i].value));
     }
   }
 

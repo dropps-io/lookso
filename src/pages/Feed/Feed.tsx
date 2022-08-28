@@ -12,7 +12,7 @@ import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
-import {addToStoredFeed, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
+import {addToStoredFeed, setCurrentFeedFilter, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
 import {timer} from "../../core/utils/timer";
 
 interface FeedProps {
@@ -36,14 +36,18 @@ const Feed: FC<FeedProps> = (props) => {
   useEffect(() => {
     async function initPageData() {
       setInitialized(true);
+      setFullyLoadedActivity(false);
+
       if (storedFeed.length > 0 && storedFeedCurrentType === props.type) {
+        console.log('inif')
+
         setFeed(storedFeed);
-        setFullyLoadedActivity(false);
         setOffset(storedFeed.length);
         setNeedToScrollOnNextFeedChange(true);
+
       } else {
+        console.log('inelse')
         setFeed([]);
-        setFullyLoadedActivity(false);
 
         let newFeed: FeedPost[];
         if (account && props.type === 'Feed') {
@@ -55,6 +59,7 @@ const Feed: FC<FeedProps> = (props) => {
         setOffset(newFeed.length);
         setFeed(newFeed);
 
+        dispatch(setCurrentFeedFilter('all'));
         dispatch(setCurrentFeedType(props.type));
         dispatch(setStoredFeed(newFeed));
       }
@@ -109,6 +114,7 @@ const Feed: FC<FeedProps> = (props) => {
       else newPosts = [];
     }
 
+    dispatch(setStoredFeed(newPosts));
     setOffset(newPosts.length);
     setFeed(newPosts);
   }
