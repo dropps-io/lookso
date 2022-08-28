@@ -541,7 +541,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
               :
               <></>
           }
-          {props.post.display.text ? <PostContent onClick={handleClick} text={props.post.display.text} params={props.post.display.params}/> : <p>Event: {props.post.name}</p>}
+          {props.post.display.text ? <PostContent onClick={handleClick} text={props.post.display.text} params={props.post.display.params}/> : props.post.type === 'event' && <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
 
