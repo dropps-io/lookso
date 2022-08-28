@@ -10,6 +10,7 @@ import {useRouter} from "next/router";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Footer from "../../components/Footer/Footer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface PostProps {
   hash: string,
@@ -22,6 +23,11 @@ const Post: FC<PostProps> = (props) => {
   const account = useSelector((state: RootState) => state.web3.account);
   const [comments, setComments] = useState<FeedPost[]>([]);
   const [isLiking, setIsLiking] = useState(false);
+  const [fullyLoadedComments, setFullyLoadedComments] = useState(false);
+  const [offset, setOffset] = useState(0);
+
+  let loading = false;
+
 
   useEffect(() => {
     async function init() {
@@ -31,11 +37,13 @@ const Post: FC<PostProps> = (props) => {
           setIsLiking(true);
         }
       }
-      const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, 0, account);
+      const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, offset, account);
       if (router.query.newComment) {
         const newComment: FeedPost = JSON.parse(router.query.newComment as string);
         if (!comments.map(c => c.hash).includes(newComment.hash)) comments.unshift(newComment);
       }
+      if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
+      setOffset(comments.length);
       setComments(comments);
     }
 
@@ -46,6 +54,14 @@ const Post: FC<PostProps> = (props) => {
     setComments(existing => [comment].concat(existing));
   }
 
+  async function loadMoreComments() {
+    if (loading || fullyLoadedComments) return;
+    const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, offset, account);
+    if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
+    setOffset(offset + comments.length);
+    setComments(existing =>  existing.concat(comments));
+  }
+
   return (
     <div className={styles.PostPage} data-testid="Post">
       <SidebarButtons/>
@@ -53,7 +69,10 @@ const Post: FC<PostProps> = (props) => {
       <div className={styles.PostPageContent}>
         <div className={styles.Content}>
           <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
-          <Comments feed={comments} loadNext={() => {}}/>
+          <Comments feed={comments} loadNext={loadMoreComments}/>
+          {
+            (!fullyLoadedComments) && <div className={styles.Loading}><CircularProgress size={60}/></div>
+          }
         </div>
       </div>
       <div className={styles.Footer}><Footer/></div>

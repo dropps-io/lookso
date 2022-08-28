@@ -25,7 +25,7 @@ const Comments: FC<CommentsProps> = (props) => {
 
   useEffect(() => {
     if (isListening) {
-      const listener = async (e: any) => {
+      const listener = async () => {
         if (isScrolledIntoView(ref)) {
           setIsListening(!isListening);
           props.loadNext();
@@ -54,7 +54,7 @@ const Comments: FC<CommentsProps> = (props) => {
                   {
                     index === props.feed.length - (POSTS_PER_LOAD / 2) ?
                       <PostBox ref={ref} key={post.hash} post={post} comment/> :
-                      <PostBox key={post.hash + index} post={post} comment/>
+                      <PostBox key={post.hash} post={post} comment/>
                   }
                 </>
               )

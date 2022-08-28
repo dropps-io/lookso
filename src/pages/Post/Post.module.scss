@@ -20,6 +20,7 @@
 
   .PostPageContent {
     flex: 1 0 auto;
+    margin-bottom: 100px;
 
     .Content {
       max-width: 700px;
@@ -27,6 +28,14 @@
       margin: 0 auto;
       background-color: var(--color-background-main-l2);
       border-radius: 24px;
+    }
+
+    .Loading {
+      width: 100%;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 
