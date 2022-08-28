@@ -3,7 +3,7 @@ import styles from './Feed.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../store/store";
 import {fetchAllFeed, fetchProfileFeed} from "../../core/api";
 import {FeedPost} from "../../components/PostBox/PostBox";
@@ -12,37 +12,64 @@ import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
+import {addToStoredFeed, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
 }
 
 const Feed: FC<FeedProps> = (props) => {
+  const dispatch = useDispatch();
   const account = useSelector((state: RootState) => state.web3.account);
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
+  const storedFeed = useSelector((state: RootState) => state.feed.feed);
+  const storedFeedCurrentType = useSelector((state: RootState) => state.feed.currentType);
+  const storedFeedCurrentTopPosition = useSelector((state: RootState) => state.feed.currentTopPosition);
   const [feed, setFeed] = useState<FeedPost[]>([])
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [initialized, setInitialized] = useState(false);
+  const [needToScrollOnNextFeedChange, setNeedToScrollOnNextFeedChange] = useState(false);
 
   let loading = false;
   useEffect(() => {
     async function initPageData() {
-      setFeed([]);
-      setFullyLoadedActivity(false);
-
-      let newFeed: FeedPost[];
-      if (account && props.type === 'Feed') {
-        newFeed = await fetchProfileFeed(account, POSTS_PER_LOAD, offset);
+      setInitialized(true);
+      if (storedFeed.length > 0 && storedFeedCurrentType === props.type) {
+        console.log('inIf');
+        console.log(storedFeed.length)
+        console.log(storedFeedCurrentTopPosition)
+        setFeed(storedFeed);
+        setFullyLoadedActivity(false);
+        setOffset(storedFeed.length);
+        setNeedToScrollOnNextFeedChange(true);
       } else {
-        newFeed = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined, account);
+        console.log('inElse')
+        setFeed([]);
+        setFullyLoadedActivity(false);
+
+        let newFeed: FeedPost[];
+        if (account && props.type === 'Feed') {
+          newFeed = await fetchProfileFeed(account, POSTS_PER_LOAD, offset);
+        } else {
+          newFeed = await fetchAllFeed(POSTS_PER_LOAD, offset, undefined, account);
+        }
+        if(newFeed.length === 0) setFullyLoadedActivity(true);
+        setOffset(newFeed.length);
+        setFeed(newFeed);
+
+        dispatch(setCurrentFeedType(props.type));
+        dispatch(setStoredFeed(newFeed));
       }
-      if(newFeed.length === 0) setFullyLoadedActivity(true);
-      setOffset(newFeed.length);
-      setFeed(newFeed);
     }
 
-    if (web3Initialized) initPageData();
-  }, [web3Initialized, account, props.type]);
+    if (initialized && needToScrollOnNextFeedChange && feed.length === storedFeed.length) {
+      setNeedToScrollOnNextFeedChange(false);
+      window.scrollTo(0, storedFeedCurrentTopPosition - 100);
+    }
+
+    if (!initialized && web3Initialized && storedFeedCurrentType && storedFeed) initPageData();
+  }, [web3Initialized, account, props.type, feed]);
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
@@ -60,6 +87,8 @@ const Feed: FC<FeedProps> = (props) => {
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       setOffset(offset + newPosts.length);
       loading = false;
+
+      dispatch(addToStoredFeed(newPosts));
     }
     catch (e) {
       console.error(e);
@@ -127,6 +156,7 @@ const Feed: FC<FeedProps> = (props) => {
               loadNext={(filter) => loadMorePosts(filter)}
               onUnfollow={handleUnfollow}
               end={fullyLoadedActivity && feed.length > 0}
+              onScroll={(scrollPosition) => dispatch(setCurrentFeedTopPosition(scrollPosition))}
             />
         }
 
