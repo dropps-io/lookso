@@ -26,12 +26,14 @@ const Post: FC<PostProps> = (props) => {
   const [isLiking, setIsLiking] = useState(false);
   const [fullyLoadedComments, setFullyLoadedComments] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
   let loading = false;
 
 
   useEffect(() => {
     async function init() {
+      setInitialized(true);
       if (account && !isLiking) {
         const isLiking = await fetchIsLikedPost(account, props.hash);
         if (isLiking) {
@@ -48,7 +50,7 @@ const Post: FC<PostProps> = (props) => {
       setComments(comments);
     }
 
-    if(props.hash) init();
+    if(props.hash && !initialized) init();
   }, [props.hash, account]);
 
   function newComment(comment: FeedPost) {
@@ -73,7 +75,7 @@ const Post: FC<PostProps> = (props) => {
           {
             account &&
               <div className={styles.NewComment}>
-                  <PostInput onNewPost={() => {}} parentHash={props.hash}/>
+                  <PostInput key={'post'} onNewPost={newComment} parentHash={props.hash}/>
               </div>
           }
           <div className={styles.Separator}></div>
