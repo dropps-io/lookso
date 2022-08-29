@@ -17,7 +17,8 @@ interface ActivityProps {
   newPost?: (post: FeedPost) => any,
   onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
   end?: boolean,
-  onScroll?: () => any
+  onScroll?: () => any,
+  loading?: boolean
 }
 
 const Activity: FC<ActivityProps> = (props) => {
@@ -101,6 +102,11 @@ const Activity: FC<ActivityProps> = (props) => {
             }
           </div>
           :
+          props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
+            <div className={styles.Loading}>
+              <p>This profile has no posts yet 🤷</p>
+            </div>
+            :
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
           </div>

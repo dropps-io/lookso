@@ -67,6 +67,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [offset, setOffset] = useState(POSTS_PER_LOAD);
   const [bgColor, setBgColor] = useState('fff');
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [feedLoading, setFeedLoading] = useState(false);
 
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
@@ -79,6 +80,7 @@ const Profile: FC<ProfileProps> = (props) => {
     if (props.address) setBgColor(props.address.slice(2, 6));
     async function initPageData() {
       setFeed([]);
+      setFeedLoading(true);
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
@@ -182,7 +184,8 @@ const Profile: FC<ProfileProps> = (props) => {
   }
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
-    if (loading || fullyLoadedActivity) return;
+    if (loading || feedLoading || fullyLoadedActivity) return;
+    setFeedLoading(true);
     // console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
@@ -190,21 +193,25 @@ const Profile: FC<ProfileProps> = (props) => {
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
-      loading = false;
       setOffset(existing => existing + POSTS_PER_LOAD);
+      loading = false;
+      setFeedLoading(false);
     }
     catch (e) {
       console.error(e);
       loading = false;
+      setFeedLoading(false);
     }
   }
 
   async function fetchPosts(filter: 'all' | 'post' | 'event') {
+    setFeedLoading(true);
     setFeed([]);
     const newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account);
     setFullyLoadedActivity(false);
     setOffset(newPosts.length);
     setFeed(newPosts);
+    setFeedLoading(false);
   }
 
   async function reportUser() {
@@ -341,7 +348,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
-            <Activity headline='Activity' feed={feed.filter(p => !p.hided)} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
+            <Activity loading={feedLoading} headline='Activity' feed={feed.filter(p => !p.hided)} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>
