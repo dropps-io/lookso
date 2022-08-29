@@ -41,7 +41,7 @@ const questions = [
     },
     {
         title: 'What do I need in order to use LOOKSO?',
-        response: "You need to install the <a href='https://docs.lukso.tech/guides/browser-extension/install-browser-extension/' target='_blank'>Lukso Browser Extension</a> and to create a Universal Profile with it. The LOOKSO platform is not compatible with generic wallets like Metamask because it uses the <a href='https://lukso.network/' target='_blank'>LUKSO</a> standards.<br><br>" +
+        response: "You need to install the <a href='https://docs.lukso.tech/guides/browser-extension/install-browser-extension/' target='_blank'>LUKSO Browser Extension</a> and to create a Universal Profile with it. The LOOKSO platform is not compatible with generic wallets like Metamask because it uses the <a href='https://lukso.network/' target='_blank'>LUKSO</a> standards.<br><br>" +
             "The first time you use LOOKSO, you will be prompted to grant permissions to the Timestamping smart contract LIPXXTimeStamper, so it can update the Social Registry on your Universal Profile. "
     },
     {
@@ -49,9 +49,9 @@ const questions = [
         response: "Although you can access the LOOKSO webpage on your mobile browser, you will not be able to log in until <a href='https://lukso.network/' target='_blank'>LUKSO</a> releases a mobile version of their Universal Profile extension.<br><br>You can keep an eye out for their announcement channels so you know as soon as this happens!"
     },
     {
-        title: 'Why Lukso?',
-        response: "<a href='https://lukso.network/' target='_blank'>Lukso</a> offers an ecosystem and a complete set of tools to simplify the experience of using the blockchain, while improving upon scalability and transaction costs. The two most relevant ones are the Browser Extension, which helps you interact with your Universal Profile, and the Transaction Relayer, which grants great flexibility and ease of use for handling transaction costs.<br><br>"+
-            "The <a href='https://lukso.network/' target='_blank'>Lukso</a> ecosystem, geared towards the creative industries, provides a promising landscape of interoperability and partnerships for a project such as LOOKSO."
+        title: 'Why LUKSO?',
+        response: "<a href='https://lukso.network/' target='_blank'>LUKSO</a> offers an ecosystem and a complete set of tools to simplify the experience of using the blockchain, while improving upon scalability and transaction costs. The two most relevant ones are the Browser Extension, which helps you interact with your Universal Profile, and the Transaction Relayer, which grants great flexibility and ease of use for handling transaction costs.<br><br>"+
+            "The <a href='https://lukso.network/' target='_blank'>LUKSO</a> ecosystem, geared towards the creative industries, provides a promising landscape of interoperability and partnerships for a project such as LOOKSO."
     }
 ]
 

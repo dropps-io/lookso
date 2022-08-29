@@ -1,5 +1,5 @@
+$question-close-height: 50px;
 .Faq {
-  $question-close-height: 66px;
   color: var(--color-text-default);
   font-family: 'Clash Display', serif;
   margin-bottom: 50px;
@@ -11,7 +11,6 @@
     margin: 0;
     padding-top: 0.83em;
     padding-bottom: 1.5em;
-
     font-weight: 600;
     font-size: 3em;
     text-align: center;
@@ -23,8 +22,16 @@
     width: 100%;
     grid-column-gap: 50px;
     padding: 0 50px;
+    max-width: 2000px;
+    margin: 0 auto;
   }
-  .FaqRow {
+  // 2nd question of each column
+  // 4th question of each column
+  .FaqQuestion {
+    &:nth-child(2),
+    &:nth-child(4) {
+      min-height: 60px;
+    }
   }
   // Block of a question
   .FaqQuestion {
@@ -84,15 +91,10 @@
   }
 }
 // To fix large question 2
-@media only screen and (max-width: 1660px) {
-  $question-close-height: 80px;
-  .FaqWrapper {
-    & > div:first-child {
-      .FaqQuestion {
-        &:nth-child(2) {
-          min-height: $question-close-height!important;
-        }
-      }
+@media only screen and (max-width: 1680px) {
+  .FaqQuestion {
+    &:nth-child(2) {
+      min-height: 80px!important;
     }
   }
 }
@@ -111,9 +113,10 @@
       font-size: 1em!important;
     }
   }
-  $question-close-height: 80px;
   .FaqQuestion {
-    min-height: $question-close-height!important;
+    &:nth-child(2) {
+      min-height: 80px;
+    }
   }
 }
 @media only screen and (max-width: 1400px) {
@@ -123,6 +126,16 @@
     }
   }
 }
+// For mobile
+@media only screen and (max-width: 1020px) {
+  // reset fix for large question 4
+  .FaqQuestion {
+    &:nth-child(4) {
+      min-height: 80px!important;
+    }
+  }
+}
+
 // For mobile
 @media only screen and (max-width: 910px) {
   .FaqWrapper {
@@ -139,13 +152,17 @@
   }
   // reset fix for large question 2
   .FaqQuestion {
-    $question-close-height: 66px;
     min-height: $question-close-height!important;
+    &:nth-child(4),
+    &:nth-child(2) {
+      min-height: $question-close-height!important;
+    }
   }
+
 }
 @media only screen and (max-width: 500px) {
   .FaqQuestion {
-    $question-close-height: 80px;
+    $question-close-height: 60px;
     min-height: $question-close-height!important;
   }
   .FaqWrapper {

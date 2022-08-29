@@ -1,9 +1,13 @@
 .Home {
   background-color: var(--color-background-main);
-
+  min-height: 100vh;
   .Content {
+    position: relative;
     overflow:hidden;
     padding: 30px 150px 0 150px;
+
+    max-width: 3000px;
+    margin: 0 auto;
 
     .MainSection {
       color: var(--color-text-default);
