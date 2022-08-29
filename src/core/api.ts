@@ -154,16 +154,20 @@ export async function fetchPostComments(hash: string, limit: number, offset: num
 }
 
 export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
-  const content = {
-    lspXXProfilePost: post,
-    fileType: asset.type,
-    base64File: await fileToBase64(asset)
+  const formData = new FormData();
+  formData.append('lspXXProfilePost', JSON.stringify(post));
+  formData.append('fileType', asset.type);
+  formData.append('asset', asset);
+
+  const headersLocal = {
+    Accept: 'application/json',
+    'Authorization': 'Bearer '+ jwt
   };
 
-  const res = await fetch(API_URL + '/lookso/post/request-object', {
+  const res = await fetch(API_URL + '/lookso/post/asset', {
     method: 'POST',
-    body: JSON.stringify(content),
-    headers: headersWithJWT(jwt)
+    body: formData,
+    headers: headersLocal
   });
 
   return (await res.json()).LSPXXProfilePost;
