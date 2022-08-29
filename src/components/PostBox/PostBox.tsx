@@ -282,6 +282,13 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     // stop process if user is highlighting something
     if (window.getSelection()?.toString()) return
+
+    // stop process if user click on an image or backdrop of Extend Image
+    if(e.target instanceof HTMLImageElement || e?.target?.className?.includes('ExtendImage')) {
+      e.preventDefault()
+      return
+    }
+
     if (clickLoading) return;
     clickLoading = true;
 
@@ -508,9 +515,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             props.post.type === 'event' ?
               props.post.display.image ?
                   <>
-                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(false)} />
+                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(true)} />
                     {
-                      isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
+                      isExtendPostImage && <ExtendImage open={isExtendPostImage} image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                     }
                   </>
                 :
@@ -523,9 +530,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             props.post.type === 'post' && props.post.display.image ?
 
                 <>
-                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(false)} />
+                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(true)} />
                   {
-                      isExtendPostImage && <ExtendImage image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
+                      isExtendPostImage && <ExtendImage open={isExtendPostImage} image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                   }
                 </>
             :

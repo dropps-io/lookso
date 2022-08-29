@@ -1,9 +1,13 @@
 .Home {
   background-color: var(--color-background-main);
-
+  min-height: 100vh;
   .Content {
+    position: relative;
     overflow:hidden;
     padding: 30px 150px 0 150px;
+
+    max-width: 3000px;
+    margin: 0 auto;
 
     .MainSection {
       color: var(--color-text-default);
@@ -82,9 +86,8 @@
 
       .ImpactImgPhoneSize {
         display: none;
-        max-width: 600px;
         width: 100%;
-        margin: 30px auto 0 auto;
+        margin-top: 30px;
       }
 
       .Shape {
@@ -208,7 +211,7 @@
 
       .RightPart {
         margin: auto;
-        height: max-content;
+        height: auto;
         width: 50%;
       }
     }
@@ -383,7 +386,8 @@
 
         .RightPart {
           margin-top: 30px;
-          width: 80%;
+          width: 100%;
+          transform: scale(1.1);
         }
       }
     }
@@ -431,7 +435,7 @@
 
         .ImpactImgPhoneSize {
           display: block;
-          width: 60%;
+          width: 100%;
         }
 
         .CallAction {
@@ -555,7 +559,6 @@
 
         .ImpactImgPhoneSize {
           display: block;
-          width: 90%;
         }
 
         .CallAction {
@@ -584,10 +587,6 @@
           p {
             font-size: 0.9em;
           }
-        }
-
-        .RightPart {
-          width: 90%;
         }
       }
     }
@@ -760,13 +759,6 @@
             font-size: 0.7em;
             padding: 2px 20px;
           }
-        }
-      }
-
-      .ThirdSection {
-
-        .RightPart {
-          width: 90%;
         }
       }
     }

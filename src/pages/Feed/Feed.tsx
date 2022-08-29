@@ -78,10 +78,10 @@ const Feed: FC<FeedProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
+    loading = true;
     console.log('Loading posts... from' + offset);
     dispatch(setCurrentFeedFilter(filter));
     try {
-      loading = true;
       let newPosts: FeedPost[];
       if (account && props.type === 'Feed') {
         newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
@@ -92,13 +92,16 @@ const Feed: FC<FeedProps> = (props) => {
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
       setOffset(offset + newPosts.length);
-      loading = false;
 
       console.log('Loaded ' + newPosts.length + ' new posts');
       dispatch(addToStoredFeed(newPosts));
+      await timer(2000)
+      loading = false;
     }
     catch (e) {
       console.error(e);
+
+      await timer(2000)
       loading = false;
     }
   }
@@ -158,6 +161,7 @@ const Feed: FC<FeedProps> = (props) => {
             </div>
             :
             <Activity
+              loading={true}
               feed={feed.filter(p => !p.hided)}
               headline={props.type}
               onFilterChange={(filterValue) => fetchFeedWithFilter(filterValue)}
