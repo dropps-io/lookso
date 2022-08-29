@@ -1,4 +1,4 @@
-## What is [LOOKSO](https://lookso.io) ![LOOKSO logo]<img src="img/LOOKSO_logo.jpg alt="logo" width="200"/>
+## What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/arch_overview.jpg)
 
 LOOKSO is a Twitter like social media feed where users post messages and interact using Universal Profiles. It combines user-generated content with a digest of relevant events emmited by Universal Profile contracts in the blockchain. This feed is a valuable addition to block explorers and allows the users to not only follow their favorite NFT collections, artists or investors, but also to comment on their events.
 
