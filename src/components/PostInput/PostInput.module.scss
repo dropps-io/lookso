@@ -2,7 +2,7 @@
   display: flex;
 
   .ProfileImgSmall {
-    border: 3px solid var(--color-border-light);
+    border: 2px solid var(--color-border-light);
     border-radius: 40px;
     height: 40px;
     width: 40px;
@@ -65,6 +65,7 @@
   align-items: end;
 
   span {
+    color: var(--color-text-default);
     height: max-content;
     font-size: 0.7em;
   }
@@ -102,6 +103,7 @@
       img {
         width: 25px;
         height: 25px;
+        cursor: pointer;
       }
 
       input {
@@ -122,12 +124,39 @@
   .BoxTop {
     .Inputs {
       .PostInput {
+        padding-top: 10px;
         font-size: 1em;
 
         &::placeholder {
           font-size: 1em;
         }
       }
+    }
+  }
+
+  .BoxBottom {
+    margin-top: 0;
+  }
+}
+
+.Repost {
+  .BoxTop {
+    margin-left: -40px;
+    .Inputs {
+      .PostInput {
+        padding-top: 10px;
+        font-size: 1em;
+
+        &::placeholder {
+          font-size: 1em;
+        }
+      }
+    }
+  }
+
+  .BoxBottom {
+    span {
+      margin-left: -40px;
     }
   }
 }
@@ -178,18 +207,28 @@
   }
 }
 
+@media only screen and (max-width: 550px) {
+  .Repost {
+    .BoxTop {
+      margin-left: -30px;
+    }
+  }
+}
+
+
 @media only screen and (max-width: 500px) {
   .BoxTop {
     .ProfileImgSmall {
       height: 35px;
       width: 35px;
       min-width: 35px;
-      border: 2px solid;
+      border: 2px solid var(--color-border-light);
     }
 
     .Inputs {
       .PostInput {
         padding-top: 7px;
+        padding-right: 15px;
         font-size: 1em;
 
         &::placeholder {
@@ -229,7 +268,53 @@
   }
 }
 
+@media only screen and (max-width: 450px) {
+  .Repost {
+    .BoxTop {
+      margin-left: 0;
+    }
+
+    .BoxBottom {
+      span {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 400px) {
+  .BoxTop {
+
+    .Inputs {
+      .PostInput {
+        padding-right: 15px;
+        padding-top: 7px;
+        font-size: 0.9em;
+
+        &::placeholder {
+          font-size:0.9em;
+        }
+      }
+    }
+  }
+}
+
+
 @media only screen and (max-width: 350px) {
+  .BoxTop {
+
+    .Inputs {
+      .PostInput {
+        padding-top: 7px;
+        font-size: 0.8em;
+
+        &::placeholder {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
   .BoxBottom {
     .RightPart {
       .SmileIcon {

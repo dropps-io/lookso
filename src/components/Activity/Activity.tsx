@@ -4,18 +4,28 @@ import styles from './Activity.module.scss';
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import {timer} from "../../core/utils/timer";
+import CircularProgress from "@mui/material/CircularProgress";
+import {useRouter} from "next/router";
+import {RootState} from "../../store/store";
+import {useSelector} from "react-redux";
 
 interface ActivityProps {
   feed: FeedPost[],
   headline: string,
   onFilterChange: (filter: 'all' | 'event' | 'post') => void
   loadNext: (filter: 'all' | 'event' | 'post') => void,
-  newPost?: (post: FeedPost) => any
+  newPost?: (post: FeedPost) => any,
+  onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
+  end?: boolean,
+  onScroll?: () => any,
+  loading?: boolean
 }
 
 const Activity: FC<ActivityProps> = (props) => {
+  const router = useRouter();
+  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
   const [isListening, setIsListening] = useState(true);
-  const [activeFilter, setActiveFilter]: ['all' | 'post' | 'event', any] = useState('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'post' | 'event'>('all');
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   const filters: {display: string, value: 'all' | 'post' | 'event'}[] = [
@@ -36,22 +46,21 @@ const Activity: FC<ActivityProps> = (props) => {
 
   async function setActive(i: number) {
     if (filters[i].value !== activeFilter) {
-      console.log(0)
       props.onFilterChange(filters[i].value);
-      console.log(1);
       setActiveFilter(filters[i].value);
     }
   }
 
   useEffect(() => {
     if (isListening) {
-      const listener = async (e: any) => {
-        if (isScrolledIntoView(ref)) {
+      const listener = async () => {
+        if (isScrolledIntoView(ref) && storedFilter) {
           setIsListening(!isListening);
-          props.loadNext(activeFilter);
+          props.loadNext(router.asPath.includes('Profile') ? activeFilter : storedFilter);
           await timer(1000);
           setIsListening(true);
         }
+        if (props.onScroll) props.onScroll();
       }
 
       document.addEventListener("scroll", listener);
@@ -59,6 +68,10 @@ const Activity: FC<ActivityProps> = (props) => {
       return () => {
         document.removeEventListener("scroll", listener);
       };
+    }
+
+    if (!router.asPath.includes('Profile')) {
+      setActiveFilter(storedFilter);
     }
   }, [props.loadNext, isListening, props.onFilterChange])
 
@@ -80,14 +93,30 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               props.feed.map((post, index) =>
                 index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <PostBox newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                           newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
                   :
-                  <PostBox newRepost={props.newPost} key={post.hash + index} post={post}/>
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                           newRepost={props.newPost} key={post.hash + index} post={post}/>
               )
             }
           </div>
           :
-          <></>
+          props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
+            <div className={styles.Loading}>
+              <p>This profile has no posts yet 🤷</p>
+            </div>
+            :
+          <div className={styles.Loading}>
+            <CircularProgress size={60}/>
+          </div>
+      }
+      {
+        props.end &&
+          <div className={styles.FeedEnd}>
+              <p>Looks like you reached the end of the feed 😔</p>
+              <button onClick={() => props.onFilterChange(activeFilter)} className={'btn btn-secondary'}>Refresh</button>
+          </div>
       }
     </div>
   );

@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import {Provider} from "react-redux";
 import {store} from "../store/store";
-import InitProvider from "./init";
+import InitProvider from "../components/init";
 import Head from "next/head";
 import fav16 from '../../public/favicon-16x16.png';
 import fav32 from '../../public/favicon-32x32.png';

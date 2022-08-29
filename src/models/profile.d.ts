@@ -12,3 +12,7 @@ export interface ProfileDisplay {
   name: string,
   image: string
 }
+
+export interface ProfileFollowingDisplay extends ProfileDisplay {
+  following: boolean
+}

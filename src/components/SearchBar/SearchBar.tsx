@@ -5,9 +5,12 @@ import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
 import {searchProfiles} from "../../core/api";
 
-interface SearchBarProps {}
+interface SearchBarProps {
+  noBorder?: boolean,
+  onClose?: () => any
+}
 
-const  SearchBar: FC<SearchBarProps> = () => {
+const  SearchBar: FC<SearchBarProps> = (props) => {
   const [searchInput, setSearchInput] = useState('');
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
   const [profilesLoading, setProfilesLoading] = useState(false);
@@ -22,6 +25,7 @@ const  SearchBar: FC<SearchBarProps> = () => {
   function handleClose() {
     setSearchInput('');
     if (ref.current) ref.current.value = '';
+    if (props.onClose) props.onClose();
   }
 
   async function fetchProfile(input: string) {
@@ -37,7 +41,11 @@ const  SearchBar: FC<SearchBarProps> = () => {
   }
 
   return (
-    <div className={styles.SearchBar}>
+    <div className={`${styles.SearchBar} ${props.noBorder ? styles.NoBorder : ''}`}>
+      {
+        searchInput !== '' &&
+        <div className={'backdrop'} onClick={handleClose}></div>
+      }
       <img src={searchIcon.src} alt="search"/>
       <input ref={ref} onChange={handleChange} data-testid="SearchBar" placeholder='Search by address or username'></input>
       <SearchResults loading={profilesLoading} profiles={profiles} onClose={handleClose} open={!!searchInput}/>

@@ -19,12 +19,15 @@ import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal"
 import Web3 from "web3";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import ActionModal from "../Modals/ActionModal/ActionModal";
+import {useRouter} from "next/router";
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
   const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
@@ -50,6 +53,7 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
+      await router.push('/feed');
       await requestJWT(web3Info.account, web3Info.web3);
     }
   }
@@ -90,6 +94,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <>
+      { showMobileSearchBar && <div className='backdrop' onClick={() => setShowMobileSearchBar(false)}></div>}
       <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
       <div className={styles.Navbar} data-testid="Navbar">
         <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
@@ -98,12 +103,15 @@ const Navbar: FC<NavbarProps> = () => {
             <img src={logo.src} alt="Logo"/>
           </div>
         </Link>
-        <div className={styles.SearchIcon}>
+        <div className={styles.SearchIcon} onClick={() => setShowMobileSearchBar(true)}>
           <img src={searchIcon.src} alt="Search"/>
         </div>
         <div className={styles.Search}>
           <SearchBar></SearchBar>
         </div>
+        {
+          router.asPath === '/' || router.asPath === '' ? <></> : <Link href={'/'}><span className={styles.Title}>LOOKSO</span></Link>
+        }
         <ul className={styles.Buttons}>
           {
             account ?
@@ -111,13 +119,13 @@ const Navbar: FC<NavbarProps> = () => {
               :
               <>
                 <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
-                <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+                <li><a onClick={() => goTo('https://twitter.com/lookso_io')}>Twitter</a></li>
               </>
           }
-          <li><Link href='/explore'><a href="">Explore</a></Link></li>
+          <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
           {
             account ?
-              <li><Link href='/feed'><a href="">My feed</a></Link></li>
+              <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
               :
               <></>
           }
@@ -173,10 +181,10 @@ const Navbar: FC<NavbarProps> = () => {
                     <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
                   </>
               }
-              <li><Link href='/explore'><a href="">Explore</a></Link></li>
+              <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
               {
                 account ?
-                  <li><Link href='/feed'><a href="">My feed</a></Link></li>
+                  <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
                   :
                   <></>
               }
@@ -203,6 +211,9 @@ const Navbar: FC<NavbarProps> = () => {
             </ul>
           </div>
         </div>
+      </div>
+      <div className={`${styles.MobileSearchBar} ${showMobileSearchBar ? styles.MobileSearchBarActive : ''}`}>
+        <SearchBar onClose={() => setShowMobileSearchBar(false)} noBorder/>
       </div>
     </>
   );

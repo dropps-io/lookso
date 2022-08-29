@@ -25,14 +25,16 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
     const init = async () => {
-      if (props.account) setNotifications(await fetchProfileNotifications(props.account, 30, 0));
+      setInitialized(true);
+      setNotifications(await fetchProfileNotifications(props.account, 30, 0));
     }
 
-    init();
-  }, [props.open, props.onClose, props.account, web3, jwt])
+  if (props.account && !initialized && props.open) init();
+  }, [props.open, props.account, web3, jwt])
 
   async function requestJWT() {
     const resJWT = await connectToAPI(props.account, web3);

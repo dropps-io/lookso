@@ -3,7 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {fileToBase64} from "./utils/file-to-base64";
-import {ProfileDisplay, ProfileInfo} from "../models/profile";
+import {ProfileDisplay, ProfileFollowingDisplay, ProfileInfo} from "../models/profile";
 
 const headers = {
   Accept: 'application/json',
@@ -85,13 +85,14 @@ export async function insertLike(address: string, postHash: string, jwt: string)
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
   const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json());
-  console.log(likes);
   return likes && likes.length > 0;
 }
 
 
 export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
-  return await (await fetch(API_URL + '/lookso/profile/' + address + '/info')).json();
+  const res = await fetch(API_URL + '/lookso/profile/' + address + '/info');
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchProfileFollowingCount(address: string): Promise<number> {
@@ -103,8 +104,24 @@ export async function fetchProfileFollowersCount(address: string): Promise<numbe
 }
 
 export async function fetchIsProfileFollower(followingAddress: string, followerAddress: string): Promise<boolean> {
-  const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json()).followers;
+  const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json());
   return followers && followers.length > 0;
+}
+
+export async function fetchProfileFollowers(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
+  let url = API_URL + '/lookso/profile/' + address + '/followers?limit=' + limit + '&offset=' + offset;
+  if (viewOf) url += '&viewOf=' + viewOf;
+  const res = await fetch(url);
+  if (res.ok) return await res.json();
+  else throw await res.json();
+}
+
+export async function fetchProfileFollowing(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
+let url = API_URL + '/lookso/profile/' + address + '/following?limit=' + limit + '&offset=' + offset;
+  if (viewOf) url += '&viewOf=' + viewOf;
+  const res = await fetch(url);
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
@@ -126,8 +143,9 @@ export async function fetchAllFeed(limit: number, offset: number, type?: 'event'
 }
 
 export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {
-  let url = API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf;
-  return await (await fetch(url)).json();
+  let res = await fetch(API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf);
+  if (res.ok) return await res.json();
+  else throw await res.json();
 }
 
 export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
@@ -136,16 +154,20 @@ export async function fetchPostComments(hash: string, limit: number, offset: num
 }
 
 export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
-  const content = {
-    lspXXProfilePost: post,
-    fileType: asset.type,
-    base64File: await fileToBase64(asset)
+  const formData = new FormData();
+  formData.append('lspXXProfilePost', JSON.stringify(post));
+  formData.append('fileType', asset.type);
+  formData.append('asset', asset);
+
+  const headersLocal = {
+    Accept: 'application/json',
+    'Authorization': 'Bearer '+ jwt
   };
 
-  const res = await fetch(API_URL + '/lookso/post/request-object', {
+  const res = await fetch(API_URL + '/lookso/post/asset', {
     method: 'POST',
-    body: JSON.stringify(content),
-    headers: headersWithJWT(jwt)
+    body: formData,
+    headers: headersLocal
   });
 
   return (await res.json()).LSPXXProfilePost;

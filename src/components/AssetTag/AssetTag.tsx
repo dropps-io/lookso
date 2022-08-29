@@ -13,7 +13,7 @@ const AssetTag: FC<AssetTagProps> = (props) => (
         className={`${props.colorReversed ? styles.AssetTagReverse : styles.AssetTag} ${props.onClick ? styles.Pointer : ''}`}>
     {
       props.name ?
-        <span className={styles.Name}>{props.name}</span>
+        <span id={'name'} className={styles.Name}>{props.name}</span>
         :
         <span className={styles.Unnamed}>unnamed</span>
     }

@@ -6,14 +6,15 @@ import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 
 interface ParamContentProps {
   param: FeedDisplayParam,
+  onClick: (e: any, value?: string) => void
 }
 
 const ParamContent: FC<ParamContentProps> = (props) => {
   const [copied, setCopied] = useState(false);
 
-  function copyToClipboard(toCopy: string) {
+  function copyToClipboard(e:any, toCopy: string) {
     setCopied(true);
-    navigator.clipboard.writeText(toCopy);
+    props.onClick(e, toCopy);
     setTimeout(() => {
       setCopied(false);
     }, 500);
@@ -22,14 +23,14 @@ const ParamContent: FC<ParamContentProps> = (props) => {
   if (props.param.type === 'address') {
     return (
       <strong title={props.param.value}>
-        <AddressFeedDisplay address={props.param.value} name={props.param.display} standard={props.param.additionalProperties.interfaceCode ? props.param.additionalProperties.interfaceCode : ''} />
+        <AddressFeedDisplay onClick={props.onClick} address={props.param.value} name={props.param.display} standard={props.param.additionalProperties.interfaceCode ? props.param.additionalProperties.interfaceCode : ''} />
       </strong>
     );
   }
   else if (props.param.type === 'bytes32' || props.param.type === 'bytes') {
     return (
       <>
-        <strong className={styles.Bytes32Parameter} title={props.param.value} onClick={() => copyToClipboard(props.param.value)}>
+        <strong className={styles.Bytes32Parameter} title={props.param.value} onClick={(e) => copyToClipboard(e, props.param.value)}>
           {shortenAddress(props.param.value, 5)}
         </strong>
         <span className={`copied ${copied ? 'copied-active' : ''}`}>Copied to clipboard</span>
@@ -45,17 +46,16 @@ const ParamContent: FC<ParamContentProps> = (props) => {
 interface PostContentProps {
   text: string,
   params: {[key: string]: FeedDisplayParam},
-  onClick: () => void
+  onClick: (e: any) => void
 }
 
 const PostContent: FC<PostContentProps> = (props) => {
-
   return (
-    <p onClick={props.onClick} className={styles.PostText}>
+    <p className={styles.PostText}>
       {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
-            <ParamContent key={index} param={props.params[entry]}></ParamContent> :
+            <ParamContent onClick={props.onClick} key={index} param={props.params[entry]}></ParamContent> :
             <span key={index}>{entry}</span>
       )
       }

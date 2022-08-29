@@ -1,21 +1,32 @@
 .Profile {
   background-color: var(--color-background-main);
-  min-height: 200vh;
+  min-height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  $header-height: 66px;
+  --padding-profile: 30px;
 
   .ProfilePageHeader {
-    position: sticky;
-    padding: 0 30px;
+    position: fixed;
+    top: 0;
+    padding: 0 var(--padding-profile) 0 70px;
     width: 100%;
     height: 66px;
     border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-background-main);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-shrink: 0;
+    z-index: 10;
   }
 
+
   .ProfilePageContent {
-    padding: 0 30px;
+    padding: calc(#{$header-height} * 1) var(--padding-profile) 0 var(--padding-profile);
+    flex: 1 0 auto;
     color: var(--color-text-default);
 
     .BackgroundImage {
@@ -25,6 +36,10 @@
       border-radius: 200px;
       background-position: center;
       background-size: cover;
+
+      &Click {
+        // cursor: pointer;
+      }
     }
 
     .ProfileBasicInfo {
@@ -73,6 +88,8 @@
         background-position: center;
         background-size: cover;
         border: 8px solid var(--color-border-light);
+
+        // cursor: pointer;
       }
 
       .ProfileButtons {
@@ -92,7 +109,7 @@
       display: flex;
       justify-content: center;
       padding: 20px;
-      align-items: end;
+      align-items: flex-end;
 
       .Sep {
         width: 1px;
@@ -102,6 +119,7 @@
       }
 
       .ProfileFollow {
+        cursor: pointer;
         font-size: 1.1em;
         display: flex;
         flex-direction: column;
@@ -113,19 +131,51 @@
     .ProfileButtons {
       margin: 10px 0;
       display: flex;
+      align-items: center;
       justify-content: center;
 
       button {
         font-size: 0.9em;
       }
 
-      button:nth-child(1) {
-        width: 150px;
+      & > button:nth-child(1) {
+        width: 100px;
         margin-right: 20px;
       }
+    }
 
-      button:nth-child(2) {
+    .ProfileExtraActions {
+      position: relative;
+      & > button {
         width: 40px;
+        padding-bottom: 5px;
+      }
+      & > .ExtraActionsPopup {
+        z-index: 3;
+        position: absolute;
+        left: 16px;
+        top: calc(100% + 4px);
+        display: flex;
+        flex-direction: column;
+        background: var(--color-background-main);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        border-radius: 24px;
+        padding: 16px 16px;
+        width: 160px;
+        span {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          margin-bottom: 10px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+          img {
+            height: 22px;
+            margin-right: 0.8rem;
+          }
+        }
       }
     }
 
@@ -133,14 +183,20 @@
       padding: 0 30px;
     }
   }
+
+  .ProfilePageFooter {
+    flex-shrink: 0;
+  }
 }
 
 @media only screen and (max-width: 1000px) {
   .Profile {
+    --padding-profile: 20px;
     .ProfilePageHeader {
     }
     .ProfilePageContent {
-      padding: 0;
+      padding-left: 0;
+      padding-right: 0;
       .BackgroundImage {
         margin-top: 0;
         border-radius: 0;
@@ -180,7 +236,7 @@
           font-size: 0.8em;
         }
 
-        button:nth-child(1) {
+        & > button {
           width: 120px;
         }
       }
@@ -190,6 +246,7 @@
 
 @media only screen and (max-width: 800px) {
   .Profile {
+
     .ProfilePageContent {
       .BackgroundImage {
         height: 120px;
@@ -218,15 +275,24 @@
           height: 30px;
         }
 
-        button:nth-child(1) {
+        & > button {
           width: 100px;
           margin-right: 10px;
         }
-
-        button:nth-child(2) {
+      }
+      .ProfileExtraActions {
+        & > button {
           width: 30px;
         }
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .Profile {
+    .ProfilePageHeader {
+      padding: 0 var(--padding-profile);
     }
   }
 }
@@ -279,12 +345,8 @@
           height: 30px;
         }
 
-        button:nth-child(1) {
+        & > button {
           width: 100px;
-        }
-
-        button:nth-child(2) {
-          width: 30px;
         }
       }
     }
@@ -313,7 +375,7 @@
         }
 
         .ProfileButtons {
-          display: block;
+          display: flex;
           margin-top: 10px;
         }
       }
@@ -344,18 +406,38 @@
       .ProfileButtons {
         display: none;
 
-        button {
+        & > button {
           height: 26px;
         }
+      }
+      .ProfileExtraActions {
+          & > .ExtraActionsPopup {
+            width: 100px;
+            span {
+              font-size: 0.8em;
 
-        button:nth-child(2) {
-          width: 26px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              img {
+                height: 15px;
+                margin-right: 0.7rem;
+              }
+            }
+          }
+
+
+
+        & > button {
+          width: 30px;
+        }
+        & > div {
+          transform: translateX(-100%);
         }
       }
     }
   }
 }
-
 
 @media only screen and (max-width: 400px) {
   .Profile {

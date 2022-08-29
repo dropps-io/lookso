@@ -90,7 +90,6 @@ export class UniversalProfileReader {
       if (permissionsValue === '0x') return false;
       else return ERC725.decodePermissions(permissionsValue);
     } catch (e) {
-      console.log(e);
       return false;
     }
   }

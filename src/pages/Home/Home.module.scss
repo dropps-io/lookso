@@ -19,7 +19,6 @@
         font-size: 64px;
         line-height: 78px;
         letter-spacing: 0.025em;
-        text-transform: capitalize;
         margin-bottom: 20px;
 
         img{
@@ -51,7 +50,7 @@
 
         .ImportantBtn {
           border: none;
-          font-weight: bold;
+          font-weight: 500;
           font-size: 1.3em;
           line-height: 36px;
           color: var(--color-text-default);
@@ -110,6 +109,12 @@
       color: var(--color-text-default);
       text-align: center;
 
+      a {
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
       .Headline {
         padding: 80px 5%;
         position: relative;
@@ -142,7 +147,7 @@
           display: none;
           font-size: 2em;
           color: var(--color-buttons);
-          font-weight: bold;
+          font-weight: 500;
         }
 
         .UnfoldedHeadline {
@@ -205,77 +210,6 @@
         margin: auto;
         height: max-content;
         width: 50%;
-      }
-    }
-
-    .FaqSection {
-      margin: 200px 0;
-      width: 100%;
-      color: var(--color-text-default);
-
-      h2 {
-        background-color: var(--color-background-main);
-        position: relative;
-        z-index: 1;
-        margin: 0;
-        padding-block-start: 0.83em;
-        padding-block-end: 1.5em;
-        font-family: 'Clash Display';
-        font-weight: 600;
-        font-size: 3em;
-        text-align: center;
-      }
-
-      .Questions {
-        display: flex;
-
-        .Entry {
-          font-family: 'Clash Display';
-          position: relative;
-          border-bottom: 1px solid var(--color-border-light);
-          transition: all .3s;
-          min-height: 66px;
-
-          .Question {
-            padding: 20px 0 20px 0;
-            background-color: var(--color-background-main);
-            z-index: 1;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            font-weight: 500;
-            font-size: 20px;
-            letter-spacing: 1.5px;
-            transition: all .3s;
-
-            &:hover {
-              cursor: pointer;
-            }
-          }
-
-          p {
-            background-color: var(--color-background-main);
-            margin-top: 0;
-            font-weight: 300;
-            font-size: 18px;
-            line-height: 29px;
-            letter-spacing: 1px;
-            display: block;
-            z-index: 0;
-            transition: all .3s;
-          }
-
-          .Folded {
-            width: 100%;
-            opacity: 0;
-            margin-top: -200px ;
-          }
-        }
-
-        .Row {
-          width: 50%;
-          padding: 0 50px;
-        }
       }
     }
   }
@@ -382,41 +316,10 @@
 
       .ThirdSection {
         margin-top: 100px;
+
         .LeftPart {
           h2 {
             font-size: 2.4em;
-          }
-        }
-      }
-
-      .FaqSection {
-        .Questions {
-
-          .Row:nth-child(1) {
-            padding-right: 25px;
-            padding-left: 0;
-          }
-
-          .Row:nth-child(2) {
-            padding-right: 0;
-            padding-left: 25px;
-          }
-        }
-
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 1300px) {
-  .Home {
-    .Content {
-      .FaqSection {
-        .Questions {
-          .Entry {
-            p {
-              font-size: 1em;
-            }
           }
         }
       }
@@ -603,21 +506,6 @@
       .MainSection{
         min-height: 750px;
       }
-
-      .FaqSection {
-        .Questions {
-          flex-direction: column;
-
-          .Row {
-            width: 100%;
-            padding: 0 !important;
-
-            .Entry {
-              min-height: 80px;
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -638,7 +526,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 600px;
+        min-height: 800px;
         h1 {
           text-align: center;
           line-height: normal;
@@ -667,6 +555,7 @@
 
         .ImpactImgPhoneSize {
           display: block;
+          width: 90%;
         }
 
         .CallAction {
@@ -724,7 +613,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 550px;
+        min-height: 650px;
         h1 {
           font-size: 1.7em;
 
@@ -749,7 +638,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 550px;
+        min-height: 600px;
       }
     }
   }
@@ -768,6 +657,10 @@
             left: 175px;
             top: 22px
           }
+        }
+
+        .ImpactImgPhoneSize {
+          width: 100%;
         }
 
         h2 {
@@ -818,8 +711,7 @@
   .Home {
     .Content {
       .MainSection {
-        min-height: 450px;
-        min-height: 450px;
+        min-height: 550px;
         h1 {
           font-size: 1.3em;
           img {
@@ -877,19 +769,6 @@
           width: 90%;
         }
       }
-
-      .FaqSection {
-        .Questions {
-          .Row {
-            .Entry {
-              .Folded {
-                margin-top: -300px ;
-              }
-            }
-          }
-        }
-      }
-
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, {createRef, FC, useState} from 'react';
+import React, {createRef, FC, useEffect, useRef, useState} from 'react';
 import styles from './PostInput.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
 import {IPFS_GATEWAY, POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
@@ -47,6 +47,8 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showEmojiPicker , setShowEmojiPicker] = useState(false);
 
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account, web3);
@@ -80,7 +82,6 @@ const PostInput: FC<PostInputProps> = (props) => {
 
   async function createPost() {
     setShowEmojiPicker(false);
-    console.log(inputValue)
     try {
       setLoadingMessage(' ');
       const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
@@ -97,6 +98,7 @@ const PostInput: FC<PostInputProps> = (props) => {
         message: inputValue,
         author: account,
         validator: POST_VALIDATOR_ADDRESS,
+        nonce: Math.floor(Math.random() * 1000000000).toString(),
         links: [],
         childHash: props.childPost?.hash,
         parentHash: props.parentHash
@@ -171,14 +173,47 @@ const PostInput: FC<PostInputProps> = (props) => {
     setInputValue(value => value + emojiObject.emoji);
   };
 
+  /**
+   * Hook that alerts clicks outside of the passed ref
+   */
+  function useOutsideAlerter(ref: any) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setShowEmojiPicker(false)
+        }
+      }
+
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref])
+  }
+
   return (
     <>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
-      <form onSubmit={handleSubmit} className={`${props.parentHash || props.childPost ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
+      <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
         <div className={`${styles.BoxTop}`}>
           <div className={styles.ProfileImgSmall} style={{backgroundImage: `url(${profileImage ? formatUrl(profileImage) : DEFAULT_PROFILE_IMAGE})`}}/>
           <div className={styles.Inputs}>
-            <textarea onClick={() => setShowEmojiPicker(false)} disabled={!!loadingMessage} onChange={handleChangeMessage} maxLength={256} ref={postInput} className={styles.PostInput} style={{height: `${inputHeight}px`}} onKeyDown={() => textAreaAdjust()} onKeyUp={() => textAreaAdjust()} name="textValue" placeholder="What's happening?"/>
+            <textarea onClick={() => setShowEmojiPicker(false)}
+                      disabled={!!loadingMessage}
+                      onChange={handleChangeMessage}
+                      maxLength={256}
+                      ref={postInput}
+                      className={styles.PostInput}
+                      style={{height: `${inputHeight}px`}}
+                      onKeyDown={() => textAreaAdjust()}
+                      onKeyUp={() => textAreaAdjust()}
+                      name="textValue"
+                      placeholder={props.childPost ? "Add comment" : props.parentHash ? "Add comment" : "What's happening?"}/>
             {
               inputFile ?
                 <div className={styles.InputImage}>
@@ -189,15 +224,19 @@ const PostInput: FC<PostInputProps> = (props) => {
           </div>
         </div>
         {
-          props.childPost ?
-            <PostBox post={props.childPost} static repost/> : <></>
+          props.childPost &&
+            <>
+                <br/>
+              <PostBox post={props.childPost} static repost/>
+            </>
+
         }
         <div className={styles.BoxBottom}>
           <span>{inputValue.length} / 256</span>
           <div className={styles.RightPart}>
             <div className={styles.SmileIcon}>
               <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>
-              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`}>
+              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`} ref={wrapperRef}>
                 <Picker onEmojiClick={onEmojiClick} disableSearchBar native/>
               </div>
             </div>

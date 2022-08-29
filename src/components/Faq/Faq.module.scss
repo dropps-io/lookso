@@ -1,0 +1,190 @@
+.Faq {
+  $question-close-height: 66px;
+  color: var(--color-text-default);
+  font-family: 'Clash Display', serif;
+  margin-bottom: 50px;
+  margin-top: 200px;
+  .FaqTitle {
+    background-color: var(--color-background-main);
+    position: relative;
+    z-index: 10; // to be above questions
+    margin: 0;
+    padding-top: 0.83em;
+    padding-bottom: 1.5em;
+
+    font-weight: 600;
+    font-size: 3em;
+    text-align: center;
+  }
+  // 2 columns wrapper
+  .FaqWrapper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    width: 100%;
+    grid-column-gap: 50px;
+    padding: 0 50px;
+  }
+  .FaqRow {
+  }
+  // Block of a question
+  .FaqQuestion {
+    position: relative;
+    border-bottom: 1px solid var(--color-border-light);
+    transition: all .3s;
+    min-height: $question-close-height;
+    max-height: $question-close-height;
+    // Title
+    .FaqQuestionTitle {
+      background-color: var(--color-background-main);
+      z-index: 1;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      font-size: 20px;
+      letter-spacing: 1.5px;
+      transition: all .3s;
+      margin: 20px 0;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    // Response
+    .FaqResponseFolded {
+      width: 100%;
+      opacity: 0;
+      margin-top: -200px;
+      color: var(--color-background-main);
+    }
+    // Response
+    p {
+      position: relative;
+      z-index: 0;
+      color: var(--color-text-default) !important;
+      background-color: var(--color-background-main);
+      margin-top: 0;
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 29px;
+      letter-spacing: 1px;
+      display: block;
+      transition: all .3s;
+
+      a, strong {
+        font-weight: 600;
+      }
+      a {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+  .FaqQuestionFolded {
+    max-height: max-content;
+  }
+}
+// To fix large question 2
+@media only screen and (max-width: 1660px) {
+  $question-close-height: 80px;
+  .FaqWrapper {
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2) {
+          min-height: $question-close-height!important;
+        }
+      }
+    }
+  }
+}
+
+// For Tablet
+@media only screen and (max-width: 1400px) {
+  .FaqWrapper {
+    padding: 0!important;
+  }
+  // reduce font size
+  .FaqQuestionTitle {
+    font-size: 18px!important;
+  }
+  .Faq {
+    p {
+      font-size: 1em!important;
+    }
+  }
+  $question-close-height: 80px;
+  .FaqQuestion {
+    min-height: $question-close-height!important;
+  }
+}
+@media only screen and (max-width: 1400px) {
+  .Faq {
+    p {
+      font-size: 1em!important;
+    }
+  }
+}
+// For mobile
+@media only screen and (max-width: 910px) {
+  .FaqWrapper {
+    display: flex!important;
+    flex-direction: column!important;
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2),
+        &:nth-child(4) {
+          min-height: 80px!important;
+        }
+      }
+    }
+  }
+  // reset fix for large question 2
+  .FaqQuestion {
+    $question-close-height: 66px;
+    min-height: $question-close-height!important;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .FaqQuestion {
+    $question-close-height: 80px;
+    min-height: $question-close-height!important;
+  }
+  .FaqWrapper {
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2) {
+          min-height: 100px!important;
+        }
+        &:nth-child(4) {
+          min-height: 90px!important;
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 400px) {
+  .FaqWrapper {
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2) {
+          min-height: 140px!important;
+        }
+        &:nth-child(4) {
+          min-height: 120px!important;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 300px) {
+  .FaqWrapper {
+    & > div:first-child {
+      .FaqQuestion {
+        &:nth-child(2) {
+          min-height: 180px !important;
+        }
+      }
+    }
+  }
+}

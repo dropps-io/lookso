@@ -1,0 +1,112 @@
+.MoreInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  .MoreInfoButton {
+    all: unset;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+
+    cursor: pointer;
+    img {
+      margin-left: 22px;
+      transform: rotate(180deg);
+    }
+    &Open {
+      img {
+        transform: rotate(0deg);
+      }
+    }
+  }
+  .MoreInfoBio {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .MoreInfoWrapper {
+    padding-top: 32px;
+  }
+  .MoreInfoLinks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    .MoreInfoLink {
+      margin: 0 10px;
+      padding: 8px;
+      background: rgba(0, 133, 255, 0.35);
+      border-radius: 11.5px;
+
+      font-family: 'Manrope', serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 100%;
+
+      cursor: pointer;
+
+      color: var(--color-tag);
+
+      &:hover {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+      }
+    }
+  }
+  .MoreInfoTags {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .MoreInfoTag {
+      margin: 0 10px;
+      padding: 8px;
+
+      border: 1px solid rgba(0, 133, 255, 0.35);
+      border-radius: 11.5466px;
+
+      font-family: 'Manrope', serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 100%;
+      text-transform: capitalize;
+      color: var(--color-tag);
+    }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .MoreInfo {
+    .MoreInfoButton {
+      font-size: 0.7em;
+      img {
+        margin-left: 10px;
+        width: 10px;
+      }
+    }
+    .MoreInfoBio {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+    .MoreInfoWrapper {
+      padding-top: 15px;
+    }
+    .MoreInfoLinks {
+      margin-top: 15px;
+      .MoreInfoLink {
+        font-size: 12px;
+      }
+    }
+    .MoreInfoTags {
+
+      .MoreInfoTag {
+        font-size: 12px;
+      }
+    }
+  }
+}

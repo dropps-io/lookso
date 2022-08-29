@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import web3Reducer from './web3-reducer';
 import profileReducer from './profile-reducer';
+import feedReducer from './feed-reducer';
 
 export const store = configureStore({
     reducer: {
         web3: web3Reducer,
         profile: profileReducer,
+        feed: feedReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false

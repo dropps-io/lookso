@@ -26,6 +26,21 @@
   }
 }
 
+.NoBorder {
+  img {
+    right: 0 !important;
+    margin-bottom: 2px;
+  }
+
+  input {
+    border: none;
+    border-radius: 0;
+    font-size: 1em;
+    padding-left: 10px !important;
+    outline: none;
+  }
+}
+
 @media only screen and (max-width: 1400px) {
   .SearchBar {
     height: 35px;
@@ -44,6 +59,22 @@
 
     input::placeholder {
       font-size: 1em;
+    }
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .NoBorder {
+    img {
+
+    }
+
+    input {
+      font-size: 0.9em;
+    }
+
+    input::placeholder {
+      font-size: 0.9em;
     }
   }
 }
