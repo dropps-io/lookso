@@ -1,4 +1,4 @@
-## What is [LOOKSO](https://lookso.io)
+## What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)
 
 LOOKSO is a Twitter like social media feed where users post messages and interact using Universal Profiles. It combines user-generated content with a digest of relevant events emmited by Universal Profile contracts in the blockchain. This feed is a valuable addition to block explorers and allows the users to not only follow their favorite NFT collections, artists or investors, but also to comment on their events.
 
@@ -54,6 +54,39 @@ And here is an example of the registry file after decoding and fetching the JSON
 }
 ```
 
+## The Post Object
+
+```JSON
+{
+  "LSPXXProfilePost": {
+    "version":"0.0.1",
+    "validator": "0x049bAfA4bF69bCf6FcB7246409bc92a43f0a7264",
+    "message": "This is the first Lookso post.",
+    "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
+    "nonce":
+    "links": [
+      {
+        "title": "Our website",
+        "url": "https://dropps.io"
+      }
+    ],
+    "asset": {
+      "hashFunction": "keccak256(bytes)",
+      "hash": "0x813a0027c9201ccdec5324aa32ddf0e8b9400479662b6f243500a42f2f85d2eb",
+      "url": "ar://gkmVUoHE4Ay6ScIlgV4E7Fs1m13LfpAXSuwuRGRQbeA",
+      "fileType": "jpg"
+    }
+  },
+  "LSPXXProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
+  "LSPXXProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
+}
+```
+
+This is an example of a post object. 
+
+
+
+## Validator
 
 
 
