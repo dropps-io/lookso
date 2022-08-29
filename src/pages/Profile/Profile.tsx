@@ -273,31 +273,27 @@ const Profile: FC<ProfileProps> = (props) => {
               <img onClick={() => openExplorer(props.address)} src={chainIcon.src} alt=""/>
               <span onClick={() => openExplorer(props.address)}>{shortenAddress(props.address, 3)}</span>
             </div>
-            {
-              connected.account && props.address !== connected.account ?
+
                 <div className={styles.ProfileButtons}>
                   {
-                    isFollowing ?
-                      <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
+                    (connected.account && props.address !== connected.account) ?
+                      isFollowing ?
+                        <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button> :
+                        <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
                       :
-                      <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                      <></>
                   }
                   <div className={styles.ProfileExtraActions}>
                     <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
                     {
-                        isOpenExtraAction && (
-                        <div className={styles.ExtraActionsPopup}>
-                          <span onClick={() => shareOnTwitter()}><img src={shareIcon.src} alt="Share profile"/>Share</span>
-                          <span onClick={() => reportUser()}><img src={reportIcon.src} alt="Report user"/>Report</span>
-                          <span onClick={() => blockUser()}><img src={blockIcon.src} alt="Block user"/>Block</span>
-                        </div>
-                        )
+                      isOpenExtraAction && (<div className={styles.ExtraActionsPopup}>
+                        <span onClick={() => shareOnTwitter()}><img src={shareIcon.src} alt="Share profile"/>Share</span>
+                        <span onClick={() => reportUser()}><img src={reportIcon.src} alt="Report user"/>Report</span>
+                        <span onClick={() => blockUser()}><img src={blockIcon.src} alt="Block user"/>Block</span>
+                      </div>)
                     }
-                  </div>
                 </div>
-                :
-                <></>
-            }
+                </div>
           </div>
           <span className={styles.UserTagMobile}>
              <UserTag onClick={() => copyToClipboard(props.userTag, 0)} username={props.profileInfo?.name ? props.profileInfo?.name : ''} address={props.address} />
@@ -318,14 +314,15 @@ const Profile: FC<ProfileProps> = (props) => {
               <span>Follower{followers > 1 ? 's' : ''}</span>
             </div>
           </div>
-          {
-            connected.account && props.address !== connected.account ?
               <div className={styles.ProfileButtons}>
                 {
-                  isFollowing ?
+                  connected.account && props.address !== connected.account ?
+                    isFollowing ?
                     <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
                     :
                     <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
+                    :
+                    <></>
                 }
                 <div className={styles.ProfileExtraActions}>
                   <button onClick={() => setIsOpenExtraAction(!isOpenExtraAction)} className={'btn btn-secondary-no-fill'}>...</button>
@@ -340,9 +337,6 @@ const Profile: FC<ProfileProps> = (props) => {
                   }
                 </div>
               </div>
-              :
-              <></>
-          }
           {
             (props.profileInfo && (props.profileInfo.links && props.profileInfo.links?.length > 0 || props.profileInfo.description || props.profileInfo.tags?.length > 0)) &&
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
