@@ -1,4 +1,4 @@
-## What is LOOKSO
+## What is [LOOKSO](https://lookso.io)
 
 LOOKSO is a Twitter like social media feed where users post messages and interact using Universal Profiles. It combines user-generated content with a digest of relevant events emmited by Universal Profile contracts in the blockchain. This feed is a valuable addition to block explorers and allows the users to not only follow their favorite NFT collections, artists or investors, but also to comment on their events.
 
@@ -10,8 +10,9 @@ LOOKSO leverages decentralized storage to minimize gas costs and allow media con
 
 On the Universal Profile of the user, only the registry is stored. This [registry](#Registry) contains a list of created posts, liked posts and followed UPs, which all together composes a user's social media state. 
 
+![LOOKSO Architecture Overview](arch_overview.jpg)
 
-
+There is a third actor whose role is to provide a reliable timestamp for the messages stored. It is a [validator](#Validator) smart contract on the LUKSO blockchain that can be called to append a timestamp to the message hash and save it in storage for future validation.
 
 
 ## Registry
@@ -29,7 +30,7 @@ The registry is saved under the (provisory) Key name of "LSPXXSocialRegistry". H
 }
 ```
 
-Here is an example of a registry file:
+And here is an example of the registry file after decoding and fetching the JSONURL:
 
 ```JSON
 {
