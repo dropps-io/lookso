@@ -119,13 +119,13 @@ const Navbar: FC<NavbarProps> = () => {
               :
               <>
                 <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
-                <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
+                <li><a onClick={() => goTo('https://twitter.com/lookso_io')}>Twitter</a></li>
               </>
           }
-          <li><Link href='/explore'><a href="">Explore</a></Link></li>
+          <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
           {
             account ?
-              <li><Link href='/feed'><a href="">My feed</a></Link></li>
+              <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
               :
               <></>
           }
@@ -181,10 +181,10 @@ const Navbar: FC<NavbarProps> = () => {
                     <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
                   </>
               }
-              <li><Link href='/explore'><a href="">Explore</a></Link></li>
+              <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
               {
                 account ?
-                  <li><Link href='/feed'><a href="">My feed</a></Link></li>
+                  <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
                   :
                   <></>
               }
