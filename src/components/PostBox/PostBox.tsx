@@ -229,9 +229,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
 
-  function openCommentModal() {
-    if (!account) setShowLogInModal(true);
-    else setShowCommentModal(true);
+  function openCommentModal(hash: string) {
+    router.push('/Post/' + hash);
   }
 
   function openRepostModal() {
@@ -542,7 +541,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div title={'Comment'} className={styles.IconNumber} onClick={openCommentModal}>
+              <div title={'Comment'} className={styles.IconNumber} onClick={() => openCommentModal(props.post.hash)}>
                 <img src={commentIcon.src} alt=""/>
                 <span>{props.post.comments}</span>
               </div>

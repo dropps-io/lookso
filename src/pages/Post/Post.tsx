@@ -70,9 +70,12 @@ const Post: FC<PostProps> = (props) => {
       <div className={styles.PostPageContent}>
         <div className={`${styles.Content} ${props.post && props.post.type === 'post' ? styles.PostType : ''}`}>
           <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
-          <div className={styles.NewComment}>
-            <PostInput onNewPost={() => {}} parentHash={props.hash}/>
-          </div>
+          {
+            account &&
+              <div className={styles.NewComment}>
+                  <PostInput onNewPost={() => {}} parentHash={props.hash}/>
+              </div>
+          }
           <div className={styles.Separator}></div>
           <Comments feed={comments} loadNext={loadMoreComments}/>
           {(!fullyLoadedComments) && <div className={styles.NoComments}><CircularProgress size={60}/></div>}
