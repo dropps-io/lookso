@@ -78,7 +78,7 @@ const Feed: FC<FeedProps> = (props) => {
 
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
-    // console.log('Loading posts... from' + offset);
+    console.log('Loading posts... from' + offset);
     dispatch(setCurrentFeedFilter(filter));
     try {
       loading = true;
@@ -94,6 +94,7 @@ const Feed: FC<FeedProps> = (props) => {
       setOffset(offset + newPosts.length);
       loading = false;
 
+      console.log('Loaded ' + newPosts.length + ' new posts');
       dispatch(addToStoredFeed(newPosts));
     }
     catch (e) {
