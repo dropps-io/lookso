@@ -360,28 +360,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     goToProfile(props?.post?.author?.address)
   }
 
-  /**
-   * Hook that alerts clicks outside of the passed ref
-   */
-  function useOutsideAlerter(ref: any) {
-    useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event: any) {
-        if (ref.current && !ref.current.contains(event.target)) {
-          setIsOpenRepostAction(false)
-        }
-      }
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        // Unbind the event listener on clean up
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref]);
-  }
-
   async function createPost(childHash?: string) {
     try {
       setLoadingMessage(' ');
@@ -484,7 +462,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                        <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                        <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
                         </PopupButton>
@@ -496,7 +474,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                            <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                            <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
                                   router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
@@ -573,7 +551,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 <span>{props.post.reposts}</span>
                 {
                     isOpenRepostAction && (
-                        <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
+                        <PopupButton open={isOpenRepostAction} className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
                           <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
                             <img src={repostIcon.src} alt="Repost"/>
                             <span>Repost </span>
