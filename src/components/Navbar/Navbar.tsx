@@ -27,6 +27,7 @@ const Navbar: FC<NavbarProps> = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
   const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
@@ -93,6 +94,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <>
+      <div className='backdrop' onClick={() => setShowMobileSearchBar(false)}></div>
       <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
       <div className={styles.Navbar} data-testid="Navbar">
         <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
@@ -101,7 +103,7 @@ const Navbar: FC<NavbarProps> = () => {
             <img src={logo.src} alt="Logo"/>
           </div>
         </Link>
-        <div className={styles.SearchIcon}>
+        <div className={styles.SearchIcon} onClick={() => setShowMobileSearchBar(true)}>
           <img src={searchIcon.src} alt="Search"/>
         </div>
         <div className={styles.Search}>
@@ -209,6 +211,9 @@ const Navbar: FC<NavbarProps> = () => {
             </ul>
           </div>
         </div>
+      </div>
+      <div className={`${styles.MobileSearchBar} ${showMobileSearchBar ? styles.MobileSearchBarActive : ''}`}>
+        <SearchBar onClose={() => setShowMobileSearchBar(false)} noBorder/>
       </div>
     </>
   );

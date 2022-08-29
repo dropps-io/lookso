@@ -45,3 +45,30 @@
 .Inactive {
   margin-top: -500px;
 }
+
+@media only screen and (max-width: 450px) {
+  .SearchResults {
+    padding: 10px 20px;
+    height: 270px;
+    width: 260px;
+
+    .ProfileDisplay {
+      font-size: 0.8em;
+      width: unset !important;
+
+      .ProfileImgMedium {
+        border: 1px solid var(--color-border-light);
+        margin-right: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+      }
+    }
+
+    .Centering {
+      p {
+        font-size: 1em;
+      }
+    }
+  }
+}
