@@ -102,11 +102,14 @@ const Activity: FC<ActivityProps> = (props) => {
             }
           </div>
           :
-          props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
+          <></>
+      }
+      {
+        props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
+          props.feed.length === 0 &&
             <div className={styles.Loading}>
               <p>This profile has no posts yet 🤷</p>
-            </div>
-            :
+            </div> :
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
           </div>
