@@ -19,6 +19,7 @@ interface ProfileDropdownProps {
 const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
   const router = useRouter();
   const [showNoUpCloud, setShowNoUpCloud] = useState(false);
+  const [showNoDisconnect, setShowNoDisconnect] = useState(false);
 
   function goTo(path: string) {
     props.onClose();
@@ -29,6 +30,7 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
   return (
     <>
       <ActionModal open={showNoUpCloud} onClose={() => setShowNoUpCloud(false)} textToDisplay={'Unavailable (still running on L14 testnet)'} btnText={'Ok 😔'} callback={() => setShowNoUpCloud(false)}/>
+      <ActionModal open={showNoDisconnect} onClose={() => setShowNoDisconnect(false)} textToDisplay={'Soon! For now please disconnect using the “logins” section on LUKSO’s UP extension'} btnText={'Ok 🙂'} callback={() => setShowNoDisconnect(false)}/>
       <div className={props.showDropdown ? 'backdrop' : ''} onClick={props.onClose}></div>
       <div className={`${styles.ProfileDropdown} ${!props.showDropdown ? styles.InactiveDropdown : ''}`}>
         <div className={styles.DropdownHeader}>
@@ -55,7 +57,7 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
             <button className={'btn btn-secondary'}><a onClick={() => goTo(EXPLORER_URL + 'address/' + props.account)}>Explorer</a></button>
             <button className={'btn btn-secondary'} onClick={() => setShowNoUpCloud(true)}>UP.cloud</button>
           </div>
-          <button className={'btn btn-main'}>Disconnect</button>
+          <button className={'btn btn-main'} onClick={() => setShowNoDisconnect(true)}>Disconnect</button>
         </div>
       </div>
     </>
