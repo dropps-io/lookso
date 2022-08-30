@@ -110,6 +110,7 @@ const Activity: FC<ActivityProps> = (props) => {
             <div className={styles.Loading}>
               <p>This profile has no posts yet 🤷</p>
             </div> :
+          (props.loading && !props.end) &&
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
           </div>
