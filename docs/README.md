@@ -1,5 +1,18 @@
 ## TOC
 
+  * [What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)](#what-is--lookso--https---looksoio----lookso-logo--img-lookso-logojpg-)
+- [Architecure](#architecure)
+  * [Overview](#overview)
+  * [Blockchain](#blockchain)
+    + [<a name="timestamp_registry"></a>The Timestamp Registry Contract](#-a-name--timestamp-registry----a-the-timestamp-registry-contract)
+    + [Event scraping and translation](#event-scraping-and-translation)
+  * [Decentralized Storage ![Arweave logo](img/arweave_logo.png)](#decentralized-storage---arweave-logo--img-arweave-logopng-)
+  * [The Backend](#the-backend)
+  * [Data format](#data-format)
+    + [Social Media Record File](#social-media-record-file)
+  * [The Post Object](#the-post-object)
+- [Future improvements](#future-improvements)
+
 ## What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)
 
 LOOKSO is a Twitter like social media feed where users post messages and interact using Universal Profiles. It combines user-generated content with a digest of relevant events emmited by Universal Profile contracts in the blockchain. This feed is a valuable addition to block explorers and allows the users to not only follow their favorite NFT collections, artists or investors, but also to comment on their events.
