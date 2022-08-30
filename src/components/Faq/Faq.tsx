@@ -56,9 +56,6 @@ const questions = [
 ]
 
 const Faq: FC<FaqProps> = () => {
-
-    const router = useRouter()
-
     const [foldQuestions, setFoldQuestions] = useState(new Array(questions.length).fill(true));
 
     const [numberOfQuestion, setNumberOfQuestion] = useState(questions.length / 2);
@@ -92,7 +89,7 @@ const Faq: FC<FaqProps> = () => {
                         return <div key={index}  className={`${styles.FaqQuestion} ${!foldQuestions[index] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index)}}>
                                 { question.title }
-                                { foldQuestions[index] ? <span>-</span> : <span>+</span> }
+                                { foldQuestions[index] ? <span>+</span> : <span>-</span> }
                             </h3>
                             <p onClick={(e) => contentClickHandler(e, index)} className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
@@ -105,7 +102,7 @@ const Faq: FC<FaqProps> = () => {
                         return <div key={index + numberOfQuestion}  className={`${styles.FaqQuestion} ${!foldQuestions[index + numberOfQuestion] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index + numberOfQuestion)}}>
                                 { question.title }
-                                { foldQuestions[index + numberOfQuestion] ? <span>-</span> : <span>+</span> }
+                                { foldQuestions[index + numberOfQuestion] ? <span>+</span> : <span>-</span> }
                             </h3>
                             <p onClick={(e) => contentClickHandler(e, index + numberOfQuestion)} className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;

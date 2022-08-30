@@ -71,10 +71,19 @@ const PostText = (props: PostTextProps) => {
   return (
     <>
       {
-        props.text.split(' ').map(word =>
-          word.match(/(< href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi) ?
-            <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>:
-            <span>{`${word} `}</span>
+        props.text.split('\n').map((sentence, index) =>
+          <>
+            {
+              index !== 0 && <br/>
+            }
+            {
+              sentence.split(' ').map(word =>
+                word.match(/(< href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi) ?
+                  <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>:
+                  <span>{`${word} `}</span>
+              )
+            }
+          </>
         )
       }
     </>

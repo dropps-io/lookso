@@ -365,6 +365,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function createPost(childHash?: string) {
+    if (!account) {
+      setShowLogInModal(true);
+      return;
+    }
     try {
       setLoadingMessage(' ');
       const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
