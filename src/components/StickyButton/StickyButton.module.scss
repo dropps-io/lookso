@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 9;
   img {
     margin-right: 0.5rem;
   }
@@ -23,5 +24,15 @@
       width: 15px;
       margin-right: 0;
     }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .StickyButton {
+    margin-top: 130px;
+    background: transparent !important;
+    border-bottom: 2px solid var(--color-border-light);
+    border-right: 2px solid var(--color-border-light);
+    border-top: 2px solid var(--color-border-light);
   }
 }
