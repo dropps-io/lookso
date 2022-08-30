@@ -12,6 +12,7 @@ import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Footer from "../../components/Footer/Footer";
 import CircularProgress from "@mui/material/CircularProgress";
 import PostInput from "../../components/PostInput/PostInput";
+import {timer} from "../../core/utils/timer";
 
 interface PostProps {
   hash: string,
@@ -34,13 +35,17 @@ const Post: FC<PostProps> = (props) => {
   useEffect(() => {
     async function init() {
       setInitialized(true);
+      setFullyLoadedComments(false);
+      setIsLiking(false);
+      setComments([]);
       if (account && !isLiking) {
         const isLiking = await fetchIsLikedPost(account, props.hash);
         if (isLiking) {
           setIsLiking(true);
         }
       }
-      const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, offset, account);
+
+      const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, 0, account);
       if (router.query.newComment) {
         const newComment: FeedPost = JSON.parse(router.query.newComment as string);
         if (!comments.map(c => c.hash).includes(newComment.hash)) comments.unshift(newComment);
@@ -48,9 +53,11 @@ const Post: FC<PostProps> = (props) => {
       if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
       setOffset(comments.length);
       setComments(comments);
+      await timer(500);
+      setInitialized(false);
     }
 
-    if(props.hash && !initialized) init();
+    if(account && props.hash && !initialized) init();
   }, [props.hash, account]);
 
   function newComment(comment: FeedPost) {
