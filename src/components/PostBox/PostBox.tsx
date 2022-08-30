@@ -302,7 +302,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       else if(el.className.includes('Address')) goToAddress(value)
       else if(el.className.includes('Bytes32')) copy(value);
       else goToPost()
-    } else {
+    } else if (!el.className.includes('Link')) {
       goToPost();
     }
 

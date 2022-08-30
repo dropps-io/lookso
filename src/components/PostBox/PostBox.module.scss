@@ -311,6 +311,13 @@
 .PostText {
   text-align: center;
   overflow-wrap: anywhere;
+
+  a {
+    color: var(--color-highlight);
+  }
+  a:hover {
+    color: var(--color-highlight-lighter);
+  }
 }
 
 .Bytes32Parameter {
