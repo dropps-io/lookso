@@ -280,11 +280,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   async function handleClick(e: any, value?: string) {
 
-    // stop process if user is highlighting something
-    if (window.getSelection()?.toString()) return
-
     // stop process if user click on an image or backdrop of Extend Image
-    if(e.target instanceof HTMLImageElement || e?.target?.className?.includes('ExtendImage')) {
+    if(e?.target?.className?.includes('ExtendImage')) {
       e.preventDefault()
       return
     }
@@ -294,15 +291,14 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     const el: HTMLElement = e.target as HTMLElement;
 
+    console.log(el.className)
     if (value) {
-      if(el.className.includes('EventImage')) goToPost();
-      if(el.className.includes('PostImage')) goToPost();
-      else if(el.className.includes('UserTag')) goToProfile(value);
+      if(el.className.includes('UserTag')) goToProfile(value);
       else if(el.className.includes('AssetTag') || el.id === 'name') goToAddress(value);
       else if(el.className.includes('Address')) goToAddress(value)
       else if(el.className.includes('Bytes32')) copy(value);
       else goToPost()
-    } else if (!el.className.includes('Link')) {
+    } else if (!el.className.includes('Link') && !el.className.includes('PostImage') && !el.className.includes('EventImage')) {
       goToPost();
     }
 
@@ -313,7 +309,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   /**
    * When user click on "Unfollow"
-   * TODO Samuel review my code
    * @param address
    */
   async function unfollowUser(address: string) {
@@ -525,7 +520,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     }
                   </>
                 :
-                <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
+                <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
               :
               <></>
           }
