@@ -1,10 +1,10 @@
 ## TOC
 
-  * [What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)](#what-is--lookso--https---looksoio----lookso-logo--img-lookso-logojpg-)
+  * [What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)](#what_is_lookso)
 - [Architecure](#architecure)
   * [Overview](#overview)
   * [Blockchain](#blockchain)
-    + [The Timestamp Registry Contract](#timestamp-registry)
+    + [The Timestamp Registry Contract](#timestamp-registryThe Timestamp Registry Contract)
     + [Event scraping and translation](#event-scraping-and-translation)
   * [Decentralized Storage](#decentralized-storage---arweave-logo--img-arweave-logopng-)
   * [The Backend](#the-backend)
@@ -13,7 +13,9 @@
   * [The Post Object](#the-post-object)
 - [Future improvements](#future-improvements)
 
-## What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)
+
+## What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)<a name="what_is_lookso"></a>
+
 
 LOOKSO is a Twitter like social media feed where users post messages and interact using Universal Profiles. It combines user-generated content with a digest of relevant events emmited by Universal Profile contracts in the blockchain. This feed is a valuable addition to block explorers and allows the users to not only follow their favorite NFT collections, artists or investors, but also to comment on their events.
 
@@ -35,7 +37,8 @@ All the data is indexed in a local database and served as an [API](https://api.l
 
 ## Blockchain
 
-### <a name="timestamp_registry"></a>The Timestamp Registry Contract
+
+### The Timestamp Registry Contract<a name="timestamp_registry"></a>
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -138,7 +141,7 @@ You can comment, repost and like an event, just like you can with any other user
 Events and their indexed parameters are saved on the backend database, alongside their translation and the Universal Profile that emitted them. 
 
 
-## Decentralized Storage ![Arweave logo](img/arweave_logo.png)<img src="img/arweave_logo.png" width="25"></img>
+## Decentralized Storage <img alt="Arweave Logo" src="img/arweave_logo.png" width="25"></img>
 
 We chose Arweave because it's cheap, easy to use and provides the degree of decentralization and interoperability we are looking for. Arweave offers a GraphQL endpoint to query for transaction metadata, which is very useful to find all the content associated with a given protocol or app. Each transaction offers 2kb of queryable space in the form of key-value pairs (tags). Any application wanting to plug itself into the Social Media Network can simply query Arweave and look for the protocol tag in the transactions. Alternatively, a dApp can fetch the Social Media Record File from a Universal Profile, and from there display all the related content stored on Arweave.
 
