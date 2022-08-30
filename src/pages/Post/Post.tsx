@@ -57,8 +57,8 @@ const Post: FC<PostProps> = (props) => {
       setInitialized(false);
     }
 
-    if(account && props.hash && !initialized) init();
-  }, [props.hash, account]);
+    if(props.hash && !initialized) init();
+  }, [props.hash]);
 
   function newComment(comment: FeedPost) {
     setComments(existing => [comment].concat(existing));
@@ -88,9 +88,10 @@ const Post: FC<PostProps> = (props) => {
           <div className={styles.Separator}></div>
           <Comments account={account} feed={comments} loadNext={loadMoreComments}/>
           {(!fullyLoadedComments) && <div className={styles.NoComments}><CircularProgress size={60}/></div>}
-          {(fullyLoadedComments && comments.length === 0) && <div className={styles.NoComments}>
+          {(fullyLoadedComments && comments.length === 0) &&
+          <div className={styles.NoComments}>
             <p>No comments yet 🤷</p>
-            </div>
+          </div>
           }
         </div>
       </div>
