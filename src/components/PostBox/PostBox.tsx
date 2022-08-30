@@ -5,6 +5,7 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, IPFS_GATEWAY, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
+import receivedEventIcon from "../../assets/icons/events/received.png";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
 import repostComment from '../../assets/icons/repost_comment.svg'
@@ -520,7 +521,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     }
                   </>
                 :
-                <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
+                props.post.name === 'ValueReceived' || props.post.name === 'UniversalReceiver' ?
+                  <img className={styles.EventIcon} src={receivedEventIcon.src} onClick={handleClick} alt="Received Event"/>
+                  :
+                  <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
               :
               <></>
           }

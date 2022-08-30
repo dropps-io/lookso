@@ -39,14 +39,11 @@ const Feed: FC<FeedProps> = (props) => {
       setFullyLoadedActivity(false);
 
       if (storedFeed.length > 0 && storedFeedCurrentType === props.type) {
-        console.log('inif')
-
         setFeed(storedFeed);
         setOffset(storedFeed.length);
         setNeedToScrollOnNextFeedChange(true);
 
       } else {
-        console.log('inelse')
         setFeed([]);
 
         let newFeed: FeedPost[];
