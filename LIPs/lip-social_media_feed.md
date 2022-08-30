@@ -25,13 +25,11 @@ Using a standardized data model to store social media makes content platform-ind
 
 ## Specification
 
-Every Universal Profile that participates in the Social Media standard SHOULD add the following ERC725Y data keys:
+## LSPXXSocialRegistry
 
-### ERC725Y Data Keys
+A Universal Profile's Social Media State will live under a record referenced by the "LSPXXSocialRegistry" data key of their ERC725Y store.
 
-#### LSPXXSocialRegistry
-
-A JSON file that lists all the social media actions of a profile, including posts, likes and follows.
+The JSON Url stored inside points to a JSON file that lists all the social media actions of a profile, including posts, likes and follows.
 
 ```json
   {
@@ -58,12 +56,12 @@ The linked JSON file SHOULD have the following format:
       ...
     ],
     "follows": [ "Address", ... ], // UPs this account has subscribed.  Will compose the account's feed.
-    "likes": ["bytes32", ...], // The identifiers of all the posts this account has liked
+    "likes": ["bytes32", ...], // The identifier (hash) of all the posts this account has liked
   }
 }
 ```
 
-#### Profile Posts
+## Profile Posts
 
 A Profile Post can be an original message, a comment on another post or a repost. The JSON file should have the following format:
 
