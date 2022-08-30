@@ -25,7 +25,7 @@ Using a standardized data model to store social media makes content platform-ind
 
 ## Specification
 
-## LSPXXSocialRegistry
+### LSPXXSocialRegistry
 
 A Universal Profile's Social Media State will live under a record referenced by the "LSPXXSocialRegistry" data key of their ERC725Y store.
 
@@ -61,7 +61,7 @@ The linked JSON file SHOULD have the following format:
 }
 ```
 
-## Profile Posts
+### Profile Posts
 
 A Profile Post can be an original message, a comment on another post or a repost. The JSON file should have the following format:
 
@@ -143,7 +143,7 @@ Let's breakdown the _LSPXXProfilePost_ attributes:
 * **message** is the actual content of a post that will be displayed as text.
 * **author** is the address of the Universal Profile that submitted the post.
 * **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
-* **nonce** is what makes a post unique. Otherwise posts written by the same author with the same text would generate the same hash and collide in the validator storage. The transaction would revert when someone tried posting the same content twice, even if on different dates. We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
+* **nonce** is what makes a post unique. Otherwise, posts written by the same author with the same message would generate the same hash and collide in the validator storage. The transaction would then revert when someone tried posting the same content twice. Even if on different dates! We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
 * **links** they can be used in the future to extend the standard.
 * **asset** A media file attached to the post. An image, video, or any other file type.
 * **parentHash** If this post is a comment, the hash of the original post should go in here.
