@@ -111,21 +111,21 @@ contract LooksoPostValidator is Validator {
 }
 ```
 
-For more details on the data being stored, please refer to [LIP-social_media_feed](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-social_media_feed.md)
+For more details on the data being stored, please refer to [LIP-social_media_feed](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-social_media_feed.md).
 
 
 ### Event scraping and translation
 
-One of the key features of the LOOKSO platform is that it scrapes blockchain events related to Universal Profiles and displays them in a user friendly way in its feed. This is a game-changer when it comes to visualizing what's happening on the network and interacting with it. 
+One of the key features of the LOOKSO platform is that it scrapes blockchain events related to Universal Profiles and displays them in a user friendly way. This is a game changer when it comes to visualizing what's happening on the network and interacting with it. 
 
 ![Event translation on feed](img/event_post.jpg)
 
-You can comment, repost and like an event-based post like any other user-generated content. This feed will be hotter than ever 🔥!
+You can comment, repost and like an event, just like you can with any other user-generated content. This feed will be hotter than ever 🔥!
 
-Events and their index parameters are saved on the database, alongside their translation and the Universal Profile that emitted them. 
+Events and their indexed parameters are saved on the backend database, alongside their translation and the Universal Profile that emitted them. 
 
 
-## Decentralized Storage
+## Decentralized Storage ![Arweave logo](img/arweave_logo.png)
 
 We chose Arweave because it's cheap, easy to use and provides the degree of decentralization and interoperability we are looking for. Arweave offers a GraphQL endpoint to query for transaction metadata, which is very useful to find all the content associated with a given protocol or app. Each transaction offers 2kb of queryable space in the form of key-value pairs (tags). Any application wanting to plug itself into the Social Media Network can simply query Arweave and look for the protocol tag in the transactions. Alternatively, a dApp can fetch the Social Media Record File from a Universal Profile, and from there display all the related content stored on Arweave.
 
