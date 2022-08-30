@@ -15,7 +15,7 @@ This standard describes a data model to store Social Media information such as p
 
 ## Abstract
 
-This standard defines a set of key-value pairs that are useful to create a Social Media Feed, combining [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md) and an open distributed storage network such as [IPFS](https://ipfs.tech/) or [ARWEAVE](https://arweave.org).
+This standard defines a set of data formats and a key-value pair to create a Social Media Feed, combining [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md) and an open distributed storage network such as [IPFS](https://ipfs.tech/) or [ARWEAVE](https://arweave.org).
 
 ## Motivation
 
@@ -25,13 +25,11 @@ Using a standardized data model to store social media makes content platform-ind
 
 ## Specification
 
-Every Universal Profile that participates in the Social Media standard SHOULD add the following ERC725Y data keys:
+## LSPXXSocialRegistry
 
-### ERC725Y Data Keys
+A Universal Profile's Social Media State will live under a record referenced by the "LSPXXSocialRegistry" data key of their ERC725Y store.
 
-#### LSPXXSocialRegistry
-
-A JSON file that lists all the social media actions of a profile, including posts, likes and follows.
+The JSON Url stored inside points to a JSON file that lists all the social media actions of a profile, including posts, likes and follows.
 
 ```json
   {
@@ -58,10 +56,12 @@ The linked JSON file SHOULD have the following format:
       ...
     ],
     "follows": [ "Address", ... ], // UPs this account has subscribed.  Will compose the account's feed.
-    "likes": ["bytes32", ...], // The identifiers of all the posts this account has liked
+    "likes": ["bytes32", ...], // The identifier (hash) of all the posts this account has liked
   }
 }
 ```
+
+## Profile Posts
 
 A Profile Post can be an original message, a comment on another post or a repost. The JSON file should have the following format:
 
@@ -104,6 +104,50 @@ A Profile Post can be an original message, a comment on another post or a repost
   "LSPXXProfilePostEOASignature": "string"
 }
 ```
+Below is an example of a post object:
+
+```JSON
+{
+  "LSPXXProfilePost": {
+    "version":"0.0.1",
+    "message": "This is the first Lookso post.",
+    "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
+    "validator": "0x049bAfA4bF69bCf6FcB7246409bc92a43f0a7264",
+    "nonce": "415665014",
+    "links": [
+      {
+        "title": "Our website",
+        "url": "https://dropps.io"
+      }
+    ],
+    "asset": {
+      "hashFunction": "keccak256(bytes)",
+      "hash": "0x813a0027c9201ccdec5324aa32ddf0e8b9400479662b6f243500a42f2f85d2eb",
+      "url": "ar://gkmVUoHE4Ay6ScIlgV4E7Fs1m13LfpAXSuwuRGRQbeA",
+      "fileType": "jpg"
+    },
+    "parentHash":"0xdc1812e317c6cf84760d59bda99517de5b5c5190fcf820713075430337805340",
+    "childHash":""
+  },
+  "LSPXXProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
+  "LSPXXProfilePostHashFunction": "keccak256",
+  "LSPXXProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
+}
+```
+
+The post content and metadata is stored under  _LSPXXProfilePost_. The content and metadata are hashed and the hash is saved under _LSPXXProfilePostHash_. Finally, the controller address is requested to sign the _LSPXXProfilePost_ object. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
+
+Let's breakdown the _LSPXXProfilePost_ attributes: 
+
+* **version** will allow clients that adhere to the protocol to display posts properly, even if some attributes change. 
+* **message** is the actual content of a post that will be displayed as text.
+* **author** is the address of the Universal Profile that submitted the post.
+* **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
+* **nonce** is what makes a post unique. Otherwise posts written by the same author with the same text would generate the same hash and collide in the validator storage. The transaction would revert when someone tried posting the same content twice, even if on different dates. We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
+* **links** they can be used in the future to extend the standard.
+* **asset** A media file attached to the post. An image, video, or any other file type.
+* **parentHash** If this post is a comment, the hash of the original post should go in here.
+* **childHash** If this post is a repost, the hash of the original post should go in here. 
 
 ## Copyright
 
