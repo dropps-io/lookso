@@ -79,7 +79,7 @@ const Feed: FC<FeedProps> = (props) => {
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     loading = true;
-    console.log('Loading posts... from' + offset);
+    // console.log('Loading posts... from' + offset);
     dispatch(setCurrentFeedFilter(filter));
     try {
       let newPosts: FeedPost[];
@@ -90,17 +90,19 @@ const Feed: FC<FeedProps> = (props) => {
       }
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
-      if (newPosts.length === 0) setFullyLoadedActivity(true);
+      if (newPosts.length === 0 || (filter === 'post' && newPosts.length < POSTS_PER_LOAD)) {
+        console.log('fully loaded')
+        setFullyLoadedActivity(true);
+      }
       setOffset(offset + newPosts.length);
 
-      console.log('Loaded ' + newPosts.length + ' new posts');
+      // console.log('Loaded ' + newPosts.length + ' new posts');
       dispatch(addToStoredFeed(newPosts));
       await timer(2000)
       loading = false;
     }
     catch (e) {
       console.error(e);
-
       await timer(2000)
       loading = false;
     }
@@ -118,6 +120,11 @@ const Feed: FC<FeedProps> = (props) => {
     } else {
       if (props.type === 'Explore') newPosts = await fetchAllFeed(POSTS_PER_LOAD, 0, type === 'all' ? undefined : type);
       else newPosts = [];
+    }
+
+    if (newPosts.length === 0 || (type === 'post' && newPosts.length < POSTS_PER_LOAD)) {
+      console.log('fully loaded')
+      setFullyLoadedActivity(true);
     }
 
     dispatch(setStoredFeed(newPosts));
