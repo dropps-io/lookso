@@ -125,12 +125,14 @@ For more details on the data being stored, please refer to [LIP-social_media_fee
 
 ## Event scraping and translation
 
+![Event translation on feed](img/event_post.jpg)
+
 One of the key features of the LOOKSO platform is that it scrapes blockchain events related to Universal Profiles and displays them in a user friendly way. This is a game changer when it comes to visualizing what's happening on the network and interacting with it. 
 
 You can comment, repost and like an event, just like you can with any other user-generated content. This feed will be hotter than ever 🔥!
 Events and their indexed parameters are saved on the backend database, alongside their translation and the Universal Profile that emitted them. 
 
-![Event translation on feed](img/event_post.jpg)
+
 
 
 ## Decentralized Storage <img alt="Arweave Logo" src="img/arweave_logo.png" width="25"></img>
