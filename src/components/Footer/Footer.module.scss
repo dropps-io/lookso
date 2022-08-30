@@ -24,6 +24,10 @@
 
     color: var(--color-text-default);
 
+    a {
+      cursor: pointer;
+    }
+
     .Credentials {
       display: flex;
       align-items: center;

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styles from './Footer.module.scss';
 import discordLogo from '../../assets/icons/Discord.svg';
 import twitterLogo from '../../assets/icons/Twitter.svg';
+import droppsLogo from '../../assets/images/dropp-logo.png';
 import Image from "next/image";
 
 interface FooterProps {}
@@ -10,10 +11,12 @@ const Footer: FC<FooterProps> = () => (
   <div className={styles.Footer} data-testid="Footer">
     <div className={styles.FooterBox}></div>
     <div className={styles.FooterContent}>
-      <div></div>
+      <a href={"https://dropps.io"} target={"_blank"} rel={'noreferrer'}>
+        <Image src={droppsLogo.src} width={50} height={50} alt=""/>
+      </a>
       <div className={styles.Credentials}>
         <span>Ⓒ</span>
-        <span>Made by DROPPS,<br/>powered by LUKSO</span>
+        <span>Made by <a href="https://dropps.io" target='_blank' rel={'noreferrer'}>DROPPS</a>,<br/>powered by LUKSO</span>
       </div>
       <div className={styles.FooterLinks}>
           <a href={"https://discord.gg/GGJcvRw2uS"} target={"_blank"} rel={'noreferrer'}>
