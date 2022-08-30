@@ -139,15 +139,15 @@ The post content and metadata is stored under  _LSPXXProfilePost_. The content a
 
 Let's breakdown the _LSPXXProfilePost_ attributes: 
 
-* _version_ will allow clients that adhere to the protocol to display posts properly, even if some attributes change. 
-* _message_ is the actual content of a post that will be displayed as text.
-* _author_ is the address of the Universal Profile that submitted the post.
-* _validator_ is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
-* _nonce_ is what makes a post unique. Otherwise posts written by the same author with the same text would generate the same hash and collide in the validator storage. The transaction would revert when someone tried posting the same content twice, even if on different dates. We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
-* _links_ they can be used in the future to extend the standard.
-* _asset_ A media file attached to the post. An image, video, or any other file type.
-* _parentHash_ If this post is a comment, the hash of the original post should go in here.
-* _childHash_ If this post is a repost, the hash of the original post should go in here. 
+* **version** will allow clients that adhere to the protocol to display posts properly, even if some attributes change. 
+* **message** is the actual content of a post that will be displayed as text.
+* **author** is the address of the Universal Profile that submitted the post.
+* **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
+* **nonce** is what makes a post unique. Otherwise posts written by the same author with the same text would generate the same hash and collide in the validator storage. The transaction would revert when someone tried posting the same content twice, even if on different dates. We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
+* **links** they can be used in the future to extend the standard.
+* **asset** A media file attached to the post. An image, video, or any other file type.
+* **parentHash** If this post is a comment, the hash of the original post should go in here.
+* **childHash** If this post is a repost, the hash of the original post should go in here. 
 
 ## Copyright
 
