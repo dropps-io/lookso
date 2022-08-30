@@ -5,15 +5,15 @@ LOOKSO is a Twitter like social media feed where users post messages and interac
 
 ## Architecure
 
-LOOKSO leverages decentralized storage to minimize gas costs and allow media content like images and videos to be attached to messages. Every message, like and follow is saved in the Arweave blockchain and a single registry is kept updated for each address. This registry is nothing more than a JSON object.
+LOOKSO leverages decentralized storage to minimize gas costs and allow media content like images and videos to be attached to messages. Every message, like and follow is saved in the Arweave blockchain and a single record file is kept updated for each Universal Profile (UP). This social media record file is nothing more than a JSON object and is saved on the Universal Profile's (UP) storage.
 
-On the Universal Profile of the user, only the registry is stored. This [registry](#Registry) contains a list of created posts, liked posts and followed UPs, which all together composes a user's social media state. 
+The [record](#Social Media Record File) is the only thing saved on the user's UP and contains a list of created posts, liked posts and followed UPs, which all together composes a user's social media state. 
 
 ![LOOKSO Architecture Overview](img/arch_overview.jpg)
 
 There is a third actor whose role is to provide a reliable timestamp for the messages in the network. It is a [validator](#Validator) smart contract on the LUKSO blockchain and can be called to append a timestamp to the message hash and save it in its own [ERC725Y](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-725.md#erc725y) storage for future validation.
 
-All the data is indexed in a local database and served as an [API] (https://api.lookso.io/documentation/static/index.html) to speed up and simplify the queries necessary to provide a consistent and fast user experience. 
+All the data is indexed in a local database and served as an [API](https://api.lookso.io/documentation/static/index.html) to speed up and simplify the queries necessary to provide a consistent and fast user experience. 
 
 
 ## The Timestamp Registry Contract
@@ -64,9 +64,11 @@ contract Validator is ERC725YCore(), Context {
         return bytes20(this.getData(key));
     }
 }
-
 ```
 
+This is a generic contract that provides a timestamping service for any kind of message. Because this contract cannot sign a message attesting the timestamp provided, instead it saves the message hash in its own storage, alongside the timestamp and the original sender. Anyone can use this registry to store their claims and attest their creation date. For more information, check [LIP-Claim_Registry](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-claim_registry.md).
+
+For the LOOKSO project, we extended the timestamping service with the capability to write to the LSPXXSocialRegistry key on the Universal Profile. This was done for the convenience of bundling two tasks in a single transaction and avoiding extra costs for the user. The message hash is sent for validation alongside a social record that includes this message already. The message hash is timestamped and the social record URL written on the Universal Profile. 
 
 ## Event scraping and translation
 
@@ -79,9 +81,9 @@ You can comment, repost and like an event-based post like any other user-generat
 Events and their index parameters are saved on the database, alongside their translation and the Universal Profile that emitted them. 
 
 
-## Registry
+## Social Media Record File
 
-The registry is saved under the (provisory) Key name of "LSPXXSocialRegistry". Here is the schema according to [LSP2](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-2-ERC725YJSONSchema.md):
+This record is saved under the (provisory) Key name of "LSPXXSocialRegistry". Here is the schema according to [LSP2](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-2-ERC725YJSONSchema.md):
 
 ```JSON
 {
@@ -94,7 +96,7 @@ The registry is saved under the (provisory) Key name of "LSPXXSocialRegistry". H
 }
 ```
 
-And here is an example of the registry file after decoding and fetching the JSONURL:
+And here is an example of the record file after decoding and fetching the JSONURL:
 
 ```JSON
 {
@@ -161,6 +163,7 @@ This is an example of a post object.
 * Refactor follows so that universalReceiver can be called and a UP can decide what to do in that situation
 * Add a relay service
 * Improve event translation (for ex. Profile metadata updated can display the before and after values)
+* Narrow the permissions given to the validator contract for a specific key (LSPXXSocialRegistry).
 
 ### Blockchain
 Provides the censorship resistant fabric where users can store their connections and content can be referenced. The rules by which the social network shapes itself are written and enforced in the protocol, no one is able to cancel or 
