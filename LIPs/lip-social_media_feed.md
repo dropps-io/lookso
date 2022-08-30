@@ -137,9 +137,9 @@ Below is an example of a post object:
 
 The Profile post is composed of 3 main components.
 
-1. The post content, stored in _LSPXXProfilePost_; 
-2. The keccak256 hash of the post content _LSPXXProfilePostHash_; 
-3. _LSPXXProfilePost_ object signature, made with the private key of the Universal Profile controller EOA. It can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
+1. The post content and metadata, stored in _LSPXXProfilePost_; 
+2. The keccak256 hash of the _LSPXXProfilePost_ object, named _LSPXXProfilePostHash_; 
+3. _LSPXXProfilePost_ object signature, made with the private key of the Universal Profile controller EOA. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
 
 The LSPXXProfilePost object includes: 
 
