@@ -244,7 +244,7 @@ const PostInput: FC<PostInputProps> = (props) => {
               <label htmlFor={props.parentHash ? 'Reply' : props.childPost ? 'Repost' : 'Post'}>
                 <img src={imageIcon.src} alt='' />
               </label>
-              <input ref={imageInput} disabled={!!loadingMessage} onChange={handleChangeFile} id={props.parentHash ? 'Reply' : props.childPost ? 'Repost' : 'Post'} type="file" accept="image/gif, image/jpeg, image/png"/>
+              <input ref={imageInput} disabled={!!loadingMessage} onChange={handleChangeFile} id={props.parentHash ? 'Reply' : props.childPost ? 'Repost' : 'Post'} type="file" accept="image/gif, image/jpeg, image/png, image/webp"/>
             </div>
             <button disabled={!!loadingMessage} type='submit' className='btn btn-secondary'>{props.parentHash ? 'Reply' : 'Post'}</button>
           </div>

@@ -1,10 +1,95 @@
 .Comments {
+  padding-bottom: 15px;
   .FeedPosts {
     .Separator {
       width: 90%;
       margin: 5px auto;
       background-color: var(--color-border);
       height: 1px;
+    }
+
+    .Comment {
+      height: auto;
+      position: relative;
+
+      .CommentLine {
+        position: absolute;
+        z-index: 0;
+        margin-top: 15px;
+        margin-left: 55px;
+        width: 1px;
+        height: 92%;
+        background: repeating-linear-gradient(to bottom,transparent 0,white 4px) 80%/2px 100% no-repeat;
+      }
+
+      .PostBox {
+        position: relative;
+        z-index: 1;
+      }
+
+      .ShowReplies {
+        padding: 0 32px;
+        color: var(--color-text-default);
+        a {
+          font-size: 0.9em;
+          margin-left: 30px;
+          cursor: pointer;
+          color: var(--color-highlight-lighter)
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Comments {
+    padding-bottom: 15px;
+    .FeedPosts {
+      .Comment {
+        .CommentLine {
+          margin-left: 31px;
+        }
+
+        .ShowReplies {
+          padding: 0 10px;
+          a {
+            font-size: 0.8em;
+            margin-left: 30px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .Comments {
+    .FeedPosts {
+      .Comment {
+        .ShowReplies {
+          a {
+            font-size: 0.7em;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .Comments {
+    .FeedPosts {
+      .Comment {
+        .CommentLine {
+          margin-left: 25px;
+        }
+
+        .ShowReplies {
+          a {
+            font-size: 0.6em;
+          }
+        }
+      }
     }
   }
 }
