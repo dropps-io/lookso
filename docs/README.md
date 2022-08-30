@@ -1,7 +1,7 @@
 ## TOC
 
-  * [What is LOOKSO)](#what_is_lookso)
-- [Architecure](#architecure)
+  * [What is LOOKSO](#what_is_lookso)
+  - [Architecure](#architecure)
   * [Overview](#overview)
   * [Blockchain](#blockchain)
     + [The Timestamp Registry Contract](#timestamp-registry)
