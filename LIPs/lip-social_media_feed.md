@@ -25,7 +25,7 @@ Using a standardized data model to store social media makes content platform-ind
 
 ## Specification
 
-## LSPXXSocialRegistry
+### LSPXXSocialRegistry
 
 A Universal Profile's Social Media State will live under a record referenced by the "LSPXXSocialRegistry" data key of their ERC725Y store.
 
@@ -61,7 +61,7 @@ The linked JSON file SHOULD have the following format:
 }
 ```
 
-## Profile Posts
+### Profile Posts
 
 A Profile Post can be an original message, a comment on another post or a repost. The JSON file should have the following format:
 
