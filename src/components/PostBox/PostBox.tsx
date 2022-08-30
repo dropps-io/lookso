@@ -281,6 +281,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   async function handleClick(e: any, value?: string) {
 
+    // stop process if user is highlighting something
+    if (window.getSelection()?.toString()) return
+
     // stop process if user click on an image or backdrop of Extend Image
     if(e?.target?.className?.includes('ExtendImage')) {
       e.preventDefault()
@@ -292,7 +295,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     const el: HTMLElement = e.target as HTMLElement;
 
-    console.log(el.className)
     if (value) {
       if(el.className.includes('UserTag')) goToProfile(value);
       else if(el.className.includes('AssetTag') || el.id === 'name') goToAddress(value);
