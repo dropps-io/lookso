@@ -1,12 +1,12 @@
 ## TOC
 
-  * [What is [LOOKSO](https://lookso.io) ![LOOKSO logo](img/LOOKSO_logo.jpg)](#what_is_lookso)
+  * [What is LOOKSO)](#what_is_lookso)
 - [Architecure](#architecure)
   * [Overview](#overview)
   * [Blockchain](#blockchain)
-    + [The Timestamp Registry Contract](#timestamp-registryThe Timestamp Registry Contract)
+    + [The Timestamp Registry Contract](#timestamp-registry)
     + [Event scraping and translation](#event-scraping-and-translation)
-  * [Decentralized Storage](#decentralized-storage---arweave-logo--img-arweave-logopng-)
+  * [Decentralized Storage](#decentralized_storage)
   * [The Backend](#the-backend)
   * [Data format](#data-format)
     + [Social Media Record File](#social-media-record-file)
@@ -141,7 +141,7 @@ You can comment, repost and like an event, just like you can with any other user
 Events and their indexed parameters are saved on the backend database, alongside their translation and the Universal Profile that emitted them. 
 
 
-## Decentralized Storage <img alt="Arweave Logo" src="img/arweave_logo.png" width="25"></img>
+## Decentralized Storage <img alt="Arweave Logo" src="img/arweave_logo.png" width="25"></img><a name="decentralized_storage"></a>
 
 We chose Arweave because it's cheap, easy to use and provides the degree of decentralization and interoperability we are looking for. Arweave offers a GraphQL endpoint to query for transaction metadata, which is very useful to find all the content associated with a given protocol or app. Each transaction offers 2kb of queryable space in the form of key-value pairs (tags). Any application wanting to plug itself into the Social Media Network can simply query Arweave and look for the protocol tag in the transactions. Alternatively, a dApp can fetch the Social Media Record File from a Universal Profile, and from there display all the related content stored on Arweave.
 
