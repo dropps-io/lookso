@@ -451,6 +451,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             </div>
           </div>
         }
+        {(isOpenExtraAction || isOpenRepostAction) && <div className={'backdrop'} onClick={() => {
+          setIsOpenExtraAction(false);
+          setIsOpenRepostAction(false);
+        }}></div>}
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
@@ -468,7 +472,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                        <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                        <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
                         </PopupButton>
@@ -480,7 +484,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                            <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                            <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
                                   router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
@@ -557,7 +561,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 <span>{props.post.reposts}</span>
                 {
                     isOpenRepostAction && (
-                        <PopupButton open={isOpenRepostAction} className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
+                        <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
                           <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
                             <img src={repostIcon.src} alt="Repost"/>
                             <span>Repost </span>
