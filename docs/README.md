@@ -7,11 +7,11 @@ As long as you have a Universal Profile, you have an account in LOOKSO. Other pr
 
 # Quick Reference
 
-[Website](https://lookso.io)
-[API Docs](https://api.lookso.io/documentation/static/index.html)
-[LIP-social_media_feed](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-social_media_feed.md)
-[LIP-timestamp_registry](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-timestamp_registry.md)
-Youtube Video
+* [Website](https://lookso.io)
+* [API Docs](https://api.lookso.io/documentation/static/index.html)
+* [LIP-social_media_feed](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-social_media_feed.md)
+* [LIP-timestamp_registry](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-timestamp_registry.md)
+* Youtube Video
 
 # Architecure
 
