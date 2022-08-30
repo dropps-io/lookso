@@ -15,7 +15,7 @@ This standard describes a data model to store Social Media information such as p
 
 ## Abstract
 
-This standard defines a set of key-value pairs that are useful to create a Social Media Feed, combining [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md) and an open distributed storage network such as [IPFS](https://ipfs.tech/) or [ARWEAVE](https://arweave.org).
+This standard defines a set of data formats and a key-value pair to create a Social Media Feed, combining [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md) and an open distributed storage network such as [IPFS](https://ipfs.tech/) or [ARWEAVE](https://arweave.org).
 
 ## Motivation
 
