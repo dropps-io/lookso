@@ -77,7 +77,7 @@ const Home: FC<HomeProps> = ()  => {
               </div>
               <h3>User-owned content</h3>
               <p onClick={() => foldHeadline(1)} className={!foldHeadlines[1] ? styles.UnfoldedHeadline : ''}>
-                Through LSPXX (a social media interoperability standard proposed by the DROPPS team) your posts, comments and followers are linked solely to your Universal Profile and can be pulled by other social media platforms
+                Through a social media interoperability standard proposed by the DROPPS team, your activity on LOOKSO (posts, comments, replies and follows) are linked solely to your Universal Profile and can be pulled by other social media platforms
               </p>
                 <div onClick={() => foldHeadline(1)} className={styles.ToggleHeadline}>{foldHeadlines[1] ? '+' : '-'}</div>
             </div>
