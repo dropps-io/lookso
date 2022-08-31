@@ -70,7 +70,7 @@ A Profile Post can be an original message, a comment on another post or a repost
   "LSPXXProfilePost": {
     "version": "0.0.1",
     "author": "Address", // The Universal Profile who authored the post
-    "validator": "Address", // Address of a time stamper smart contract which will certify the post date
+    "validator": "Address", // Address of a validator smart contract which will authenticate a post and provide its publication date
     "nonce": "string", // Random value to avoid having same hash for different posts
     "message": "string", // The post original content
     "links": [
@@ -80,11 +80,8 @@ A Profile Post can be an original message, a comment on another post or a repost
       },
       ...
     ],
-    "tags": [
-      {
-        "title": "string", // The tag's label
-        "value": "string"
-      },
+    "tags": [ // Tags attached to a post
+      "string",
       ...
     ],
     "asset": { // Each post can have up to 1 media file attached
@@ -130,7 +127,7 @@ Below is an example of a post object:
     "childHash":""
   },
   "LSPXXProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
-  "LSPXXProfilePostHashFunction": "keccak256",
+  "LSPXXProfilePostHashFunction": "keccak256(utf-8)",
   "LSPXXProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
 }
 ```
@@ -145,6 +142,7 @@ Let's breakdown the _LSPXXProfilePost_ attributes:
 * **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
 * **nonce** is what makes a post unique. Otherwise, posts written by the same author with the same message would generate the same hash and collide in the validator storage. The transaction would then revert when someone tried posting the same content twice. Even if on different dates! We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
 * **links** they can be used in the future to extend the standard.
+* **tags** they can be used in the future as hashtags.
 * **asset** A media file attached to the post. An image, video, or any other file type.
 * **parentHash** If this post is a comment, the hash of the original post should go in here.
 * **childHash** If this post is a repost, the hash of the original post should go in here. 
