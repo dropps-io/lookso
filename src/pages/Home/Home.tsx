@@ -3,6 +3,7 @@ import styles from './Home.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import impactImage from "../../assets/images/impact-image.png";
 import impactImage2 from "../../assets/images/impact-image-2.png";
+import looksoLogo from "../../assets/images/lookso_logo.png";
 import shape1 from "../../assets/images/shape1.png";
 import titleUnderline from "../../assets/images/title_underline.png";
 import layerHeadlines from "../../assets/images/layer-headlines.png";
@@ -13,7 +14,6 @@ import Footer from "../../components/Footer/Footer";
 import Head from "next/head";
 import Link from "next/link";
 import Faq from '../../components/Faq/Faq';
-
 
 interface HomeProps {}
 
@@ -28,6 +28,15 @@ const Home: FC<HomeProps> = ()  => {
     <div className={styles.Home} data-testid="Home">
         <Head>
           <title>LOOKSO</title>
+          <meta name="twitter:card" content={'summary'}/>
+          <meta name="twitter:site" content="@lookso_io"/>
+          <meta name="twitter:title" content={`LOOKSO`}/>
+          <meta property='twitter:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+          <meta property='twitter:creator' content='@undeveloped'/>
+          <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+          <meta property='og:title' content={`LOOKSO`}/>
+          <meta property='og:image' itemProp='image' content={looksoLogo.src}/>
+          <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
         </Head>
         <div className={styles.Content}>
           <Navbar/>
