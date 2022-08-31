@@ -14,6 +14,7 @@ import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
 import {addToStoredFeed, setCurrentFeedFilter, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
 import {timer} from "../../core/utils/timer";
+import looksoBanner from "../../assets/images/lookso-banner.png";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -143,6 +144,15 @@ const Feed: FC<FeedProps> = (props) => {
     <div className={styles.Feed} data-testid="Feed">
       <Head>
         <title>{props.type} | LOOKSO</title>
+        <meta name="twitter:card" content={'summary_large_image'}/>
+        <meta name="twitter:site" content="@lookso_io"/>
+        <meta name="twitter:title" content={`${props.type} | LOOKSO`}/>
+        <meta property='twitter:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+        <meta property='twitter:creator' content='@undeveloped'/>
+        <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+        <meta property='og:title' content={`${props.type} | LOOKSO`}/>
+        <meta property='og:image' itemProp='image' content={looksoBanner.src}/>
+        <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
       </Head>
       <div className={styles.FeedPageHeader}>
         <Navbar/>
