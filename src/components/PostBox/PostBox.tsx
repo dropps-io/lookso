@@ -14,6 +14,7 @@ import repostComment from '../../assets/icons/repost_comment.svg'
 import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
+import warningIcon from "../../assets/icons/warning.png";
 import {connectToAPI, connectWeb3, signMessage} from "../../core/web3";
 import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
 import {
@@ -149,6 +150,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   useEffect(() => {
     setLikes(props.post.likes);
     setIsLiked(props.post.isLiked);
+
+    console.log(props.post)
 
     if (props.isLiked) setIsLiked(props.isLiked)
   }, [props.post, props.isLiked]);
@@ -506,7 +509,12 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     }
                   </div>
             }
-
+            {
+             (props.post.type === 'post' && props.post.trusted !== undefined && !props.post.trusted) &&
+                <div className={styles.Warning}>
+                  <img src={warningIcon.src} alt=""/>
+                </div>
+            }
           </div>
         </div>
         <div className={styles.PostTags}>
