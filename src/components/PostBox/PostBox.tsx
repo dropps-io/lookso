@@ -5,6 +5,9 @@ import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, IPFS_GATEWAY, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
+import receivedEventIcon from "../../assets/icons/events/received.png";
+import dataChangedEventIcon from "../../assets/icons/events/data-changed.png";
+import ownershipTransferredEventIcon from "../../assets/icons/events/transfer-ownership.png";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
 import repostComment from '../../assets/icons/repost_comment.svg'
@@ -284,7 +287,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     if (window.getSelection()?.toString()) return
 
     // stop process if user click on an image or backdrop of Extend Image
-    if(e.target instanceof HTMLImageElement || e?.target?.className?.includes('ExtendImage')) {
+    if(e?.target?.className?.includes('ExtendImage')) {
       e.preventDefault()
       return
     }
@@ -295,14 +298,12 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     const el: HTMLElement = e.target as HTMLElement;
 
     if (value) {
-      if(el.className.includes('EventImage')) goToPost();
-      if(el.className.includes('PostImage')) goToPost();
-      else if(el.className.includes('UserTag')) goToProfile(value);
+      if(el.className.includes('UserTag')) goToProfile(value);
       else if(el.className.includes('AssetTag') || el.id === 'name') goToAddress(value);
       else if(el.className.includes('Address')) goToAddress(value)
       else if(el.className.includes('Bytes32')) copy(value);
       else goToPost()
-    } else {
+    } else if (!el.className.includes('Link') && !el.className.includes('PostImage') && !el.className.includes('EventImage')) {
       goToPost();
     }
 
@@ -313,7 +314,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   /**
    * When user click on "Unfollow"
-   * TODO Samuel review my code
    * @param address
    */
   async function unfollowUser(address: string) {
@@ -367,6 +367,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function createPost(childHash?: string) {
+    if (!account) {
+      setShowLogInModal(true);
+      return;
+    }
     try {
       setLoadingMessage(' ');
       const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
@@ -451,6 +455,10 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             </div>
           </div>
         }
+        {(isOpenExtraAction || isOpenRepostAction) && <div className={'backdrop'} onClick={() => {
+          setIsOpenExtraAction(false);
+          setIsOpenRepostAction(false);
+        }}></div>}
         <div className={styles.PostHeader}>
           <div className={styles.LeftPart}>
             <Link href={`/Profile/${props.post.author.address}`}>
@@ -468,7 +476,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                        <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                        <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
                         </PopupButton>
@@ -480,7 +488,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
                     {
                         isOpenExtraAction && (
-                            <PopupButton open={isOpenExtraAction} className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
+                            <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
                                   router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
@@ -521,7 +529,16 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                     }
                   </>
                 :
-                <img className={styles.EventIcon} src={executedEventIcon.src} alt="Executed Event"/>
+                props.post.name === 'ValueReceived' || props.post.name === 'UniversalReceiver' ?
+                  <img className={styles.EventIcon} src={receivedEventIcon.src} onClick={handleClick} alt="Received Event"/>
+                  :
+                  props.post.name === 'OwnershipTransferred' ?
+                    <img className={styles.EventIcon} src={ownershipTransferredEventIcon.src} onClick={handleClick} alt="Ownership transferred Event"/>
+                    :
+                    props.post.name === 'DataChanged' ?
+                    <img className={styles.EventIcon} src={dataChangedEventIcon.src} onClick={handleClick} alt="Data changed Event"/>
+                      :
+                    <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
               :
               <></>
           }
@@ -557,7 +574,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 <span>{props.post.reposts}</span>
                 {
                     isOpenRepostAction && (
-                        <PopupButton open={isOpenRepostAction} className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
+                        <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
                           <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
                             <img src={repostIcon.src} alt="Repost"/>
                             <span>Repost </span>

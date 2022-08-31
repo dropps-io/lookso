@@ -94,7 +94,10 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <>
-      { showMobileSearchBar && <div className='backdrop' onClick={() => setShowMobileSearchBar(false)}></div>}
+      { (showMobileSearchBar || showBurgerMenu) && <div className='backdrop' onClick={() => {
+        setShowMobileSearchBar(false);
+        setShowBurgerMenu(false);
+      }}></div>}
       <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
       <div className={styles.Navbar} data-testid="Navbar">
         <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
@@ -110,7 +113,7 @@ const Navbar: FC<NavbarProps> = () => {
           <SearchBar></SearchBar>
         </div>
         {
-          router.asPath === '/' || router.asPath === '' ? <></> : <Link href={'/'}><span className={styles.Title}>LOOKSO</span></Link>
+          router.asPath === '/' || router.asPath === '' ? <></> : <Link href={'/feed'}><span className={styles.Title}>LOOKSO</span></Link>
         }
         <ul className={styles.Buttons}>
           {

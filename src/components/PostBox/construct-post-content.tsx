@@ -56,11 +56,38 @@ const PostContent: FC<PostContentProps> = (props) => {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
             <ParamContent onClick={props.onClick} key={index} param={props.params[entry]}></ParamContent> :
-            <span key={index}>{entry}</span>
+            <PostText text={entry}/>
       )
       }
     </p>
   );
+}
+
+interface PostTextProps {
+  text: string,
+}
+
+const PostText = (props: PostTextProps) => {
+  return (
+    <>
+      {
+        props.text.split('\n').map((sentence, index) =>
+          <>
+            {
+              index !== 0 && <br/>
+            }
+            {
+              sentence.split(' ').map(word =>
+                word.match(/(< href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi) ?
+                  <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>:
+                  <span>{`${word} `}</span>
+              )
+            }
+          </>
+        )
+      }
+    </>
+  )
 }
 
 export default PostContent;

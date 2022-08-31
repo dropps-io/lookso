@@ -101,8 +101,8 @@
       cursor: pointer;
 
       img {
-        width: 25px;
-        height: 25px;
+        width: 100%;
+        height: 100%;
         cursor: pointer;
       }
 
@@ -315,15 +315,38 @@
       }
     }
   }
+
   .BoxBottom {
+    span {
+      font-size: 0.6em;
+    }
     .RightPart {
+      display: flex;
+      align-items: center;
       .SmileIcon {
+        width: 15px;
+        height: 15px;
+        margin-top: -5px;
         .EmojiPicker {
           margin-left: -100px;
         }
       }
+
+      .ImageUpload {
+        width: 15px;
+        height: 15px;
+        margin-top: -5px;
+      }
+
+      button {
+        margin-left: 20px;
+        padding: 0 10px;
+        height: 25px;
+        font-size: 0.7em;
+      }
     }
   }
+
 
   .Comment {
     .BoxTop {

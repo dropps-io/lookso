@@ -1,6 +1,5 @@
 import React, {FC, useState} from 'react';
 import styles from './Faq.module.scss';
-import {useRouter} from "next/router";
 
 interface FaqProps {
 }
@@ -9,7 +8,7 @@ const questions = [
     {
         title: 'What is LOOKSO?',
         response: "LOOKSO is a decentralized social media platform combining user generated content with blockchain events. An incredibly rich feed displaying on-chain Universal Profile activity, such as contract interactions and profile updates, side by side with user posts, comments and likes.<br><br>" +
-            "The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSP27 standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard."
+            "The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSPXX standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard."
     },
     {
         title: 'What happens to my posts and social activity (likes, follows, etc) if one day LOOKSO decides to shut down?',
@@ -56,9 +55,6 @@ const questions = [
 ]
 
 const Faq: FC<FaqProps> = () => {
-
-    const router = useRouter()
-
     const [foldQuestions, setFoldQuestions] = useState(new Array(questions.length).fill(true));
 
     const [numberOfQuestion, setNumberOfQuestion] = useState(questions.length / 2);
@@ -92,7 +88,7 @@ const Faq: FC<FaqProps> = () => {
                         return <div key={index}  className={`${styles.FaqQuestion} ${!foldQuestions[index] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index)}}>
                                 { question.title }
-                                { foldQuestions[index] ? <span>-</span> : <span>+</span> }
+                                { foldQuestions[index] ? <span>+</span> : <span>-</span> }
                             </h3>
                             <p onClick={(e) => contentClickHandler(e, index)} className={`${foldQuestions[index] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
@@ -105,7 +101,7 @@ const Faq: FC<FaqProps> = () => {
                         return <div key={index + numberOfQuestion}  className={`${styles.FaqQuestion} ${!foldQuestions[index + numberOfQuestion] ? styles.FaqQuestionFolded : ''}`}>
                             <h3 className={styles.FaqQuestionTitle} onClick={() => {foldQuestion(index + numberOfQuestion)}}>
                                 { question.title }
-                                { foldQuestions[index + numberOfQuestion] ? <span>-</span> : <span>+</span> }
+                                { foldQuestions[index + numberOfQuestion] ? <span>+</span> : <span>-</span> }
                             </h3>
                             <p onClick={(e) => contentClickHandler(e, index + numberOfQuestion)} className={`${foldQuestions[index + numberOfQuestion] ? styles.FaqResponseFolded : ''}`} dangerouslySetInnerHTML={{ __html: question.response }}/>
                         </div>;
