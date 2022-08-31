@@ -498,8 +498,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                               }
                               {
                                   router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
-                                    <span>Follow </span>
-                                    <UserTag username={props.post.author.name} address={props.post.author.address}/>
+                                    <span>Follow <UserTag username={props.post.author.name} address={props.post.author.address}/></span>
                                   </div>
                               }
                             </PopupButton>
