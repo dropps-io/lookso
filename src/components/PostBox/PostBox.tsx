@@ -6,6 +6,8 @@ import {EXPLORER_URL, IPFS_GATEWAY, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from ".
 import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import receivedEventIcon from "../../assets/icons/events/received.png";
+import dataChangedEventIcon from "../../assets/icons/events/data-changed.png";
+import ownershipTransferredEventIcon from "../../assets/icons/events/transfer-ownership.png";
 import commentIcon from "../../assets/icons/comment.svg";
 import repostIcon from "../../assets/icons/repost.svg";
 import repostComment from '../../assets/icons/repost_comment.svg'
@@ -530,7 +532,13 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                 props.post.name === 'ValueReceived' || props.post.name === 'UniversalReceiver' ?
                   <img className={styles.EventIcon} src={receivedEventIcon.src} onClick={handleClick} alt="Received Event"/>
                   :
-                  <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
+                  props.post.name === 'OwnershipTransferred' ?
+                    <img className={styles.EventIcon} src={ownershipTransferredEventIcon.src} onClick={handleClick} alt="Ownership transferred Event"/>
+                    :
+                    props.post.name === 'DataChanged' ?
+                    <img className={styles.EventIcon} src={dataChangedEventIcon.src} onClick={handleClick} alt="Data changed Event"/>
+                      :
+                    <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
               :
               <></>
           }
