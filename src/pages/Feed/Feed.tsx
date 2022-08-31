@@ -14,7 +14,6 @@ import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
 import {addToStoredFeed, setCurrentFeedFilter, setCurrentFeedTopPosition, setCurrentFeedType, setStoredFeed} from "../../store/feed-reducer";
 import {timer} from "../../core/utils/timer";
-import looksoBanner from "../../assets/images/lookso-banner.png";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -78,7 +77,7 @@ const Feed: FC<FeedProps> = (props) => {
   async function loadMorePosts(filter: 'all' | 'post' | 'event') {
     if (loading || fullyLoadedActivity) return;
     loading = true;
-    // console.log('Loading posts... from' + offset);
+    console.log('Loading posts... from' + offset);
     dispatch(setCurrentFeedFilter(filter));
     try {
       let newPosts: FeedPost[];
@@ -95,7 +94,7 @@ const Feed: FC<FeedProps> = (props) => {
       }
       setOffset(offset + newPosts.length);
 
-      // console.log('Loaded ' + newPosts.length + ' new posts');
+      console.log('Loaded ' + newPosts.length + ' new posts');
       dispatch(addToStoredFeed(newPosts));
       await timer(2000)
       loading = false;

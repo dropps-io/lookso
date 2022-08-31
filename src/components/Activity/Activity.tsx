@@ -57,7 +57,7 @@ const Activity: FC<ActivityProps> = (props) => {
         if (isScrolledIntoView(ref) && storedFilter) {
           setIsListening(!isListening);
           props.loadNext(router.asPath.includes('Profile') ? activeFilter : storedFilter);
-          await timer(1000);
+          await timer(4000);
           setIsListening(true);
         }
         if (props.onScroll) props.onScroll();

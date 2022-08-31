@@ -152,8 +152,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setLikes(props.post.likes);
     setIsLiked(props.post.isLiked);
 
-    console.log(props.post)
-
     if (props.isLiked) setIsLiked(props.isLiked)
   }, [props.post, props.isLiked]);
 
