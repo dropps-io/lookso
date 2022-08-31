@@ -138,6 +138,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [showLogInModal, setShowLogInModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
   // extra button with "Explore" | "Hide"
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
 
@@ -447,6 +448,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     <>
       <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={() => goTo('https://docs.lukso.tech/guides/browser-extension/install-browser-extension/')}/>
       <ActionModal open={showLogInModal} onClose={() => setShowLogInModal(false)} textToDisplay={'Please log in first'} btnText={'Log in'} callback={() => connectToWeb3()}/>
+      <ActionModal open={showWarningModal} onClose={() => setShowWarningModal(false)} textToDisplay={'Warning! The validator contract used on this post is not known by our platform. Send us an email at hello@dropps.io so we can verify it.'} btnText={'ok'} callback={() => setShowWarningModal(false)}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
@@ -511,7 +513,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             }
             {
              (props.post.type === 'post' && props.post.trusted !== undefined && !props.post.trusted) &&
-                <div className={styles.Warning}>
+                <div className={styles.Warning} onClick={() => setShowWarningModal(true)}>
                   <img src={warningIcon.src} alt=""/>
                 </div>
             }
