@@ -1,6 +1,5 @@
 import React, {FC, useState} from 'react';
 import styles from './Faq.module.scss';
-import {useRouter} from "next/router";
 
 interface FaqProps {
 }
@@ -9,7 +8,7 @@ const questions = [
     {
         title: 'What is LOOKSO?',
         response: "LOOKSO is a decentralized social media platform combining user generated content with blockchain events. An incredibly rich feed displaying on-chain Universal Profile activity, such as contract interactions and profile updates, side by side with user posts, comments and likes.<br><br>" +
-            "The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSP27 standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard."
+            "The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSPXX standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard."
     },
     {
         title: 'What happens to my posts and social activity (likes, follows, etc) if one day LOOKSO decides to shut down?',
