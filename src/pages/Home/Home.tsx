@@ -28,14 +28,14 @@ const Home: FC<HomeProps> = ()  => {
     <div className={styles.Home} data-testid="Home">
         <Head>
           <title>LOOKSO</title>
-          <meta name="twitter:card" content={'summary'}/>
+          <meta name="twitter:card" content={'summary_large_image'}/>
           <meta name="twitter:site" content="@lookso_io"/>
           <meta name="twitter:title" content={`LOOKSO`}/>
           <meta property='twitter:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='twitter:creator' content='@undeveloped'/>
           <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='og:title' content={`LOOKSO`}/>
-          <meta property='og:image' itemProp='image' content={looksoLogo.src}/>
+          <meta property='og:image' itemProp='image' content={'https://lookso.io/_next/static/media/lookso-banner.6b51eb2c.png'}/>
           <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
         </Head>
         <div className={styles.Content}>
