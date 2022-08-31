@@ -3,7 +3,7 @@ import styles from './Home.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import impactImage from "../../assets/images/impact-image.png";
 import impactImage2 from "../../assets/images/impact-image-2.png";
-import looksoBanner from "../../assets/images/lookso-banner.png";
+import looksoBanner21 from "../../assets/images/lookso-banner-2-1.png";
 import shape1 from "../../assets/images/shape1.png";
 import titleUnderline from "../../assets/images/title_underline.png";
 import layerHeadlines from "../../assets/images/layer-headlines.png";
@@ -35,7 +35,7 @@ const Home: FC<HomeProps> = ()  => {
           <meta property='twitter:creator' content='@undeveloped'/>
           <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='og:title' content={`LOOKSO`}/>
-          <meta property='og:image' itemProp='image' content={looksoBanner.src}/>
+          <meta property='og:image' itemProp='image' content={looksoBanner21.src}/>
           <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
         </Head>
         <div className={styles.Content}>
