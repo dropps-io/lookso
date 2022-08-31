@@ -8,6 +8,7 @@ import {InferGetServerSidePropsType} from "next";
 import {FeedPost, initialFeedPost} from "../../components/PostBox/PostBox";
 import {formatUrl} from "../../core/utils/url-formating";
 import {getTextPostContent} from "../../components/PostBox/get-text-post-content";
+import looksoLogo from "../../assets/images/lookso_logo.png";
 
 export const getServerSideProps = async ({ query }:any) => {
   try {
@@ -39,7 +40,7 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
         <meta property='twitter:creator' content='@undeveloped' />
         <meta name='description' content={description} />
         <meta property='og:title' content={`${post.type === 'event' ? 'Event' : 'Post'} from ${userTag} | Lookso`} />
-        <meta property='og:image' content={formatUrl(post.display.image) || formatUrl(post.author.image)} />
+        <meta property='og:image' content={formatUrl(post.display.image) || formatUrl(post.author.image) || looksoLogo.src} />
         <meta property='og:description' content={description} />
       </Head>
       <Post post={post} hash={hash as string}></Post>
