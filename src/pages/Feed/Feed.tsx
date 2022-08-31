@@ -25,6 +25,7 @@ const Feed: FC<FeedProps> = (props) => {
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
   const storedFeed = useSelector((state: RootState) => state.feed.feed);
   const storedFeedCurrentType = useSelector((state: RootState) => state.feed.currentType);
+  const storedFeedCurrentFilter = useSelector((state: RootState) => state.feed.currentFilter);
   const storedFeedCurrentTopPosition = useSelector((state: RootState) => state.feed.currentTopPosition);
   const [feed, setFeed] = useState<FeedPost[]>([])
   const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
@@ -157,7 +158,7 @@ const Feed: FC<FeedProps> = (props) => {
             <></>
         }
         {
-          props.type === 'Feed' && account && fullyLoadedActivity && feed.length === 0 ?
+          props.type === 'Feed' && account && fullyLoadedActivity && feed.length === 0 && store && storedFeedCurrentFilter !== 'post' ?
             <div className={styles.NoFollowing}>
               <p>It seems you don’t follow any UP’s yet!</p>
               <span className={styles.Tip}>(tip: you can find new ones through our Explore section or use the search bar to find specific ones)</span>
@@ -172,7 +173,7 @@ const Feed: FC<FeedProps> = (props) => {
               newPost={handleNewPost}
               loadNext={(filter) => loadMorePosts(filter)}
               onUnfollow={handleUnfollow}
-              end={fullyLoadedActivity && feed.length > 0}
+              end={fullyLoadedActivity}
               onScroll={() => {
                 if (initialized && !needToScrollOnNextFeedChange) {
                   dispatch(setCurrentFeedTopPosition(window.scrollY))
