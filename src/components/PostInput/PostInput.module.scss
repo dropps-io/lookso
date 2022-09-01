@@ -88,6 +88,8 @@
         margin-left: -250px;
         display: none;
         color: black;
+        position: relative;
+        z-index: 10;
       }
 
       .ActivePicker {
@@ -329,8 +331,6 @@
         margin-top: -5px;
         .EmojiPicker {
           margin-left: -100px;
-          position: relative;
-          z-index: 10;
         }
       }
 
