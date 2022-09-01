@@ -329,6 +329,8 @@
         margin-top: -5px;
         .EmojiPicker {
           margin-left: -100px;
+          position: relative;
+          z-index: 10;
         }
       }
 
