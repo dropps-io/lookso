@@ -19,7 +19,7 @@ import {connectToAPI} from "../../../core/web3";
 import {setProfileJwt} from "../../../store/profile-reducer";
 
 interface FollowModalProps {
-  account: string,
+  address: string,
   connectedAccount: string,
   type: 'following' | 'followers',
   open: boolean,
@@ -49,8 +49,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
       loadProfiles();
     }
 
-    if(props.account && !initialized && props.open) init();
-  }, [props.open, props.account, web3, jwt]);
+    if(props.address && !initialized && props.open) init();
+  }, [props.open, props.address, web3, jwt]);
 
   function handleScroll() {
     if (ref.current && !loading && !fullyLoaded) {
@@ -67,8 +67,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     setLoading(true);
     let profiles: ProfileFollowingDisplay[] = [];
     try {
-      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.account, PROFILES_PER_LOAD, offset, props.connectedAccount);
-      if (props.type === 'following') profiles = await fetchProfileFollowing(props.account, PROFILES_PER_LOAD, offset, props.connectedAccount);
+      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
+      if (props.type === 'following') profiles = await fetchProfileFollowing(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
       if (profiles.length < PROFILES_PER_LOAD) setFullyLoaded(true);
       setOffset(offset + profiles.length);
       setProfiles(existing => existing.concat(profiles));
@@ -85,7 +85,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   }
 
   async function requestJWT() {
-    const resJWT = await connectToAPI(props.account, web3);
+    const resJWT = await connectToAPI(props.address, web3);
     if (resJWT) {
       dispatch(setProfileJwt(resJWT));
       return resJWT;
@@ -103,8 +103,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any = await insertFollow(props.account, address, headersJWT);
-        props.onFollowChange(props.type, 1);
+        const res: any = await insertFollow(props.connectedAccount, address, headersJWT);
+        if (props.address === props.connectedAccount) props.onFollowChange(props.type, 1);
         if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
@@ -127,8 +127,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any = await insertUnfollow(props.account, address, headersJWT);
-        props.onFollowChange(props.type, -1);
+        const res: any = await insertUnfollow(props.connectedAccount, address, headersJWT);
+        if (props.address === props.connectedAccount) props.onFollowChange(props.type, -1);
         if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
@@ -170,10 +170,11 @@ const FollowModal: FC<FollowModalProps> = (props) => {
                   <span onClick={() => goToProfile(profile.address)} className={styles.NotificationText}><UserTag username={profile.name} address={profile.address}/></span>
                 </div>
                 {
-                  profile.following ?
+                  props.connectedAccount &&
+                  (profile.following ?
                     <button onClick={() => unfollowUser(profile.address)} className={`btn btn-secondary-no-fill`}>Following</button>
                     :
-                    <button onClick={() => followUser(profile.address)} className={`btn btn-secondary`}>Follow</button>
+                    <button onClick={() => followUser(profile.address)} className={`btn btn-secondary`}>Follow</button>)
                 }
               </div>
             ) :
