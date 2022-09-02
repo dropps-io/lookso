@@ -113,7 +113,7 @@ const Navbar: FC<NavbarProps> = () => {
           <SearchBar></SearchBar>
         </div>
         {
-          router.asPath === '/' || router.asPath === '' ? <></> : <Link href={'/feed'}><span className={styles.Title}>LOOKSO</span></Link>
+          router.asPath === '/' || router.asPath === '' ? <></> : <Link href={ account ? '/feed' : '/explore'}><span className={styles.Title}>LOOKSO</span></Link>
         }
         <ul className={styles.Buttons}>
           {
