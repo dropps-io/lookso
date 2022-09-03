@@ -9,18 +9,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 interface SearchResultsProps {
   profiles: ProfileDisplay[],
-  onClose: () => void,
+  onClose: (profile?: ProfileDisplay) => void,
   open: boolean,
   loading: boolean
 }
 
 const SearchResults: FC<SearchResultsProps> = (props) => {
-  const router = useRouter();
-
-  function goToProfile(account: string) {
-    router.push('/Profile/' + account);
-    props.onClose();
-  }
 
   return (
     <div className={`${styles.SearchResults} ${!props.open ? styles.Inactive : ''}`} data-testid="SearchResults">
@@ -32,7 +26,7 @@ const SearchResults: FC<SearchResultsProps> = (props) => {
           :
           props.profiles.length > 0 ?
             props.profiles.map(profile =>
-              <div key={profile.address} onClick={() => goToProfile(profile.address)} className={styles.ProfileDisplay}>
+              <div key={profile.address} onClick={() => props.onClose(profile)} className={styles.ProfileDisplay}>
                 <div className={styles.ProfileImgMedium} style={{backgroundImage: `url(${profile.image ? formatUrl(profile.image) : DEFAULT_PROFILE_IMAGE})`}}/>
                 <UserTag username={profile.name} address={profile.address}/>
               </div>

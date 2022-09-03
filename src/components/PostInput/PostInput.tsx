@@ -8,7 +8,7 @@ import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
 import {LSPXXProfilePost} from "../../models/profile-post";
-import {fetchPostObjectWithAsset, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api";
+import {fetchPostObjectWithAsset, searchProfiles, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api";
 import {connectToAPI, signMessage} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
@@ -17,6 +17,8 @@ import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import dynamic from "next/dynamic";
+import SearchResults from "../SearchResults/SearchResults";
+import {ProfileDisplay} from "../../models/profile";
 
 const Picker = dynamic(
   () => {
@@ -46,6 +48,9 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [inputFile, setInputFile] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showEmojiPicker , setShowEmojiPicker] = useState(false);
+  const [profileTaggingOn , setProfileTaggingOn] = useState(false);
+  const [profilesLoading, setProfilesLoading] = useState(false);
+  const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
 
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
@@ -155,8 +160,47 @@ const PostInput: FC<PostInputProps> = (props) => {
     }
   }
 
+  async function fetchProfiles(input: string) {
+    setProfilesLoading(true);
+    try {
+      setProfiles([]);
+      setProfiles(await searchProfiles(input, 5, 0));
+      setProfilesLoading(false);
+    } catch (e) {
+      setProfilesLoading(false);
+      console.error(e);
+    }
+  }
+
   function handleChangeMessage(e: any) {
     setInputValue(e.target.value);
+    handleTaggingInput(e.target.value);
+  }
+
+  function handleTaggingInput(input: string) {
+    const splitInput = input.split(' ');
+
+    if (profileTaggingOn && !splitInput[splitInput.length - 1].includes('@')) {
+      setProfileTaggingOn(false);
+      return;
+    }
+    else if (splitInput[splitInput.length - 1].includes('@')) setProfileTaggingOn(true);
+    else return;
+
+    if (splitInput[splitInput.length - 1] !== '@') fetchProfiles(splitInput[splitInput.length - 1].slice(1));
+  }
+
+  function handleTaggingClose(profile?: ProfileDisplay) {
+    if (!profile?.name) return;
+    setProfileTaggingOn(false);
+    const splitInput = inputValue.split(' ');
+    const newInput = inputValue.replace(splitInput[splitInput.length - 1], '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase());
+    if (postInput.current) {
+      postInput.current.value = newInput;
+      postInput.current.focus();
+    }
+    setInputValue(newInput);
+    textAreaAdjust();
   }
 
   function handleChangeFile(e: any) {
@@ -214,6 +258,12 @@ const PostInput: FC<PostInputProps> = (props) => {
                       onKeyUp={() => textAreaAdjust()}
                       name="textValue"
                       placeholder={props.childPost ? "Add comment" : props.parentHash ? "Add comment" : "What's happening?"}/>
+            {
+              (profileTaggingOn && (profiles.length > 0 || profilesLoading)) &&
+                <div className={styles.ProfileTagging}>
+                    <SearchResults profiles={profiles} onClose={handleTaggingClose} open={true} loading={profilesLoading}/>
+                </div>
+            }
             {
               inputFile ?
                 <div className={styles.InputImage}>
