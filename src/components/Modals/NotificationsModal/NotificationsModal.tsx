@@ -81,6 +81,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
                   {notification.type === 'follow' ? <span onClick={() => goToProfile(notification.sender.address)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>followed you</span></span> : <></>}
                   {notification.type === 'repost' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>reposted your post</span></span> : <></>}
                   {notification.type === 'comment' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>commented your post</span></span> : <></>}
+                  {notification.type === 'tag' ? <span onClick={() => goToPost(notification.postHash)} className={styles.NotificationText}><UserTag username={notification.sender.name} address={notification.sender.address}/> <span>tagged you in a post</span></span> : <></>}
                 </p>
               </div>
             ) :

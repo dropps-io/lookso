@@ -6,7 +6,7 @@ export interface Notification {
     image: string,
   },
   date: Date,
-  type: 'like' | 'follow' | 'comment' | 'repost',
+  type: 'like' | 'follow' | 'comment' | 'repost' | 'tag',
   viewed: boolean,
   postHash?: string
 }
