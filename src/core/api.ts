@@ -94,6 +94,12 @@ export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
   else throw await res.json();
 }
 
+export async function fetchAddressFromUserTag(username: string, digits: string): Promise<string> {
+  const res = await fetch(API_URL + '/lookso/profile/' + username + '/' + digits);
+  if (res.ok) return (await res.json()).address;
+  else throw await res.json();
+}
+
 export async function fetchProfileFollowingCount(address: string): Promise<number> {
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/following/count')).json()).following;
 }

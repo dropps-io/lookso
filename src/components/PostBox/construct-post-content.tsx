@@ -3,6 +3,9 @@ import {FeedDisplayParam} from "./PostBox";
 import styles from './PostBox.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
 import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
+import {USER_TAG_REGEX} from "../../core/utils/constants";
+import {fetchAddressFromUserTag} from "../../core/api";
+import {useRouter} from "next/router";
 
 interface ParamContentProps {
   param: FeedDisplayParam,
@@ -68,6 +71,14 @@ interface PostTextProps {
 }
 
 const PostText = (props: PostTextProps) => {
+  const router = useRouter();
+
+  async function goToProfile(userTag: string) {
+    const splitUserTag = userTag.replace('@', '').split('#');
+    const address = await fetchAddressFromUserTag(splitUserTag[0], splitUserTag[1]);
+    await router.push('/Profile/' + address);
+  }
+
   return (
     <>
       {
@@ -79,8 +90,18 @@ const PostText = (props: PostTextProps) => {
             {
               sentence.split(' ').map(word =>
                 word.match(/(< href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi) ?
-                  <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>:
-                  <span>{`${word} `}</span>
+                  <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>
+                  :
+                  word.match(USER_TAG_REGEX) ?
+                    <span>
+                      <span onClick={() => goToProfile(word)} className={styles.ProfileTagged}>
+                        {word.split('#')[0]}
+                        <span className={styles.Digits}>#{word.split('#')[1]}</span>
+                      </span>
+                        {` `}
+                    </span>
+                    :
+                    <span>{`${word} `}</span>
               )
             }
           </>

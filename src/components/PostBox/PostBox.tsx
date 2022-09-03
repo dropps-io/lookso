@@ -299,13 +299,19 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     const el: HTMLElement = e.target as HTMLElement;
 
+    console.log(el.className)
+
     if (value) {
       if(el.className.includes('UserTag')) goToProfile(value);
       else if(el.className.includes('AssetTag') || el.id === 'name') goToAddress(value);
       else if(el.className.includes('Address')) goToAddress(value)
       else if(el.className.includes('Bytes32')) copy(value);
       else goToPost()
-    } else if (!el.className.includes('Link') && !el.className.includes('PostImage') && !el.className.includes('EventImage')) {
+    } else if (!el.className.includes('Link')
+      && !el.className.includes('PostImage')
+      && !el.className.includes('EventImage')
+      && !el.className.includes('ProfileTagged')
+    ) {
       goToPost();
     }
 
