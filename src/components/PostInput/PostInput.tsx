@@ -193,7 +193,8 @@ const PostInput: FC<PostInputProps> = (props) => {
     if (!profile?.name) return;
     setProfileTaggingOn(false);
     const splitInput = inputValue.split(/[\n\r\s]+/);
-    const newInput = inputValue.replace(splitInput[splitInput.length - 1], '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase());
+    let newInput = inputValue.slice(0, inputValue.length - splitInput[splitInput.length - 1].length);
+    newInput += '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase();
     if (postInput.current) {
       postInput.current.value = newInput;
       postInput.current.focus();
