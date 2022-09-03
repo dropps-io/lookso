@@ -178,28 +178,28 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   function handleTaggingInput(input: string) {
-    const splitInput = input.split(' ');
+    const splitInput = input.split(/[\n\r\s]+/);
 
     if (profileTaggingOn && !splitInput[splitInput.length - 1].includes('@')) {
       setProfileTaggingOn(false);
       return;
     }
     else if (splitInput[splitInput.length - 1].includes('@')) setProfileTaggingOn(true);
-    else return;
 
-    if (splitInput[splitInput.length - 1] !== '@') fetchProfiles(splitInput[splitInput.length - 1].slice(1));
+    if (profileTaggingOn && splitInput[splitInput.length - 1] !== '@') fetchProfiles(splitInput[splitInput.length - 1].slice(1));
   }
 
   function handleTaggingClose(profile?: ProfileDisplay) {
     if (!profile?.name) return;
     setProfileTaggingOn(false);
-    const splitInput = inputValue.split(' ');
+    const splitInput = inputValue.split(/[\n\r\s]+/);
     const newInput = inputValue.replace(splitInput[splitInput.length - 1], '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase());
     if (postInput.current) {
       postInput.current.value = newInput;
       postInput.current.focus();
     }
     setInputValue(newInput);
+    setProfiles([]);
     textAreaAdjust();
   }
 
@@ -242,6 +242,7 @@ const PostInput: FC<PostInputProps> = (props) => {
 
   return (
     <>
+      {(profileTaggingOn && (profiles.length > 0 || profilesLoading)) && <div className={'backdrop'} onClick={() => setProfileTaggingOn(false)}></div>}
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
         <div className={`${styles.BoxTop}`}>
