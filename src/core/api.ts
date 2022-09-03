@@ -2,7 +2,6 @@ import {API_URL} from "../environment/endpoints";
 import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
-import {fileToBase64} from "./utils/file-to-base64";
 import {ProfileDisplay, ProfileFollowingDisplay, ProfileInfo} from "../models/profile";
 
 const headers = {
@@ -90,7 +89,7 @@ export async function fetchIsLikedPost(sender: string, postHash: string): Promis
 
 
 export async function fetchProfileInfo(address: string): Promise<ProfileInfo> {
-  const res = await fetch(API_URL + '/lookso/profile/' + address + '/info');
+  const res = await fetch(API_URL + '/lookso/profile/' + address);
   if (res.ok) return await res.json();
   else throw await res.json();
 }
