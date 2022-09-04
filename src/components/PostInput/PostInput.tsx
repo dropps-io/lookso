@@ -197,7 +197,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   function handleTaggingClose(profile?: ProfileDisplay) {
     if (!profile?.name) return;
     setProfiles([]);
-    const newInput = inputValue.replace(new RegExp(`@${tagInput}(?!\\S)`), '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase())
+    const newInput = inputValue.replace(new RegExp(`@${tagInput}(?!\\S)`), '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase()) + ' ';
     if (postInput.current) {
       postInput.current.value = newInput;
       postInput.current.focus();
