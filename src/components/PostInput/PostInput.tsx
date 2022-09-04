@@ -164,7 +164,8 @@ const PostInput: FC<PostInputProps> = (props) => {
     setProfilesLoading(true);
     try {
       setProfiles([]);
-      setProfiles(await searchProfiles(input, 5, 0));
+      const profiles = await searchProfiles(input, 5, 0);
+      if (tagInput) setProfiles(profiles);
       setProfilesLoading(false);
     } catch (e) {
       setProfilesLoading(false);
@@ -178,20 +179,28 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   function handleTaggingInput(newInput: string) {
-    const splitInput = inputValue.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*/mg);
-    const splitNewInput = newInput.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*/mg);
-
+    const splitInput = inputValue.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*(?!\S)/mg);
+    const splitNewInput = newInput.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*(?!\S)/mg);
 
     if (splitInput && splitNewInput) {
+      let isTagging = false;
       for (let i = 0 ; i < splitInput.length ; i++) {
-        if (splitInput[i] !== splitNewInput[i]) {
-          setTagInput(splitNewInput[i].replace('@', ''));
+        if (splitInput[i] !== splitNewInput[i] && splitNewInput[i] !== '@') {
+          const newTagInput = splitNewInput[i].replace('@', '');
+          setTagInput(newTagInput);
+          searchTagProfiles(newTagInput);
+          isTagging = true;
           break;
         }
       }
+      if (!isTagging) {
+        setProfiles([]);
+        setTagInput('');
+      }
+    } else {
+      setProfiles([]);
+      setTagInput('');
     }
-
-    if (tagInput) searchTagProfiles(tagInput);
   }
 
   function handleTaggingClose(profile?: ProfileDisplay) {
@@ -246,7 +255,10 @@ const PostInput: FC<PostInputProps> = (props) => {
 
   return (
     <>
-      {(profiles.length > 0 || profilesLoading) && <div className={'backdrop'} onClick={() => setProfiles([])}></div>}
+      {(profiles.length > 0 || profilesLoading) && <div className={'backdrop'} onClick={() => {
+        setProfiles([]);
+        setTagInput('');
+      }}></div>}
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
         <div className={`${styles.BoxTop}`}>
