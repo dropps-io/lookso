@@ -48,9 +48,9 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [inputFile, setInputFile] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showEmojiPicker , setShowEmojiPicker] = useState(false);
-  const [profileTaggingOn , setProfileTaggingOn] = useState(false);
   const [profilesLoading, setProfilesLoading] = useState(false);
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
+  const [tagInput, setTagInput] = useState('');
 
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
@@ -160,7 +160,7 @@ const PostInput: FC<PostInputProps> = (props) => {
     }
   }
 
-  async function fetchProfiles(input: string) {
+  async function searchTagProfiles(input: string) {
     setProfilesLoading(true);
     try {
       setProfiles([]);
@@ -173,34 +173,37 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   function handleChangeMessage(e: any) {
-    setInputValue(e.target.value);
     handleTaggingInput(e.target.value);
+    setInputValue(e.target.value);
   }
 
-  function handleTaggingInput(input: string) {
-    const splitInput = input.split(/[\n\r\s]+/);
+  function handleTaggingInput(newInput: string) {
+    const splitInput = inputValue.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*/mg);
+    const splitNewInput = newInput.split(/@[A-Za-z0-9\.\-\_]+#[A-Za-z0-9]{4}/mg).join('').match(/@[0-9a-z-A-Z\.\-\_]*/mg);
 
-    if (profileTaggingOn && !splitInput[splitInput.length - 1].includes('@')) {
-      setProfileTaggingOn(false);
-      return;
+
+    if (splitInput && splitNewInput) {
+      for (let i = 0 ; i < splitInput.length ; i++) {
+        if (splitInput[i] !== splitNewInput[i]) {
+          setTagInput(splitNewInput[i].replace('@', ''));
+          break;
+        }
+      }
     }
-    else if (splitInput[splitInput.length - 1].includes('@')) setProfileTaggingOn(true);
 
-    if (profileTaggingOn && splitInput[splitInput.length - 1] !== '@') fetchProfiles(splitInput[splitInput.length - 1].slice(1));
+    if (tagInput) searchTagProfiles(tagInput);
   }
 
   function handleTaggingClose(profile?: ProfileDisplay) {
     if (!profile?.name) return;
-    setProfileTaggingOn(false);
-    const splitInput = inputValue.split(/[\n\r\s]+/);
-    let newInput = inputValue.slice(0, inputValue.length - splitInput[splitInput.length - 1].length);
-    newInput += '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase();
+    setProfiles([]);
+    const newInput = inputValue.replace(new RegExp(`@${tagInput}(?!\\S)`), '@' + profile.name + '#' + profile.address.slice(2, 6).toUpperCase())
     if (postInput.current) {
       postInput.current.value = newInput;
       postInput.current.focus();
     }
     setInputValue(newInput);
-    setProfiles([]);
+    setTagInput('');
     textAreaAdjust();
   }
 
@@ -243,7 +246,7 @@ const PostInput: FC<PostInputProps> = (props) => {
 
   return (
     <>
-      {(profileTaggingOn && (profiles.length > 0 || profilesLoading)) && <div className={'backdrop'} onClick={() => setProfileTaggingOn(false)}></div>}
+      {(profiles.length > 0 || profilesLoading) && <div className={'backdrop'} onClick={() => setProfiles([])}></div>}
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
         <div className={`${styles.BoxTop}`}>
@@ -261,7 +264,7 @@ const PostInput: FC<PostInputProps> = (props) => {
                       name="textValue"
                       placeholder={props.childPost ? "Add comment" : props.parentHash ? "Add comment" : "What's happening?"}/>
             {
-              (profileTaggingOn && (profiles.length > 0 || profilesLoading)) &&
+              (profiles.length > 0 || profilesLoading) &&
                 <div className={styles.ProfileTagging}>
                     <SearchResults profiles={profiles} onClose={handleTaggingClose} open={true} loading={profilesLoading}/>
                 </div>
