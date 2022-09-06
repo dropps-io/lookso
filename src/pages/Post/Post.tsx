@@ -38,11 +38,10 @@ const Post: FC<PostProps> = (props) => {
       setFullyLoadedComments(false);
       setIsLiking(false);
       setComments([]);
-      if (account && !isLiking) {
-        const isLiking = await fetchIsLikedPost(account, props.hash);
-        if (isLiking) {
-          setIsLiking(true);
-        }
+
+      const isLiking = await fetchIsLikedPost(account ? account : '', props.hash);
+      if (isLiking) {
+        setIsLiking(true);
       }
 
       const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, 0, account);
@@ -53,12 +52,12 @@ const Post: FC<PostProps> = (props) => {
       if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
       setOffset(comments.length);
       setComments(comments);
-      await timer(500);
+      await timer(1000);
       setInitialized(false);
     }
 
-    if(props.hash && !initialized) init();
-  }, [props.hash]);
+    if (props.hash && !initialized && typeof account === 'string') init();
+  }, [account]);
 
   function newComment(comment: FeedPost) {
     setComments(existing => [comment].concat(existing));
@@ -86,7 +85,7 @@ const Post: FC<PostProps> = (props) => {
               </div>
           }
           <div className={styles.Separator}></div>
-          <Comments account={account} feed={comments} loadNext={loadMoreComments}/>
+          <Comments account={account ? account : ''} feed={comments} loadNext={loadMoreComments}/>
           {(!fullyLoadedComments) && <div className={styles.NoComments}><CircularProgress size={60}/></div>}
           {(fullyLoadedComments && comments.length === 0) &&
           <div className={styles.NoComments}>

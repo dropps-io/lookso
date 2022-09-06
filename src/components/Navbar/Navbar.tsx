@@ -32,7 +32,7 @@ const Navbar: FC<NavbarProps> = () => {
   const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [showUpInstallationModal, setShowUpInstallationModal] = useState(false);
   const [notificationsCount, setNotificationsCount] = useState(0);
-  const account: string = useSelector((state: RootState) => state.web3.account);
+  const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const balance: string = useSelector((state: RootState) => state.web3.balance);
   const username: string = useSelector((state: RootState) => state.profile.name);
   const profileImage: string = useSelector((state: RootState) => state.profile.profileImage);
@@ -43,6 +43,7 @@ const Navbar: FC<NavbarProps> = () => {
       web3Info = await connectWeb3();
     } catch (e: any) {
       console.error(e.message);
+      dispatch(setAccount(''));
       if ((e.message as string).includes('Provider')) setShowUpInstallationModal(true);
       return;
     }
@@ -100,7 +101,7 @@ const Navbar: FC<NavbarProps> = () => {
       }}></div>}
       <ActionModal open={showUpInstallationModal} onClose={() => setShowUpInstallationModal(false)} textToDisplay={'Universal Profile not detected'} btnText={'Go to docs.lukso.tech'} callback={goToUpInstallationGuide}/>
       <div className={styles.Navbar} data-testid="Navbar">
-        <NotificationsModal account={account} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
+        <NotificationsModal account={account ? account : ''} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
         <Link href='/'>
           <div className={styles.Logo}>
             <img src={logo.src} alt="Logo"/>

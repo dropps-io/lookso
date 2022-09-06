@@ -30,6 +30,7 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
       dispatch(setProfileInfo(web3Info.profileInfo));
       requestJWT(web3Info.account, web3Info.web3)
     } catch (e) {
+      dispatch(setAccount(''));
     }
     dispatch(setInitialized(true));
     await listenChanges();

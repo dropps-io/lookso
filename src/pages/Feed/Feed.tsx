@@ -21,7 +21,7 @@ interface FeedProps {
 
 const Feed: FC<FeedProps> = (props) => {
   const dispatch = useDispatch();
-  const account = useSelector((state: RootState) => state.web3.account);
+  const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const web3Initialized = useSelector((state: RootState) => state.web3.initialized);
   const storedFeed = useSelector((state: RootState) => state.feed.feed);
   const storedFeedCurrentType = useSelector((state: RootState) => state.feed.currentType);
@@ -82,7 +82,7 @@ const Feed: FC<FeedProps> = (props) => {
     try {
       let newPosts: FeedPost[];
       if (account && props.type === 'Feed') {
-        newPosts = await fetchProfileFeed(store.getState().web3.account, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
+        newPosts = await fetchProfileFeed(account, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter);
       } else {
         newPosts = await fetchAllFeed(POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, account);
       }

@@ -126,7 +126,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const account = useSelector((state: RootState) => state.web3.account);
+  const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
@@ -156,7 +156,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }, [props.post, props.isLiked]);
 
   async function requestJWT() {
-    const resJWT = await connectToAPI(account, web3);
+    const resJWT = await connectToAPI(account ? account : '', web3);
     if (resJWT) {
       dispatch(setProfileJwt(resJWT));
       return resJWT;
@@ -182,7 +182,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       }
 
       try {
-        const res: any = await insertLike(account, props.post.hash, headersJWT);
+        console.log(account ? account : '')
+        const res: any = await insertLike(account ? account : '', props.post.hash, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         console.error(e);
@@ -204,9 +205,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account, _jwt)).jsonUrl
-      await updateRegistry(account, JSONURL, web3);
-      await setNewRegistryPostedOnProfile(account, _jwt);
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account ? account : '', _jwt)).jsonUrl
+      await updateRegistry(account ? account : '', JSONURL, web3);
+      await setNewRegistryPostedOnProfile(account ? account : '', _jwt);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');
@@ -255,7 +256,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       web3Info = await connectWeb3();
     } catch (e: any) {
       console.error(e.message);
-      if ((e.message as string).includes('Provider')) {
+      dispatch(setAccount(''));
+      if ((e.message as string).includes('Provider')) { // Error when no provider extension found (metamask, up browser extension...)
         setShowUpInstallationModal(true);
         setShowLogInModal(false)
       }
@@ -332,7 +334,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
         headersJWT = await requestJWT();
       }
       try {
-        const res: any  = await insertUnfollow(account, address, headersJWT);
+        const res: any  = await insertUnfollow(account ? account : '', address, headersJWT);
         if (props.onUnfollow) props.onUnfollow(address);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
@@ -354,7 +356,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
         headersJWT = await requestJWT();
       }
       try {
-        const res: any  = await insertFollow(account, address, headersJWT);
+        const res: any  = await insertFollow(account ? account : '', address, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         if (e.message.includes('registry')) {
@@ -381,7 +383,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }
     try {
       setLoadingMessage(' ');
-      const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
+      const author: UniversalProfile = new UniversalProfile(account ? account : '', IPFS_GATEWAY, web3);
       const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
 
 
@@ -393,7 +395,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       let post: LSPXXProfilePost = {
         version: '0.0.1',
         message: '',
-        author: account,
+        author: account ? account : '',
         validator: POST_VALIDATOR_ADDRESS,
         nonce: Math.floor(Math.random() * 1000000000).toString(),
         links: [],
@@ -403,19 +405,19 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       const resJWT = jwt ? jwt : await requestJWT();
 
       setLoadingMessage('Please sign your post');
-      const signedMessage = await signMessage(account, JSON.stringify(post), web3);
+      const signedMessage = await signMessage(account ? account : '', JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
       const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
-      const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account, resJWT);
+      const receipt = await updateRegistryWithPost(account ? account : '', postUploaded.postHash, postUploaded.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(account ? account : '', resJWT);
 
       if (props.newRepost) {
         props.newRepost({
           date: new Date(),
           author: {
-            address: account,
+            address: account ? account : '',
             name: username,
             image: profileImage
           },

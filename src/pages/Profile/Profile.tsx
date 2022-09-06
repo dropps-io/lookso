@@ -44,9 +44,12 @@ interface ProfileProps {
 
 const Profile: FC<ProfileProps> = (props) => {
   const dispatch = useDispatch();
+  const accountSelector = useSelector((state: RootState) => state.web3.account);
 
   const connected = {
-    account: useSelector((state: RootState) => state.web3.account),
+    account: (): string => {
+      return accountSelector ? accountSelector : '';
+    },
     username: useSelector((state: RootState) => state.profile.name),
     profileImage: useSelector((state: RootState) => state.profile.profileImage),
     backgroundImage: useSelector((state: RootState) => state.profile.backgroundImage),
@@ -84,7 +87,7 @@ const Profile: FC<ProfileProps> = (props) => {
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
-      if (connected.account === props.address) {
+      if (connected.account() === props.address) {
       } else if (props.address && props.address.length === 42) {
         await initProfile();
       } else {
@@ -93,14 +96,14 @@ const Profile: FC<ProfileProps> = (props) => {
     }
 
     async function initProfile() {
-      setIsFollowing(await fetchIsProfileFollower(props.address, connected.account));
+      setIsFollowing(await fetchIsProfileFollower(props.address, connected.account()));
     }
 
     initPageData();
-  }, [props.address, connected.account]);
+  }, [props.address, connected.account()]);
 
   async function requestJWT() {
-    const resJWT = await connectToAPI(connected.account, web3);
+    const resJWT = await connectToAPI(connected.account(), web3);
     if (resJWT) {
       dispatch(setProfileJwt(resJWT));
       return resJWT;
@@ -127,7 +130,7 @@ const Profile: FC<ProfileProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any = await insertFollow(connected.account, props.address, headersJWT);
+        const res: any = await insertFollow(connected.account(), props.address, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setIsFollowing(false);
@@ -151,7 +154,7 @@ const Profile: FC<ProfileProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any  = await insertUnfollow(connected.account, props.address, headersJWT);
+        const res: any  = await insertUnfollow(connected.account(), props.address, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setIsFollowing(true);
@@ -170,9 +173,9 @@ const Profile: FC<ProfileProps> = (props) => {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account, _jwt)).jsonUrl
-      await updateRegistry(connected.account, JSONURL, web3);
-      await setNewRegistryPostedOnProfile(connected.account, _jwt);
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), _jwt)).jsonUrl
+      await updateRegistry(connected.account(), JSONURL, web3);
+      await setNewRegistryPostedOnProfile(connected.account(), _jwt);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');
@@ -189,7 +192,7 @@ const Profile: FC<ProfileProps> = (props) => {
     // console.log('Loading new posts from offset ' + offset);
     try {
       loading = true;
-      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account);
+      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account());
       newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
       setFeed((existing: FeedPost[]) => existing.concat(newPosts));
       if (newPosts.length === 0) setFullyLoadedActivity(true);
@@ -207,7 +210,7 @@ const Profile: FC<ProfileProps> = (props) => {
   async function fetchPosts(filter: 'all' | 'post' | 'event') {
     setFeedLoading(true);
     setFeed([]);
-    const newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account);
+    const newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account());
     setFullyLoadedActivity(false);
     setOffset(newPosts.length);
     setFeed(newPosts);
@@ -227,7 +230,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   function shareOnTwitter() {
     setIsOpenExtraAction(false);
-    const content: string = `Checkout ${connected.account === props.address ? 'my' : 'this'} Universal Profile on @lookso_io! \n\n${WEBSITE_URL}/Profile/${props.address}`
+    const content: string = `Checkout ${connected.account() === props.address ? 'my' : 'this'} Universal Profile on @lookso_io! \n\n${WEBSITE_URL}/Profile/${props.address}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
   }
 
@@ -244,8 +247,8 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <ActionModal open={isOpenFeatureSoonModal} onClose={() => setIsOpenFeatureSoonModal(false)} textToDisplay={"Sorry, this functionality will be added soon!"} btnText={"Close"} callback={() => setIsOpenFeatureSoonModal(false)}/>
-      <FollowModal connectedAccount={connected.account} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
-      <FollowModal connectedAccount={connected.account} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
@@ -276,7 +279,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
                 <div className={styles.ProfileButtons}>
                   {
-                    (connected.account && props.address !== connected.account) ?
+                    (connected.account() && props.address !== connected.account()) ?
                       isFollowing ?
                         <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button> :
                         <button onClick={followUser} className={'btn btn-secondary'}>Follow</button>
@@ -316,7 +319,7 @@ const Profile: FC<ProfileProps> = (props) => {
           </div>
               <div className={styles.ProfileButtons}>
                 {
-                  connected.account && props.address !== connected.account ?
+                  connected.account() && props.address !== connected.account() ?
                     isFollowing ?
                     <button onClick={unfollowUser} className={'btn btn-secondary-no-fill'}>Following</button>
                     :

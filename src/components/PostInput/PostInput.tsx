@@ -36,12 +36,16 @@ interface PostInputProps {
 const PostInput: FC<PostInputProps> = (props) => {
   const dispatch = useDispatch();
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
-  const account = useSelector((state: RootState) => state.web3.account);
+  const accountSelector: string | undefined = useSelector((state: RootState) => state.web3.account);
   const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const imageInput = createRef<HTMLInputElement>();
   const postInput = React.useRef<HTMLTextAreaElement>(null);
+
+  const account = (): string => {
+    return accountSelector ? accountSelector : '';
+  }
 
   const [inputHeight, setInputHeight] = useState(70);
   const [inputValue, setInputValue] = useState('');
@@ -56,7 +60,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   useOutsideAlerter(wrapperRef);
 
   async function requestJWT() {
-    const resJWT = await connectToAPI(account, web3);
+    const resJWT = await connectToAPI(account(), web3);
     if (resJWT) {
       dispatch(setProfileJwt(resJWT));
       return resJWT;
@@ -89,7 +93,7 @@ const PostInput: FC<PostInputProps> = (props) => {
     setShowEmojiPicker(false);
     try {
       setLoadingMessage(' ');
-      const author: UniversalProfile = new UniversalProfile(account, IPFS_GATEWAY, web3);
+      const author: UniversalProfile = new UniversalProfile(account(), IPFS_GATEWAY, web3);
       const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
 
 
@@ -101,7 +105,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       let post: LSPXXProfilePost = {
         version: '0.0.1',
         message: inputValue,
-        author: account,
+        author: account(),
         validator: POST_VALIDATOR_ADDRESS,
         nonce: Math.floor(Math.random() * 1000000000).toString(),
         links: [],
@@ -115,18 +119,18 @@ const PostInput: FC<PostInputProps> = (props) => {
         post = await fetchPostObjectWithAsset(post, inputFile, resJWT);
       }
       setLoadingMessage('Please sign your post');
-      const signedMessage = await signMessage(account, JSON.stringify(post), web3);
+      const signedMessage = await signMessage(account(), JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
       const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
-      const receipt = await updateRegistryWithPost(account, postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account, resJWT);
+      const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
+      await setNewRegistryPostedOnProfile(account(), resJWT);
 
       props.onNewPost({
         date: new Date(),
         author: {
-          address: account,
+          address: account(),
           name: username,
           image: profileImage
         },

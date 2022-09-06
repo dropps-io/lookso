@@ -5,7 +5,7 @@ import {RPC} from "../environment/endpoints";
 
 export interface Web3State {
     web3: Web3,
-    account: string,
+    account?: string,
     networkId: number,
     balance: string,
     initialized: boolean
@@ -13,7 +13,7 @@ export interface Web3State {
 
 const initialState: Web3State = {
     web3: new Web3(RPC),
-    account: '',
+    account: undefined,
     networkId: 0,
     balance: '0',
     initialized: false
