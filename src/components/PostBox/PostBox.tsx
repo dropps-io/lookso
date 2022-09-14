@@ -240,6 +240,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   function openRepostModal() {
+    setIsOpenRepostAction(false);
     if (!account) setShowLogInModal(true);
     else setShowRepostModal(true);
   }
@@ -309,10 +310,19 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       else if(el.className.includes('Address')) goToAddress(value)
       else if(el.className.includes('Bytes32')) copy(value);
       else goToPost()
-    } else if (!el.className.includes('Link')
+    }
+    else if (el.className.includes('MoreOptions')) setIsOpenExtraAction(!isOpenExtraAction)
+    else if (el.className.includes('PostShare')) shareOnTwitter()
+    else if (el.className.includes('RepostIcon')) setIsOpenRepostAction(!isOpenRepostAction)
+    else if (el.className.includes('LikeIcon')) await likeOrUnlikePost()
+    else if (!el.className.includes('Link')
       && !el.className.includes('PostImage')
       && !el.className.includes('EventImage')
       && !el.className.includes('ProfileTagged')
+      && !el.className.includes('ProfileImageMedium')
+      && !el.className.includes('IconNumber')
+      && !el.className.includes('Explorer')
+      && !el.className.includes('RepostHandler')
     ) {
       goToPost();
     }
@@ -377,6 +387,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function createPost(childHash?: string) {
+    setIsOpenRepostAction(false);
     if (!account) {
       setShowLogInModal(true);
       return;
@@ -458,7 +469,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
-      <div ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${(props.comment) ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
+      <div onClick={handleClick} ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${(props.comment) ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
         {props.post.parentPost &&
           <div className={styles.ParentPost}>
             <div className={styles.Post}>
@@ -475,8 +486,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             <Link href={`/Profile/${props.post.author.address}`}>
               <div className={styles.ProfileImageMedium} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
             </Link>
-            <div className={styles.UserTag}>
-              <UserTag username={props.post.author.name} address={props.post.author.address} onClick={onClickProfile}/>
+            <div className={styles.UserTag} onClick={(e) => handleClick(e, props.post.author.address)}>
+              <UserTag username={props.post.author.name} address={props.post.author.address}/>
             </div>
           </div>
           <div className={styles.RightPart}>
@@ -484,11 +495,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             {
               props.post.author.address === account ?
                   <div className={styles.RightPartButton}>
-                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
+                    <span className={styles.MoreOptions} onClick={handleClick}>...</span>
                     {
                         isOpenExtraAction && (
                         <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
-                              <a onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
+                              <a className={styles.Explorer} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide</span>
                         </PopupButton>
                         )
@@ -496,11 +507,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                   </div>
                   :
                   <div className={styles.RightPartButton}>
-                    <span onClick={() => setIsOpenExtraAction(!isOpenExtraAction)}>...</span>
+                    <span className={styles.MoreOptions} onClick={handleClick}>...</span>
                     {
                         isOpenExtraAction && (
                             <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
-                              <a title={'Explorer'} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
+                              <a className={styles.Explorer} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
                                   router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
                                     <span>Unfollow </span>
@@ -533,7 +544,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             <div className={styles.PostTag}>{props.post.display.tags.standardType}</div>
             : <></>}
         </div>
-        <div onClick={handleClick} className={styles.PostContent}>
+        <div className={styles.PostContent}>
           {
             props.post.type === 'event' ?
               props.post.display.image ?
@@ -580,34 +591,34 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           <div className={styles.PostFooter}>
             <div></div>
             <div className={styles.PostActions}>
-              <div title={'Comment'} className={styles.IconNumber} onClick={() => openCommentModal(props.post.hash)}>
-                <img src={commentIcon.src} alt=""/>
-                <span>{props.post.comments}</span>
+              <div title={'Comment'} className={`${styles.IconNumber} ${styles.CommentIcon}`} onClick={handleClick}>
+                <img className={styles.CommentIcon} src={commentIcon.src} alt=""/>
+                <span className={styles.CommentIcon}>{props.post.comments}</span>
               </div>
-              <div title={'Repost'} className={styles.IconNumber}  onClick={() => setIsOpenRepostAction(!isOpenRepostAction)}>
-                <img src={repostIcon.src} alt=""/>
-                <span>{props.post.reposts}</span>
+              <div title={'Repost'} className={`${styles.IconNumber} ${styles.RepostIcon}`} onClick={handleClick}>
+                <img className={styles.RepostIcon} src={repostIcon.src} alt=""/>
+                <span className={styles.RepostIcon}>{props.post.reposts}</span>
                 {
                     isOpenRepostAction && (
                         <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
                           <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
-                            <img src={repostIcon.src} alt="Repost"/>
-                            <span>Repost </span>
+                            <img className={styles.RepostHandler} src={repostIcon.src} alt="Repost"/>
+                            <span className={styles.RepostHandler}>Repost </span>
                           </div>
                           <div onClick={() => openRepostModal()} className={styles.PopupButtonItem}>
-                            <img src={repostComment.src} alt="Repost"/>
-                            <span>Repost with comment </span>
+                            <img className={styles.RepostHandler} src={repostComment.src} alt="Repost"/>
+                            <span className={styles.RepostHandler}>Repost with comment </span>
                           </div>
                         </PopupButton>
                     )
                 }
               </div>
-              <div title={'Like'} onClick={() => likeOrUnlikePost()} className={styles.IconNumber}>
-                {isLiked ? <img src={heartFullIcon.src} alt=""/> : <img src={heartIcon.src} alt=""/>}
-                <span>{likes}</span>
+              <div title={'Like'} onClick={handleClick} className={`${styles.IconNumber} ${styles.LikeIcon}`}>
+                {isLiked ? <img className={styles.LikeIcon} src={heartFullIcon.src} alt=""/> : <img className={styles.LikeIcon} src={heartIcon.src} alt=""/>}
+                <span className={styles.LikeIcon}>{likes}</span>
               </div>
             </div>
-            <img title={'Share'} onClick={shareOnTwitter} className={styles.PostShare} src={shareIcon.src} alt=""/>
+            <img title={'Share'} onClick={handleClick} className={styles.PostShare} src={shareIcon.src} alt=""/>
           </div>
         }
       </div>

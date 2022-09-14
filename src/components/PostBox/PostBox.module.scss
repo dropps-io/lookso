@@ -4,6 +4,7 @@
   width: 100%;
   border-radius: 24px;
   color: var(--color-text-default);
+  cursor: pointer;
 
   .ParentPost {
     margin-bottom: 50px;
@@ -33,6 +34,10 @@
         margin-right: 10px;
         cursor: pointer;
       }
+      
+      .UserTag {
+        cursor: pointer;
+      }
     }
 
     .RightPart {
@@ -56,13 +61,19 @@
       position: relative;
       transform: translateY(-7.5px);
       z-index: 5;
-      & > span {
+      .MoreOptions {
         width: 40px;
         padding-bottom: 5px;
         border: none!important;
         font-size: 30px;
         padding-right: 20px;
         cursor: pointer;
+
+        .MoreActionPopup {
+          .Explorer {
+            position: relative;
+          }
+        }
       }
     }
   }
@@ -123,6 +134,14 @@
       width: 270px;
       max-width: 50%;
 
+      .RepostPopup {
+        .PopupButtonItem {
+          .RepostHandler {
+            position: relative;
+          }
+        }
+      }
+
       .IconNumber {
         position: relative;
         cursor: pointer;
@@ -139,6 +158,18 @@
           font-size: 14px;
           height: 18px;
         }
+      }
+
+      .CommentIcon {
+        position: relative;
+      }
+
+      .RepostIcon {
+        position: relative;
+      }
+
+      .LikeIcon {
+        position: relative;
       }
     }
 
