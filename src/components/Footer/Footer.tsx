@@ -19,7 +19,7 @@ const Footer: FC<FooterProps> = () => (
         <span>Made by <a href="https://dropps.io" target='_blank' rel={'noreferrer'}>DROPPS</a>,<br/>powered by LUKSO</span>
       </div>
       <div className={styles.FooterLinks}>
-          <a href={"https://discord.gg/GGJcvRw2uS"} target={"_blank"} rel={'noreferrer'}>
+          <a href={"https://discord.gg/2eDkpwbK9w"} target={"_blank"} rel={'noreferrer'}>
               <Image src={discordLogo.src} width={40} height={30} alt=""/>
           </a>
           <a href={"https://twitter.com/lookso_io"} target={"_blank"} rel={'noreferrer'}>

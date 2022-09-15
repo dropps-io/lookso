@@ -122,7 +122,7 @@ const Navbar: FC<NavbarProps> = () => {
               <></>
               :
               <>
-                <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                <li><a onClick={() => goTo('https://discord.gg/2eDkpwbK9w')}>Discord</a></li>
                 <li><a onClick={() => goTo('https://twitter.com/lookso_io')}>Twitter</a></li>
               </>
           }
@@ -181,7 +181,7 @@ const Navbar: FC<NavbarProps> = () => {
                   <></>
                   :
                   <>
-                    <li><a onClick={() => goTo('https://discord.gg/jW9gfSda')}>Discord</a></li>
+                    <li><a onClick={() => goTo('https://discord.gg/2eDkpwbK9w')}>Discord</a></li>
                     <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
                   </>
               }
