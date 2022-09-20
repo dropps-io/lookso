@@ -2,7 +2,7 @@ import React, {ForwardedRef, forwardRef, useEffect, useState} from 'react';
 import styles from './PostBox.module.scss';
 import Link from "next/link";
 import {formatUrl} from "../../core/utils/url-formating";
-import {EXPLORER_URL, IPFS_GATEWAY, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from "../../environment/endpoints";
+import {EXPLORER_URL, POST_VALIDATOR_ADDRESS, WEBSITE_URL} from "../../environment/endpoints";
 import {dateDifference} from "../../core/utils/date-difference";
 import executedEventIcon from "../../assets/icons/events/executed.png";
 import receivedEventIcon from "../../assets/icons/events/received.png";
@@ -41,6 +41,7 @@ import ExtendImage from "../ExtendImage/ExtendImage";
 import PopupButton from "../PopupButton/PopupButton";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {LSPXXProfilePost} from "../../models/profile-post";
+import {IPFS_GATEWAY} from "../../environment/constants";
 
 export interface FeedPost {
   hash: string,

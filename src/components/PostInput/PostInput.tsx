@@ -1,7 +1,7 @@
 import React, {createRef, FC, useEffect, useRef, useState} from 'react';
 import styles from './PostInput.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
-import {IPFS_GATEWAY, POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
+import {POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import imageIcon from '../../assets/icons/image.svg';
@@ -19,6 +19,7 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import dynamic from "next/dynamic";
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
+import {IPFS_GATEWAY} from "../../environment/constants";
 
 const Picker = dynamic(
   () => {
