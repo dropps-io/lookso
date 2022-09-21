@@ -9,7 +9,7 @@
     "build:start:staging": "NEXT_PUBLIC_ENV='staging' next build && NEXT_PUBLIC_ENV='staging' next start -p 3001",
     "build:start:prod": "NEXT_PUBLIC_ENV='prod' next build && NEXT_PUBLIC_ENV='prod' next start -p 3000",
     "release": "standard-version",
-    "prerelease": "npm run release -- --prerelease",
+    "pre-release": "standard-version --prerelease",
     "lint": "next lint",
     "component:new": "npx generate-react-cli component"
   },
