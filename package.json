@@ -6,8 +6,8 @@
     "dev": "set NEXT_PUBLIC_ENV=development&& next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "build:start:staging": "set NEXT_PUBLIC_ENV=staging&& next build && next start -p 3001",
-    "build:start:prod": "set NEXT_PUBLIC_ENV=prod&& next build && next start -p 3000",
+    "build:start:staging": "next build && NEXT_PUBLIC_ENV=staging next start -p 3001",
+    "build:start:prod": "next build && NEXT_PUBLIC_ENV=prod next start -p 3000",
     "lint": "next lint",
     "component:new": "npx generate-react-cli component"
   },
