@@ -12,7 +12,7 @@ const questions = [
     },
     {
         title: 'What happens to my posts and social activity (likes, follows, etc) if one day LOOKSO decides to shut down?',
-        response: "Your social media footprint is permanently stored on the blockchain, according to standards adopted by the whole community. LOOKSO is merely a tool displaying  this content and helping its users interact with the network. Anyone can use a different tool that adheres to the standards because all the content is stored in each user's Universal Profile."
+        response: "Your social media footprint is permanently stored on the blockchain, according to standards adopted by the whole community. LOOKSO is merely a tool displaying  this content and helping its users interact with the network. Anyone can use a different tool that adheres to the standards because all the content is referenced in each user's Universal Profile."
     },
     {
         title: 'How is LOOKSO decentralized?',
