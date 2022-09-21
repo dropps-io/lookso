@@ -6,8 +6,6 @@ import {setProfileInfo, setProfileJwt} from "../store/profile-reducer";
 import Web3 from "web3";
 import {useRouter} from "next/router";
 
-import packageJson from '../../package.json';
-
 const InitProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -21,7 +19,6 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   async function initApp() {
-    console.log('LOOKSO v' + packageJson.version);
     try {
       const account = await getAccount();
       if (router.asPath === '/' || router.asPath === '') await router.push('/feed');
