@@ -3,7 +3,7 @@ import styles from './Home.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import impactImage from "../../assets/images/impact-image.png";
 import impactImage2 from "../../assets/images/impact-image-2.png";
-import looksoLogo from "../../assets/images/lookso_logo.png";
+import looksoBanner from "../../assets/images/lookso-banner.png";
 import shape1 from "../../assets/images/shape1.png";
 import titleUnderline from "../../assets/images/title_underline.png";
 import layerHeadlines from "../../assets/images/layer-headlines.png";
@@ -14,6 +14,7 @@ import Footer from "../../components/Footer/Footer";
 import Head from "next/head";
 import Link from "next/link";
 import Faq from '../../components/Faq/Faq';
+import {WEBSITE_URL} from "../../environment/endpoints";
 
 interface HomeProps {}
 
@@ -35,7 +36,7 @@ const Home: FC<HomeProps> = ()  => {
           <meta property='twitter:creator' content='@undeveloped'/>
           <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='og:title' content={`LOOKSO`}/>
-          <meta property='og:image' itemProp='image' content={'https://lookso.io/_next/static/media/lookso-banner.6b51eb2c.png'}/>
+          <meta property='og:image' itemProp='image' content={WEBSITE_URL + looksoBanner.src}/>
           <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
         </Head>
         <div className={styles.Content}>
