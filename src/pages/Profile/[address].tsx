@@ -8,6 +8,7 @@ import React from "react";
 import {ProfileInfo} from "../../models/profile";
 import {formatUrl} from "../../core/utils/url-formating";
 import looksoLogo from "../../assets/images/lookso_logo.png";
+import {WEBSITE_URL} from "../../environment/endpoints";
 
 export const getServerSideProps = async ({ query }:any) => {
   try {
@@ -44,7 +45,7 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
       <meta property='twitter:creator' content='@undeveloped'/>
       <meta name='description' content={profile.description}/>
       <meta property='og:title' content={`${userTag} | Lookso`}/>
-      <meta property='og:image' itemProp='image' content={formatUrl(profile.profileImage) || 'https://lookso.io/_next/static/media/lookso_logo.e051e6df.png'}/>
+      <meta property='og:image' itemProp='image' content={formatUrl(profile.profileImage) || WEBSITE_URL + looksoLogo.src}/>
       <meta property='og:description' content={profile.description}/>
     </Head>
     <Profile userTag={userTag} address={address as string} profileInfo={props}></Profile>;
