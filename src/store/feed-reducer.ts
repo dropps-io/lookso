@@ -2,42 +2,74 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {FeedPost} from "../components/PostBox/PostBox";
 
 interface FeedStore{
-    feed: FeedPost[],
-    currentTopPosition: number,
-    currentType: 'Explore' | 'Feed'
-    currentFilter: 'all' | 'event' | 'post'
+    feed: {
+        Profile: FeedPost[],
+        Explore: FeedPost[],
+        Feed: FeedPost[],
+    },
+    currentPost: {
+        Profile: string,
+        Explore: string,
+        Feed: string,
+    },
+    currentOffset: {
+        Profile: number,
+        Explore: number,
+        Feed: number,
+    },
+    currentFilter: {
+        Profile: 'all' | 'event' | 'post',
+        Explore: 'all' | 'event' | 'post',
+        Feed: 'all' | 'event' | 'post',
+    }
 }
 
 const initialState: FeedStore = {
-    feed: [],
-    currentTopPosition: 0,
-    currentType: 'Explore',
-    currentFilter: 'all',
+    feed: {
+        Profile: [],
+        Explore: [],
+        Feed: [],
+    },
+    currentPost: {
+        Profile: '',
+        Explore: '',
+        Feed: '',
+    },
+    currentOffset: {
+        Profile: 0,
+        Explore: 0,
+        Feed: 0,
+    },
+    currentFilter: {
+        Profile: 'all',
+        Explore: 'all',
+        Feed: 'all',
+    },
 };
 
 export const feedSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-        setStoredFeed: (state, action: PayloadAction<FeedPost[]>) => {
-            state.feed = action.payload
+        setStoredFeed: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', feed: FeedPost[] }>) => {
+            state.feed[action.payload.type] = action.payload.feed;
         },
-        addToStoredFeed: (state, action: PayloadAction<FeedPost[]>) => {
-            state.feed = state.feed.concat(action.payload);
+        addToStoredFeed: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', feed: FeedPost[] }>) => {
+            state.feed[action.payload.type] = state.feed[action.payload.type].concat(action.payload.feed);
         },
-        setCurrentFeedTopPosition: (state, action: PayloadAction<number>) => {
-            state.currentTopPosition = action.payload;
+        setCurrentPost: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', postHash: string }>) => {
+            state.currentPost[action.payload.type] = action.payload.postHash;
         },
-        setCurrentFeedType: (state, action: PayloadAction<'Explore' | 'Feed'>) => {
-            state.currentType = action.payload;
+        setCurrentOffset: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', offset: number }>) => {
+            state.currentOffset[action.payload.type] = action.payload.offset;
         },
-        setCurrentFeedFilter: (state, action: PayloadAction<'all' | 'event' | 'post'>) => {
-            state.currentFilter = action.payload;
+        setCurrentFeedFilter: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', filter: 'all' | 'event' | 'post'}>) => {
+            state.currentFilter[action.payload.type] = action.payload.filter;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentFeedTopPosition, setStoredFeed, addToStoredFeed, setCurrentFeedType, setCurrentFeedFilter } = feedSlice.actions;
+export const { setCurrentPost, setStoredFeed, addToStoredFeed, setCurrentFeedFilter, setCurrentOffset } = feedSlice.actions;
 
 export default feedSlice.reducer;

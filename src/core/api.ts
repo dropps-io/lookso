@@ -3,6 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {ProfileDisplay, ProfileFollowingDisplay, ProfileInfo} from "../models/profile";
+import axios from "axios";
 
 const headers = {
   Accept: 'application/json',
@@ -135,16 +136,46 @@ export async function fetchProfileActivity(address: string, limit: number, offse
   return await (await fetch(url)).json();
 }
 
+export function fetchProfileActivityWithCancellationToken(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+  let cancel;
+  return {promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/profile/' + address + '/activity',
+      params: { postType: type, limit, offset, viewOf },
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }), cancel};
+}
+
 export async function fetchProfileFeed(address: string, limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
   let url = API_URL + '/lookso/profile/' + address + '/feed?limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
 }
 
+export function fetchProfileFeedWithCancellationToken(address: string, limit: number, offset: number, type?: 'event' | 'post'): { promise: Promise<any>, cancel: any } {
+  let cancel;
+  return {promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/profile/' + address + '/feed',
+      params: { postType: type, limit, offset },
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }), cancel};
+}
+
 export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
   let url = API_URL + '/lookso/feed?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
   if (type) url +=  '&postType=' + type;
   return await (await fetch(url)).json();
+}
+
+export function fetchAllFeedWithCancellationToken(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+  let cancel;
+  return {promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/feed',
+      params: { viewOf, limit, offset, postType: type },
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }), cancel};
 }
 
 export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {

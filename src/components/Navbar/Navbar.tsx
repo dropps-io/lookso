@@ -54,6 +54,7 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
+      //TODO go to feed only if on the home, but manage to make the explore page stay when logging in
       await router.push('/feed');
       await requestJWT(web3Info.account, web3Info.web3);
     }

@@ -1,19 +1,19 @@
-import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import styles from './Activity.module.scss';
 
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {POSTS_PER_LOAD} from "../../environment/constants";
-import {timer} from "../../core/utils/timer";
 import CircularProgress from "@mui/material/CircularProgress";
 import {useRouter} from "next/router";
-import {RootState} from "../../store/store";
 import {useSelector} from "react-redux";
+import {RootState} from "../../store/store";
 
 interface ActivityProps {
   feed: FeedPost[],
+  type: 'Profile' | 'Feed' | 'Explore',
   headline: string,
   onFilterChange: (filter: 'all' | 'event' | 'post') => void
-  loadNext: (filter: 'all' | 'event' | 'post') => void,
+  loadNext: () => void,
   newPost?: (post: FeedPost) => any,
   onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
   end?: boolean,
@@ -23,10 +23,37 @@ interface ActivityProps {
 
 const Activity: FC<ActivityProps> = (props) => {
   const router = useRouter();
-  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
-  const [isListening, setIsListening] = useState(true);
+
   const [activeFilter, setActiveFilter] = useState<'all' | 'post' | 'event'>('all');
-  let ref: RefObject<HTMLDivElement> = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  const storedCurrentPost = useSelector((state: RootState) => state.feed.currentPost);
+  const storedCurrentFilter = useSelector((state: RootState) => state.feed.currentFilter);
+  const storedPosts = useSelector((state: RootState) => state.feed.feed);
+
+  const observer: any = useRef();
+  const postElementRef = useCallback((node: any) => {
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !props.end) {
+        props.loadNext();
+      }
+    })
+    if (node) observer.current.observe(node);
+  }, [props.loading, props.end, props.loadNext]);
+
+  const observerEnd: any = useRef();
+  const postElementEndRef = useCallback((node: any) => {
+    if (observerEnd.current) observerEnd.current.disconnect();
+    observerEnd.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !props.end) {
+        props.loadNext();
+      }
+    })
+    if (node) observerEnd.current.observe(node);
+  }, [props.loading, props.end, props.loadNext]);
+
+  const currentPostRef = useRef(null);
 
   const filters: {display: string, value: 'all' | 'post' | 'event'}[] = [
     {display: 'All', value: 'all'},
@@ -34,15 +61,17 @@ const Activity: FC<ActivityProps> = (props) => {
     {display: 'Events', value: 'event'}
   ];
 
-  function isScrolledIntoView(el: RefObject<HTMLDivElement>) {
-    if (el.current) {
-      const rect = el.current.getBoundingClientRect();
-      const elemTop = rect.top;
-      return (elemTop < 0);
-    } else {
-      return false;
+  useEffect(() => {
+    if (props.feed[0] && !(props.type === 'Profile' && (storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.feed[0].author.address))){
+      setActiveFilter(storedCurrentFilter[props.type]);
     }
-  }
+    if (!scrolled && currentPostRef && currentPostRef.current) {
+      setScrolled(true);
+      setTimeout(() => {
+        if(currentPostRef.current) (currentPostRef.current as any).scrollIntoView({behavior: 'smooth'});
+      }, 150);
+    }
+  }, [props.feed]);
 
   async function setActive(i: number) {
     if (filters[i].value !== activeFilter) {
@@ -51,34 +80,10 @@ const Activity: FC<ActivityProps> = (props) => {
     }
   }
 
-  useEffect(() => {
-    if (isListening) {
-      const listener = async () => {
-        if (isScrolledIntoView(ref) && storedFilter) {
-          setIsListening(!isListening);
-          props.loadNext(router.asPath.includes('Profile') ? activeFilter : storedFilter);
-          await timer(3000);
-          setIsListening(true);
-        }
-        if (props.onScroll) props.onScroll();
-      }
-
-      document.addEventListener("scroll", listener);
-
-      return () => {
-        document.removeEventListener("scroll", listener);
-      };
-    }
-
-    if (!router.asPath.includes('Profile')) {
-      setActiveFilter(storedFilter);
-    }
-  }, [props.loadNext, isListening, props.onFilterChange])
-
   return (
     <div className={styles.Feed}>
       <div className={styles.FeedHeader}>
-        <h5>{props.headline}</h5>
+        <h5 onClick={() => console.log(currentPostRef)}>{props.headline}</h5>
         <div className={styles.Filters}>
           {
             filters.map((filter, index) =>
@@ -92,12 +97,20 @@ const Activity: FC<ActivityProps> = (props) => {
           <div className={styles.FeedPosts}>
             {
               props.feed.map((post, index) =>
-                index === props.feed.length - (POSTS_PER_LOAD / 2) ?
+                post.hash === storedCurrentPost[props.type] ?
                   <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                           newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
+                           newRepost={props.newPost} ref={currentPostRef} key={post.hash + index} post={post} type={props.type}/>
                   :
-                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                           newRepost={props.newPost} key={post.hash + index} post={post}/>
+                  index === props.feed.length - (POSTS_PER_LOAD / 2) ?
+                    <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                             newRepost={props.newPost} ref={postElementRef} key={post.hash + index} post={post} type={props.type}/>
+                    :
+                    index === props.feed.length - 1 ?
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                               newRepost={props.newPost} ref={postElementEndRef} key={post.hash + index} post={post} type={props.type}/>
+                      :
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
+                               newRepost={props.newPost} key={post.hash + index} post={post} type={props.type}/>
               )
             }
           </div>
@@ -105,12 +118,13 @@ const Activity: FC<ActivityProps> = (props) => {
           <></>
       }
       {
-        props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
-          props.feed.length === 0 &&
-            <div className={styles.Loading}>
+        props.loading !== undefined && !props.loading && router.asPath.includes('Profile') && (props.feed.length === 0 && props.end) &&
+          <div className={styles.Loading}>
               <p>This profile has no posts yet 🤷</p>
-            </div> :
-          (props.loading && !props.end) &&
+          </div>
+      }
+      {
+          props.loading &&
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
           </div>
