@@ -65,7 +65,7 @@ export interface FeedPost {
   childPost?: FeedPost,
   parentPost?: FeedPost,
   trusted?: boolean,
-  hided?: boolean
+  hided?: boolean //TODO misspelled, verify in DB if same name
 }
 
 export const initialFeedPost: FeedPost = {

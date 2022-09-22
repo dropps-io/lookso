@@ -13,7 +13,6 @@ import chainIcon from '../../assets/icons/chain.svg';
 import {shortenAddress} from "../../core/utils/address-formating";
 import {
   fetchIsProfileFollower,
-  fetchProfileActivity,
   fetchProfileFollowersCount,
   fetchProfileFollowingCount,
   insertFollow,
@@ -23,7 +22,6 @@ import {connectToAPI} from "../../core/web3";
 import {setProfileJwt} from "../../store/profile-reducer";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
-import {FeedPost} from "../../components/PostBox/PostBox";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
 import {POSTS_PER_LOAD} from "../../environment/constants";
@@ -35,6 +33,7 @@ import ExtendImage from "../../components/ExtendImage/ExtendImage";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import FollowModal from "../../components/Modals/FollowModal/FollowModal";
 import ActionModal from "../../components/Modals/ActionModal/ActionModal";
+import useFetchFeed from "../../hooks/useFetchFeed/useFetchFeed";
 
 interface ProfileProps {
   address: string,
@@ -64,35 +63,32 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState<'' | 'followers' | 'following'>('');
 
-  const [feed, setFeed]: [FeedPost[], any] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
   const [copied, setCopied] = useState([false, false]);
-  const [fullyLoadedActivity, setFullyLoadedActivity] = useState(false);
-  const [offset, setOffset] = useState(POSTS_PER_LOAD);
   const [bgColor, setBgColor] = useState('fff');
   const [loadingMessage, setLoadingMessage] = useState('');
-  const [feedLoading, setFeedLoading] = useState(false);
 
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
   const [isOpenFeatureSoonModal, setIsOpenFeatureSoonModal] = useState(false);
 
-
-  let loading = false;
+  const {
+    posts,
+    hasMore,
+    loading,
+    error
+  } = useFetchFeed({type: 'Profile', profile: props.address, offset, filter, account: connected.account()});
 
   useEffect(() => {
     if (props.address) setBgColor(props.address.slice(2, 6));
     async function initPageData() {
-      setFeed([]);
-      setFeedLoading(true);
       setFollowing(await fetchProfileFollowingCount(props.address));
       setFollowers(await fetchProfileFollowersCount(props.address));
 
-      if (connected.account() === props.address) {
-      } else if (props.address && props.address.length === 42) {
+      if (props.address && props.address.length === 42) {
         await initProfile();
-      } else {
       }
-      await fetchPosts('all');
     }
 
     async function initProfile() {
@@ -186,35 +182,16 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open ( EXPLORER_URL + '/address/' + address, '_blank');
   }
 
-  async function loadMorePosts(filter: 'all' | 'post' | 'event') {
-    if (loading || feedLoading || fullyLoadedActivity) return;
-    setFeedLoading(true);
-    // console.log('Loading new posts from offset ' + offset);
-    try {
-      loading = true;
-      let newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, offset, filter === 'all' ? undefined : filter, connected.account());
-      newPosts = newPosts.filter(post => !feed.map(p => p.hash).includes(post.hash));
-      setFeed((existing: FeedPost[]) => existing.concat(newPosts));
-      if (newPosts.length === 0) setFullyLoadedActivity(true);
-      setOffset(existing => existing + POSTS_PER_LOAD);
-      loading = false;
-      setFeedLoading(false);
-    }
-    catch (e) {
-      console.error(e);
-      loading = false;
-      setFeedLoading(false);
-    }
+  async function loadMorePosts() {
+    if (loading || !hasMore) return;
+    setOffset(offset + POSTS_PER_LOAD);
   }
 
-  async function fetchPosts(filter: 'all' | 'post' | 'event') {
-    setFeedLoading(true);
-    setFeed([]);
-    const newPosts = await fetchProfileActivity(props.address, POSTS_PER_LOAD, 0, filter !== 'all' ? filter : undefined, connected.account());
-    setFullyLoadedActivity(false);
-    setOffset(newPosts.length);
-    setFeed(newPosts);
-    setFeedLoading(false);
+  async function changeFilter(newFilter: 'all' | 'post' | 'event') {
+    if (filter !== newFilter) {
+      setOffset(0);
+      setFilter(newFilter);
+    }
   }
 
   async function reportUser() {
@@ -345,7 +322,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
-            <Activity loading={feedLoading} headline='Activity' feed={feed.filter(p => !p.hided)} loadNext={(filter) => loadMorePosts(filter)} onFilterChange={(filter) => fetchPosts(filter)}></Activity>
+            <Activity end={!hasMore} loading={loading} headline='Activity' feed={posts.filter(p => !p.hided)} loadNext={loadMorePosts} onFilterChange={(filter) => changeFilter(filter)}></Activity>
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>
