@@ -42,6 +42,7 @@ import PopupButton from "../PopupButton/PopupButton";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {LSPXXProfilePost} from "../../models/profile-post";
 import {IPFS_GATEWAY} from "../../environment/constants";
+import {setCurrentPost} from "../../store/feed-reducer";
 
 export interface FeedPost {
   hash: string,
@@ -124,14 +125,15 @@ interface PostProps {
 
 // eslint-disable-next-line react/display-name
 const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
-
   const router = useRouter();
   const dispatch = useDispatch();
+
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
+
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -142,12 +144,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [showWarningModal, setShowWarningModal] = useState(false);
   // extra button with "Explore" | "Hide"
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
-
   const [isOpenRepostAction, setIsOpenRepostAction] = useState(false);
+  const [isExtendPostImage, setIsExtendPostImage] = useState(false);
 
   let clickLoading = false;
 
-  const [isExtendPostImage, setIsExtendPostImage] = useState(false);
 
   useEffect(() => {
     setLikes(props.post.likes);
@@ -227,7 +228,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   function goToPost() {
-    router.push('/Post/' +props.post.hash);
+    router.push('/Post/' + props.post.hash);
   }
 
   function shareOnTwitter() {
@@ -287,6 +288,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function handleClick(e: any, value?: string) {
+    dispatch(setCurrentPost(props.post.hash));
 
     // stop process if user is highlighting something
     if (window.getSelection()?.toString()) return

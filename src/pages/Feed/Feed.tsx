@@ -21,9 +21,6 @@ interface FeedProps {
 }
 
 const Feed: FC<FeedProps> = (props) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const storedOffset: number = useSelector((state: RootState) => state.feed.currentOffset);
   const storedType = useSelector((state: RootState) => state.feed.currentType);
@@ -33,8 +30,6 @@ const Feed: FC<FeedProps> = (props) => {
   const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
   const [postToAdd, setPostToAdd] = useState<FeedPost | undefined>(undefined);
   const [addressToUnfollow, setAddressToUnfollow] = useState('');
-  const [initialized, setInitialized] = useState(false);
-  const [needToScrollOnNextFeedChange, setNeedToScrollOnNextFeedChange] = useState(false);
 
   const {
     posts,

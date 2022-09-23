@@ -36,7 +36,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     let fetch: {promise: Promise<any>, cancel: any};
 
     if (storedType === props.type && storedPosts.length > 0) {
-      console.log('inif')
       setTimeout(() => {
         setPosts(storedPosts);
         setFilter(storedFilter);
