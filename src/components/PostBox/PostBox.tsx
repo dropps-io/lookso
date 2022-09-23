@@ -183,7 +183,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       }
 
       try {
-        console.log(account ? account : '')
         const res: any = await insertLike(account ? account : '', props.post.hash, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
@@ -302,8 +301,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     clickLoading = true;
 
     const el: HTMLElement = e.target as HTMLElement;
-
-    console.log(el.className)
 
     if (value) {
       if(el.className.includes('UserTag')) goToProfile(value);

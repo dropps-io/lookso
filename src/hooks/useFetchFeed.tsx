@@ -123,7 +123,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   useEffect(() => {
     if (!initialized) return;
 
-    dispatch(setCurrentOffset(props.offset));
     setLoading(true);
     setError(false);
 
@@ -151,6 +150,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           dispatch(setStoredFeed(feed));
           return feed;
         });
+        dispatch(setCurrentOffset(props.offset));
         console.log('Loaded ' + newPosts.length + ' new posts')
         console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);
