@@ -11,7 +11,6 @@ import Head from "next/head";
 import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
-import {setCurrentFeedTopPosition} from "../../store/feed-reducer";
 import {WEBSITE_URL} from "../../environment/endpoints";
 import looksoBanner from "../../assets/images/lookso-banner.png";
 import useFetchFeed from "../../hooks/useFetchFeed";
@@ -102,11 +101,6 @@ const Feed: FC<FeedProps> = (props) => {
               loadNext={loadMorePosts}
               onUnfollow={handleUnfollow}
               end={!hasMore}
-              onScroll={() => {
-                if (initialized && !needToScrollOnNextFeedChange) {
-                  dispatch(setCurrentFeedTopPosition(window.scrollY))
-                }
-              }}
             />
         }
 
