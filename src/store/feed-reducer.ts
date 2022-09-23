@@ -3,14 +3,16 @@ import {FeedPost} from "../components/PostBox/PostBox";
 
 interface FeedStore{
     feed: FeedPost[],
-    currentTopPosition: number,
-    currentType: 'Explore' | 'Feed'
+    currentPost: string,
+    currentOffset: number,
+    currentType: 'Explore' | 'Feed' | 'Profile'
     currentFilter: 'all' | 'event' | 'post'
 }
 
 const initialState: FeedStore = {
     feed: [],
-    currentTopPosition: 0,
+    currentPost: '',
+    currentOffset: 0,
     currentType: 'Explore',
     currentFilter: 'all',
 };
@@ -25,10 +27,14 @@ export const feedSlice = createSlice({
         addToStoredFeed: (state, action: PayloadAction<FeedPost[]>) => {
             state.feed = state.feed.concat(action.payload);
         },
-        setCurrentFeedTopPosition: (state, action: PayloadAction<number>) => {
-            state.currentTopPosition = action.payload;
+        setCurrentPost: (state, action: PayloadAction<string>) => {
+            state.currentPost = action.payload;
         },
-        setCurrentFeedType: (state, action: PayloadAction<'Explore' | 'Feed'>) => {
+        setCurrentOffset: (state, action: PayloadAction<number>) => {
+            state.currentOffset = action.payload;
+        },
+        setCurrentFeedType: (state, action: PayloadAction<'Explore' | 'Feed' | 'Profile'>) => {
+            console.log('set current type to ' + action.payload)
             state.currentType = action.payload;
         },
         setCurrentFeedFilter: (state, action: PayloadAction<'all' | 'event' | 'post'>) => {
@@ -38,6 +44,6 @@ export const feedSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentFeedTopPosition, setStoredFeed, addToStoredFeed, setCurrentFeedType, setCurrentFeedFilter } = feedSlice.actions;
+export const { setCurrentPost, setStoredFeed, addToStoredFeed, setCurrentFeedType, setCurrentFeedFilter, setCurrentOffset } = feedSlice.actions;
 
 export default feedSlice.reducer;
