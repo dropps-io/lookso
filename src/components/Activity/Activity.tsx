@@ -29,6 +29,7 @@ const Activity: FC<ActivityProps> = (props) => {
 
   const storedCurrentPost = useSelector((state: RootState) => state.feed.currentPost);
   const storedCurrentFilter = useSelector((state: RootState) => state.feed.currentFilter);
+  const storedPosts = useSelector((state: RootState) => state.feed.feed);
 
   const observer: any = useRef();
   const postElementRef = useCallback((node: any) => {
@@ -61,17 +62,15 @@ const Activity: FC<ActivityProps> = (props) => {
   ];
 
   useEffect(() => {
-    setActiveFilter(storedCurrentFilter[props.type]);
-  }, []);
-
-  useEffect(() => {
-      if (!scrolled && currentPostRef && currentPostRef.current) {
-        setScrolled(true);
-        setTimeout(() => {
-          (currentPostRef.current as any).scrollIntoView({behavior: 'smooth'});
-        }, 100)
-      }
-
+    if (props.feed[0] && !(props.type === 'Profile' && (storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.feed[0].author.address))){
+      setActiveFilter(storedCurrentFilter[props.type]);
+    }
+    if (!scrolled && currentPostRef && currentPostRef.current) {
+      setScrolled(true);
+      setTimeout(() => {
+        if(currentPostRef.current) (currentPostRef.current as any).scrollIntoView({behavior: 'smooth'});
+      }, 150);
+    }
   }, [props.feed]);
 
   async function setActive(i: number) {

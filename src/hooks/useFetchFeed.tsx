@@ -34,7 +34,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     setLoading(true)
     let fetch: {promise: Promise<any>, cancel: any};
 
-    if (storedPosts[props.type].length > 0) {
+    if (storedPosts[props.type].length > 0 && !(props.type === 'Profile' && storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.profile)) {
       setTimeout(() => {
         setPosts(storedPosts[props.type]);
         setFilter(storedFilter[props.type]);
@@ -42,9 +42,9 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       }, 1)
     }
     else {
-      console.log('inelse')
       setLoading(true);
       setError(false);
+      setPosts([]);
       dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
 
       if (props.account && props.type === 'Feed') fetch = fetchProfileFeedWithCancellationToken(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
@@ -61,16 +61,14 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
             setHasMore(newPosts.length !== 0);
 
             // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
-            if (filter !== props.filter) setPosts(existing => {
-              const feed = existing.concat(newPosts);
-              dispatch(setStoredFeed({type: props.type, feed: feed}));
-              return feed;
-            });
-            else setPosts(existing => {
-              const feed = existing.concat(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
-              dispatch(setStoredFeed({type: props.type, feed: feed}));
-              return feed;
-            });
+            if (filter !== props.filter) {
+              setPosts(newPosts);
+              dispatch(setStoredFeed({type: props.type, feed: newPosts}));
+            }
+            else {
+              setPosts(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
+              dispatch(setStoredFeed({type: props.type, feed: newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash))}));
+            }
             console.log('Loaded ' + newPosts.length + ' new posts')
             console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
           } else setError(true);
@@ -88,7 +86,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     return () => {
       if (fetch) fetch.cancel();
     }
-  }, [])
+  }, [props.profile])
 
   // TODO in case of Log in, just updated the like status of posts
   useEffect(() => {

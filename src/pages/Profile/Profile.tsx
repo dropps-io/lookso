@@ -47,6 +47,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const accountSelector = useSelector((state: RootState) => state.web3.account);
   const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
+  const storedPosts = useSelector((state: RootState) => state.feed.feed);
 
   const connected = {
     account: (): string => {
@@ -65,13 +66,11 @@ const Profile: FC<ProfileProps> = (props) => {
   // extra button with "report" and "block" user
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState<'' | 'followers' | 'following'>('');
-
   const [offset, setOffset] = useState(0);
   const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
   const [copied, setCopied] = useState([false, false]);
   const [bgColor, setBgColor] = useState('fff');
   const [loadingMessage, setLoadingMessage] = useState('');
-
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
   const [isOpenFeatureSoonModal, setIsOpenFeatureSoonModal] = useState(false);
@@ -85,10 +84,20 @@ const Profile: FC<ProfileProps> = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setOffset(storedOffset.Profile);
-      setFilter(storedFilter.Profile);
+      if (storedPosts.Profile[0] && storedPosts.Profile[0].author.address === props.address) {
+        setOffset(storedOffset.Profile);
+        setFilter(storedFilter.Profile);
+      }
     }, 1)
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    console.log('in hrer')
+    if (storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.address) {
+      setOffset(0);
+      setFilter('all');
+    }
+  }, [props.address]);
 
   useEffect(() => {
     if (props.address) setBgColor(props.address.slice(2, 6));
