@@ -112,6 +112,7 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 
 interface PostProps {
   post: FeedPost;
+  type?: 'Profile' | 'Feed' | 'Explore',
   isLiked?: boolean;
   newComment?: ((comment: FeedPost) => any);
   newRepost?: ((repost: FeedPost) => any);
@@ -288,7 +289,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function handleClick(e: any, value?: string) {
-    dispatch(setCurrentPost(props.post.hash));
+    if (props.type) dispatch(setCurrentPost({type: props.type, postHash: props.post.hash}));
 
     // stop process if user is highlighting something
     if (window.getSelection()?.toString()) return

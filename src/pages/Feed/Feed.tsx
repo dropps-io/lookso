@@ -3,7 +3,7 @@ import styles from './Feed.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState, store} from "../../store/store";
 import {FeedPost} from "../../components/PostBox/PostBox";
 import PostInput from "../../components/PostInput/PostInput";
@@ -14,7 +14,6 @@ import Link from "next/link";
 import {WEBSITE_URL} from "../../environment/endpoints";
 import looksoBanner from "../../assets/images/lookso-banner.png";
 import useFetchFeed from "../../hooks/useFetchFeed";
-import {useRouter} from "next/router";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -22,8 +21,7 @@ interface FeedProps {
 
 const Feed: FC<FeedProps> = (props) => {
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
-  const storedOffset: number = useSelector((state: RootState) => state.feed.currentOffset);
-  const storedType = useSelector((state: RootState) => state.feed.currentType);
+  const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   const [offset, setOffset] = useState(0);
@@ -39,12 +37,10 @@ const Feed: FC<FeedProps> = (props) => {
   } = useFetchFeed({type: props.type, offset, filter, postToAdd, account, toUnfollow: addressToUnfollow});
 
   useEffect(() => {
-    if (props.type === storedType) {
-      setTimeout(() => {
-        setOffset(storedOffset);
-        setFilter(storedFilter);
-      }, 1)
-    }
+    setTimeout(() => {
+      setOffset(storedOffset[props.type]);
+      setFilter(storedFilter[props.type]);
+    }, 1);
   }, []);
 
   async function loadMorePosts() {
@@ -104,6 +100,7 @@ const Feed: FC<FeedProps> = (props) => {
             </div>
             :
             <Activity
+              type={props.type}
               loading={loading}
               feed={posts.filter(p => !p.hided)}
               headline={props.type}

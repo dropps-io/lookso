@@ -5,7 +5,7 @@ import {POSTS_PER_LOAD} from "../environment/constants";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
-import {setCurrentFeedFilter, setCurrentFeedType, setCurrentOffset, setStoredFeed} from "../store/feed-reducer";
+import {setCurrentFeedFilter, setCurrentOffset, setStoredFeed} from "../store/feed-reducer";
 
 interface UseFetchFeedProps {
   account?: string;
@@ -28,17 +28,16 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   const [initialized, setInitialized] = useState(false);
 
   const storedPosts = useSelector((state: RootState) => state.feed.feed);
-  const storedType = useSelector((state: RootState) => state.feed.currentType);
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   useEffect(() => {
     setLoading(true)
     let fetch: {promise: Promise<any>, cancel: any};
 
-    if (storedType === props.type && storedPosts.length > 0) {
+    if (storedPosts[props.type].length > 0) {
       setTimeout(() => {
-        setPosts(storedPosts);
-        setFilter(storedFilter);
+        setPosts(storedPosts[props.type]);
+        setFilter(storedFilter[props.type]);
         setLoading(false);
       }, 1)
     }
@@ -46,8 +45,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       console.log('inelse')
       setLoading(true);
       setError(false);
-      dispatch(setCurrentOffset(props.offset));
-      dispatch(setCurrentFeedType(props.type));
+      dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
 
       if (props.account && props.type === 'Feed') fetch = fetchProfileFeedWithCancellationToken(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
       else if (props.type === 'Explore') fetch = fetchAllFeedWithCancellationToken(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
@@ -65,12 +63,12 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
             // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
             if (filter !== props.filter) setPosts(existing => {
               const feed = existing.concat(newPosts);
-              dispatch(setStoredFeed(feed));
+              dispatch(setStoredFeed({type: props.type, feed: feed}));
               return feed;
             });
             else setPosts(existing => {
               const feed = existing.concat(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
-              dispatch(setStoredFeed(feed));
+              dispatch(setStoredFeed({type: props.type, feed: feed}));
               return feed;
             });
             console.log('Loaded ' + newPosts.length + ' new posts')
@@ -97,10 +95,9 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     if (!initialized) return;
 
     setPosts([]);
-    dispatch(setStoredFeed([]));
+    dispatch(setStoredFeed({type: props.type, feed: []}));
     setFilter(props.filter);
-    dispatch(setCurrentFeedFilter(props.filter));
-    dispatch(setCurrentFeedType(props.type));
+    dispatch(setCurrentFeedFilter({type: props.type, filter: props.filter}));
   }, [props.filter, props.account, props.type]);
 
   useEffect(() => {
@@ -114,7 +111,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     if (!initialized) return;
     if (props.toUnfollow) setPosts(existing => {
       const feed = existing.filter(p => p.author.address !== props.toUnfollow);
-      dispatch(setStoredFeed(feed));
+      dispatch(setStoredFeed({type: props.type, feed}));
       return feed;
     });
   }, [props.toUnfollow]);
@@ -141,15 +138,15 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
         if (filter !== props.filter) setPosts(existing => {
           const feed = existing.concat(newPosts);
-          dispatch(setStoredFeed(feed));
+          dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
         });
         else setPosts(existing => {
           const feed = existing.concat(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
-          dispatch(setStoredFeed(feed));
+          dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
         });
-        dispatch(setCurrentOffset(props.offset));
+        dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
         console.log('Loaded ' + newPosts.length + ' new posts')
         console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);

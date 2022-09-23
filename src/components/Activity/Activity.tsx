@@ -10,6 +10,7 @@ import {RootState} from "../../store/store";
 
 interface ActivityProps {
   feed: FeedPost[],
+  type: 'Profile' | 'Feed' | 'Explore',
   headline: string,
   onFilterChange: (filter: 'all' | 'event' | 'post') => void
   loadNext: () => void,
@@ -27,7 +28,6 @@ const Activity: FC<ActivityProps> = (props) => {
   const [scrolled, setScrolled] = useState(false);
 
   const storedCurrentPost = useSelector((state: RootState) => state.feed.currentPost);
-  const storedCurrentType = useSelector((state: RootState) => state.feed.currentType);
   const storedCurrentFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   const observer: any = useRef();
@@ -61,11 +61,10 @@ const Activity: FC<ActivityProps> = (props) => {
   ];
 
   useEffect(() => {
-    if (router.asPath.toLowerCase().includes(storedCurrentType.toLowerCase())) setActiveFilter(storedCurrentFilter);
+    setActiveFilter(storedCurrentFilter[props.type]);
   }, []);
 
   useEffect(() => {
-      console.log(currentPostRef)
       if (!scrolled && currentPostRef && currentPostRef.current) {
         setScrolled(true);
         setTimeout(() => {
@@ -99,20 +98,20 @@ const Activity: FC<ActivityProps> = (props) => {
           <div className={styles.FeedPosts}>
             {
               props.feed.map((post, index) =>
-                post.hash === storedCurrentPost ?
+                post.hash === storedCurrentPost[props.type] ?
                   <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                           newRepost={props.newPost} ref={currentPostRef} key={post.hash + index} post={post}/>
+                           newRepost={props.newPost} ref={currentPostRef} key={post.hash + index} post={post} type={props.type}/>
                   :
                   index === props.feed.length - (POSTS_PER_LOAD / 2) ?
                     <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                             newRepost={props.newPost} ref={postElementRef} key={post.hash + index} post={post}/>
+                             newRepost={props.newPost} ref={postElementRef} key={post.hash + index} post={post} type={props.type}/>
                     :
                     index === props.feed.length - 1 ?
                       <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                               newRepost={props.newPost} ref={postElementEndRef} key={post.hash + index} post={post}/>
+                               newRepost={props.newPost} ref={postElementEndRef} key={post.hash + index} post={post} type={props.type}/>
                       :
                       <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                               newRepost={props.newPost} key={post.hash + index} post={post}/>
+                               newRepost={props.newPost} key={post.hash + index} post={post} type={props.type}/>
               )
             }
           </div>

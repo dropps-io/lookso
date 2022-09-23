@@ -46,7 +46,6 @@ const Profile: FC<ProfileProps> = (props) => {
 
   const accountSelector = useSelector((state: RootState) => state.web3.account);
   const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
-  const storedType = useSelector((state: RootState) => state.feed.currentType);
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   const connected = {
@@ -85,12 +84,10 @@ const Profile: FC<ProfileProps> = (props) => {
   } = useFetchFeed({type: 'Profile', profile: props.address, offset, filter, account: connected.account()});
 
   useEffect(() => {
-    if (storedType === 'Profile' && storedOffset > 0) {
-      setTimeout(() => {
-        setOffset(storedOffset);
-        setFilter(storedFilter);
-      }, 1)
-    }
+    setTimeout(() => {
+      setOffset(storedOffset.Profile);
+      setFilter(storedFilter.Profile);
+    }, 1)
   }, [])
 
   useEffect(() => {
@@ -335,7 +332,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
-            <Activity end={!hasMore} loading={loading} headline='Activity' feed={posts.filter(p => !p.hided)} loadNext={loadMorePosts} onFilterChange={(filter) => changeFilter(filter)}></Activity>
+            <Activity type={'Profile'} end={!hasMore} loading={loading} headline='Activity' feed={posts.filter(p => !p.hided)} loadNext={loadMorePosts} onFilterChange={(filter) => changeFilter(filter)}></Activity>
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>
