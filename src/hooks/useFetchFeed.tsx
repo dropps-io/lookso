@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {FeedPost} from "../../components/PostBox/PostBox";
+import {FeedPost} from "../components/PostBox/PostBox";
 import {useDispatch} from "react-redux";
 import {
   fetchAllFeedWithCancellationToken, fetchProfileActivityWithCancellationToken,
   fetchProfileFeedWithCancellationToken
-} from "../../core/api";
-import {POSTS_PER_LOAD} from "../../environment/constants";
+} from "../core/api";
+import {POSTS_PER_LOAD} from "../environment/constants";
 import axios from "axios";
 
 interface UseFetchFeedProps {

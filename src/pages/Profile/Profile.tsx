@@ -33,7 +33,7 @@ import ExtendImage from "../../components/ExtendImage/ExtendImage";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import FollowModal from "../../components/Modals/FollowModal/FollowModal";
 import ActionModal from "../../components/Modals/ActionModal/ActionModal";
-import useFetchFeed from "../../hooks/useFetchFeed/useFetchFeed";
+import useFetchFeed from "../../hooks/useFetchFeed";
 
 interface ProfileProps {
   address: string,
