@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styles from './Feed.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import Activity from "../../components/Activity/Activity";
@@ -14,6 +14,7 @@ import Link from "next/link";
 import {WEBSITE_URL} from "../../environment/endpoints";
 import looksoBanner from "../../assets/images/lookso-banner.png";
 import useFetchFeed from "../../hooks/useFetchFeed";
+import {useRouter} from "next/router";
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -21,7 +22,13 @@ interface FeedProps {
 
 const Feed: FC<FeedProps> = (props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
+  const storedOffset: number = useSelector((state: RootState) => state.feed.currentOffset);
+  const storedType = useSelector((state: RootState) => state.feed.currentType);
+  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
+
   const [offset, setOffset] = useState(0);
   const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
   const [postToAdd, setPostToAdd] = useState<FeedPost | undefined>(undefined);
@@ -35,6 +42,15 @@ const Feed: FC<FeedProps> = (props) => {
     loading,
     error
   } = useFetchFeed({type: props.type, offset, filter, postToAdd, account, toUnfollow: addressToUnfollow});
+
+  useEffect(() => {
+    if (props.type === storedType) {
+      setTimeout(() => {
+        setOffset(storedOffset);
+        setFilter(storedFilter);
+      }, 1)
+    }
+  }, []);
 
   async function loadMorePosts() {
     if (loading || !hasMore) return;

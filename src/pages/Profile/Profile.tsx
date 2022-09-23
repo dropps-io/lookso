@@ -43,7 +43,11 @@ interface ProfileProps {
 
 const Profile: FC<ProfileProps> = (props) => {
   const dispatch = useDispatch();
+
   const accountSelector = useSelector((state: RootState) => state.web3.account);
+  const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
+  const storedType = useSelector((state: RootState) => state.feed.currentType);
+  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   const connected = {
     account: (): string => {
@@ -79,6 +83,15 @@ const Profile: FC<ProfileProps> = (props) => {
     loading,
     error
   } = useFetchFeed({type: 'Profile', profile: props.address, offset, filter, account: connected.account()});
+
+  useEffect(() => {
+    if (storedType === 'Profile' && storedOffset > 0) {
+      setTimeout(() => {
+        setOffset(storedOffset);
+        setFilter(storedFilter);
+      }, 1)
+    }
+  }, [])
 
   useEffect(() => {
     if (props.address) setBgColor(props.address.slice(2, 6));

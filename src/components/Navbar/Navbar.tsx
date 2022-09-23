@@ -54,7 +54,8 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
-      await router.push('/feed');
+      console.log(router.asPath)
+      if (router.asPath === '/') await router.push('/feed');
       await requestJWT(web3Info.account, web3Info.web3);
     }
   }
