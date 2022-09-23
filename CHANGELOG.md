@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1-0](https://github.com/dropps-nft/Lookso/compare/v0.1.0...v0.1.1-0) (2022-09-23)
+
+
+### Features
+
+* posts saved locally for feed, explore and profile sections ([e8e449d](https://github.com/dropps-nft/Lookso/commit/e8e449d57ef4f43b4e2d51e1927b99a0335dc3ce))
+* scroll into view active post ([425f4da](https://github.com/dropps-nft/Lookso/commit/425f4da23454a7cabe57e11fd934785036aea005))
+
+
+### Bug Fixes
+
+* correct profile reloading when going from a profile to another ([d962ad2](https://github.com/dropps-nft/Lookso/commit/d962ad2db2fdfde6f845cde61c514121269f2ed8))
+* do not skip chunk of posts ([780c81b](https://github.com/dropps-nft/Lookso/commit/780c81bc06adfb7b1c43d816d3aea772ad23dd71))
+* feed performance and experience upgraded ([695422c](https://github.com/dropps-nft/Lookso/commit/695422cf3b2acc0ac69f95c42967abffa2b8ef10))
+* Images in the meta tags are functional ([ce63457](https://github.com/dropps-nft/Lookso/commit/ce634577786ae8488317e969b629c4eb9919313e))
+
 ## 0.1.0 (2022-09-21)
 
 
