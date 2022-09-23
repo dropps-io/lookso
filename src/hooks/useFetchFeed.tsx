@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {FeedPost} from "../components/PostBox/PostBox";
-import {useDispatch} from "react-redux";
 import {
   fetchAllFeedWithCancellationToken, fetchProfileActivityWithCancellationToken,
   fetchProfileFeedWithCancellationToken
@@ -24,9 +23,11 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   const [error, setError] = useState(false);
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
 
   useEffect(() => {
     setPosts(props.posts ? props.posts: []);
+    setFilter(props.filter);
   }, [props.filter, props.account]);
 
   useEffect(() => {
@@ -55,10 +56,11 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         const newPosts = res.data as FeedPost[];
         setHasMore(newPosts.length !== 0);
 
-        // We filter the new posts to avoid duplicates
-        if (newPosts.length <= POSTS_PER_LOAD) setPosts(existing => existing.concat(newPosts));
+        // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
+        if (filter !== props.filter) setPosts(existing => existing.concat(newPosts));
         else setPosts(existing => existing.concat(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash))));
-        console.log('Loaded ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
+        console.log('Loaded ' + newPosts.length + ' new posts')
+        console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);
       setLoading(false);
     }).catch(e => {
