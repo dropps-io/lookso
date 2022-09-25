@@ -42,7 +42,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       }, 1)
     }
     else {
-      console.log('in else 1')
       setLoading(true);
       setError(false);
       setPosts([]);
@@ -118,7 +117,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   useEffect(() => {
     if (!initialized) return;
-    console.log('in else 2')
 
     setLoading(true);
     setError(false);
