@@ -42,6 +42,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       }, 1)
     }
     else {
+      console.log('in else 1')
       setLoading(true);
       setError(false);
       setPosts([]);
@@ -50,7 +51,10 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       if (props.account && props.type === 'Feed') fetch = fetchProfileFeedWithCancellationToken(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
       else if (props.type === 'Explore') fetch = fetchAllFeedWithCancellationToken(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
       else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivityWithCancellationToken(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-      else return;
+      else {
+        setInitialized(true);
+        return;
+      }
 
       console.log('Loading more posts... from ' + props.offset);
 
@@ -73,6 +77,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
             console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
           } else setError(true);
           setLoading(false);
+          setInitialized(true);
         })
         .catch(e => {
           console.log(e);
@@ -80,9 +85,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           setError(true);
      });
     }
-    setTimeout(() => {
-      setInitialized(true);
-    }, 100)
     return () => {
       if (fetch) fetch.cancel();
     }
@@ -116,6 +118,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   useEffect(() => {
     if (!initialized) return;
+    console.log('in else 2')
 
     setLoading(true);
     setError(false);
