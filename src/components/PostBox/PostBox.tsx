@@ -324,6 +324,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       && !el.className.includes('IconNumber')
       && !el.className.includes('Explorer')
       && !el.className.includes('RepostHandler')
+      && !el.className.includes('backdrop')
     ) {
       goToPost();
     }
