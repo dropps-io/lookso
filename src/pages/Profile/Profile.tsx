@@ -92,7 +92,6 @@ const Profile: FC<ProfileProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log('in hrer')
     if (storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.address) {
       setOffset(0);
       setFilter('all');
