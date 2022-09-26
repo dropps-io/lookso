@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1-1](https://github.com/dropps-nft/Lookso/compare/v0.1.1-0...v0.1.1-1) (2022-09-26)
+
+
+### Features
+
+* dropdown up.cloud button working ([53f3d05](https://github.com/dropps-nft/Lookso/commit/53f3d051bcdc71b302882c166611d2381d5bb0e7))
+* logout ([21af913](https://github.com/dropps-nft/Lookso/commit/21af91385f2ef6e2a5b09c76ded681937afae6b3))
+
+
+### Bug Fixes
+
+* continue loading posts when going back in the feed ([83ef9b4](https://github.com/dropps-nft/Lookso/commit/83ef9b47ea1232bac87d1fbd4ea3291be2d75434))
+* emoji picker popup show on top of icon when repost ([5f89901](https://github.com/dropps-nft/Lookso/commit/5f89901a50d1ca00e7be7d626591984c3fe452e8))
+* followers and following profiles get updated when navigate from a profile to another ([16496ad](https://github.com/dropps-nft/Lookso/commit/16496adc02b5ad43eddb0e3c3d213a502690ce45))
+* not loading twice posts on init, and properly loading on feed init ([e009537](https://github.com/dropps-nft/Lookso/commit/e0095372fbbc1a567b900e97c5370d540686b9dd))
+* post do not open on backdrop click ([5fa4c68](https://github.com/dropps-nft/Lookso/commit/5fa4c68a155fe76f131bd53a2cad4f4fab8fdc41))
+* reset web3 with empty string account instead of undefined ([8fb7d07](https://github.com/dropps-nft/Lookso/commit/8fb7d0772c61ab37e3a955938c80083f9f780566))
+
 ### [0.1.1-0](https://github.com/dropps-nft/Lookso/compare/v0.1.0...v0.1.1-0) (2022-09-23)
 
 
