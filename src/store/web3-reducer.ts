@@ -39,7 +39,13 @@ export const web3Slice = createSlice({
             state.initialized = action.payload;
         },
         resetWeb3: () => {
-            return initialState;
+            return {
+                web3: new Web3(RPC),
+                account: '',
+                networkId: 0,
+                balance: '0',
+                initialized: false
+            }
         }
     }
 });
