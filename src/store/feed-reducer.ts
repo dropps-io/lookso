@@ -65,11 +65,14 @@ export const feedSlice = createSlice({
         },
         setCurrentFeedFilter: (state, action: PayloadAction<{ type: 'Profile' | 'Explore' | 'Feed', filter: 'all' | 'event' | 'post'}>) => {
             state.currentFilter[action.payload.type] = action.payload.filter;
+        },
+        resetFeed: () => {
+            return initialState;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentPost, setStoredFeed, addToStoredFeed, setCurrentFeedFilter, setCurrentOffset } = feedSlice.actions;
+export const { setCurrentPost, setStoredFeed, addToStoredFeed, setCurrentFeedFilter, setCurrentOffset, resetFeed } = feedSlice.actions;
 
 export default feedSlice.reducer;

@@ -37,11 +37,14 @@ export const web3Slice = createSlice({
         },
         setInitialized: (state, action: PayloadAction<boolean>) => {
             state.initialized = action.payload;
+        },
+        resetWeb3: () => {
+            return initialState;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setWeb3, setAccount, setBalance, setNetworkId, setInitialized } = web3Slice.actions;
+export const { setWeb3, setAccount, setBalance, setNetworkId, setInitialized, resetWeb3 } = web3Slice.actions;
 
 export default web3Slice.reducer;

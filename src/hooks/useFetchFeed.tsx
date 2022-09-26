@@ -24,20 +24,24 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   const [error, setError] = useState(false);
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
+  const [currentFilter, setCurrentFilter] = useState<'all' | 'post' | 'event'>('all');
+  const [currentAccount, setCurrentAccount] = useState<string | undefined>(undefined);
   const [initialized, setInitialized] = useState(false);
 
   const storedPosts = useSelector((state: RootState) => state.feed.feed);
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
+
+    console.log('load from ' + props.offset)
+
     let fetch: {promise: Promise<any>, cancel: any};
 
     if (storedPosts[props.type].length > 0 && !(props.type === 'Profile' && storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.profile)) {
       setTimeout(() => {
         setPosts(storedPosts[props.type]);
-        setFilter(storedFilter[props.type]);
+        setCurrentFilter(storedFilter[props.type]);
         setLoading(false);
         setInitialized(true);
       }, 1)
@@ -56,8 +60,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         return;
       }
 
-      console.log('Loading more posts... from ' + props.offset);
-
       fetch.promise
         .then(res => {
           if (res.status === 200) {
@@ -65,7 +67,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
             setHasMore(newPosts.length !== 0);
 
             // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
-            if (filter !== props.filter) {
+            if (currentFilter !== props.filter) {
               setPosts(newPosts);
               dispatch(setStoredFeed({type: props.type, feed: newPosts}));
             }
@@ -73,8 +75,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
               setPosts(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
               dispatch(setStoredFeed({type: props.type, feed: newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash))}));
             }
-            console.log('Loaded ' + newPosts.length + ' new posts')
-            console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
           } else setError(true);
           setLoading(false);
           setInitialized(true);
@@ -92,11 +92,13 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   // TODO in case of Log in, just updated the like status of posts
   useEffect(() => {
+    setCurrentAccount(props.account);
+
     if (!initialized) return;
 
     setPosts([]);
     dispatch(setStoredFeed({type: props.type, feed: []}));
-    setFilter(props.filter);
+    setCurrentFilter(props.filter);
     dispatch(setCurrentFeedFilter({type: props.type, filter: props.filter}));
   }, [props.filter, props.account, props.type]);
 
@@ -117,11 +119,12 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   }, [props.toUnfollow]);
 
   useEffect(() => {
-    console.log(initialized)
     if (!initialized) return;
 
     setLoading(true);
     setError(false);
+
+    console.log('load from ' + props.offset)
 
     let fetch: {promise: Promise<any>, cancel: any};
     if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
@@ -129,15 +132,13 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
     else return;
 
-    console.log('Loading more posts... from ' + props.offset);
-
     fetch.promise.then(res => {
       if (res.status === 200) {
         const newPosts = res.data as FeedPost[];
         setHasMore(newPosts.length !== 0);
 
         // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
-        if (filter !== props.filter) setPosts(existing => {
+        if (currentFilter !== props.filter || props.account !== currentAccount) setPosts(existing => {
           const feed = existing.concat(newPosts);
           dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
@@ -148,8 +149,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           return feed;
         });
         dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
-        console.log('Loaded ' + newPosts.length + ' new posts')
-        console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);
       setLoading(false);
     }).catch(e => {

@@ -30,10 +30,13 @@ export const profileSlice = createSlice({
         setProfileJwt: (state, action: PayloadAction<string>) => {
             state.jwt = action.payload;
         },
+        resetProfile: () => {
+            return initialState;
+        }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfileInfo, setProfileJwt } = profileSlice.actions;
+export const { setProfileInfo, setProfileJwt, resetProfile } = profileSlice.actions;
 
 export default profileSlice.reducer;

@@ -43,6 +43,10 @@ const Feed: FC<FeedProps> = (props) => {
     }, 1);
   }, []);
 
+  useEffect(() => {
+    setOffset(0);
+  }, [account]);
+
   async function loadMorePosts() {
     if (loading || !hasMore) return;
     setOffset(offset + POSTS_PER_LOAD);
