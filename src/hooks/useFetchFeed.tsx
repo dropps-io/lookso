@@ -39,13 +39,14 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         setPosts(storedPosts[props.type]);
         setFilter(storedFilter[props.type]);
         setLoading(false);
+        setInitialized(true);
       }, 1)
     }
     else {
       setLoading(true);
       setError(false);
       setPosts([]);
-      dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
+      dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
 
       if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
       else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
@@ -116,6 +117,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   }, [props.toUnfollow]);
 
   useEffect(() => {
+    console.log(initialized)
     if (!initialized) return;
 
     setLoading(true);
@@ -145,7 +147,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
         });
-        dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
+        dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
         console.log('Loaded ' + newPosts.length + ' new posts')
         console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);
