@@ -17,6 +17,7 @@ import {ProfileFollowingDisplay} from "../../../models/profile";
 import CircularProgress from "@mui/material/CircularProgress";
 import {connectToAPI} from "../../../core/web3";
 import {setProfileJwt} from "../../../store/profile-reducer";
+import {PROFILES_PER_LOAD} from "../../../environment/constants";
 
 interface FollowModalProps {
   address: string,
@@ -28,54 +29,59 @@ interface FollowModalProps {
   onFollowChange: (type: 'followers' | 'following', value: -1 | 1) => any;
 }
 
-const PROFILES_PER_LOAD: number = 50;
-
 const FollowModal: FC<FollowModalProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const [profiles, setProfiles] = useState<ProfileFollowingDisplay[]>([]);
-  const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fullyLoaded, setFullyLoaded] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState<number | null>(null);
 
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
-    const init = async () => {
-      setInitialized(true);
-      loadProfiles();
+    if (props.open) {
+      setOffset(0);
+      setLoading(false);
+      setProfiles([]);
+      setFullyLoaded(false);
     }
-
-    if(props.address && !initialized && props.open) init();
   }, [props.open, props.address, web3, jwt]);
+
+  useEffect(() => {
+    if (fullyLoaded || loading || !props.open || offset === null) return;
+    setLoading(true);
+    let fetch: {promise: Promise<any>, cancel: any};
+    if (props.type === 'followers') fetch = fetchProfileFollowers(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
+    else fetch = fetchProfileFollowing(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
+
+    fetch.promise.then(res => {
+      if (res.status === 200) {
+        const profiles: ProfileFollowingDisplay[] = res.data;
+        setFullyLoaded(profiles.length < PROFILES_PER_LOAD);
+        setProfiles(existing => existing.concat(profiles));
+      }
+      else {
+
+      }
+      setLoading(false);
+      }).catch(err => {
+      console.log(err)
+      setLoading(false);
+    });
+
+    return () => fetch.cancel();
+  }, [offset]);
 
   function handleScroll() {
     if (ref.current && !loading && !fullyLoaded) {
       const rect = ref.current.getBoundingClientRect();
       const elemTop = rect.top;
       if (elemTop < 0) {
-        loadProfiles();
+        setOffset(profiles.length);
       }
-    }
-  }
-
-  async function loadProfiles() {
-    if (fullyLoaded) return;
-    setLoading(true);
-    let profiles: ProfileFollowingDisplay[] = [];
-    try {
-      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
-      if (props.type === 'following') profiles = await fetchProfileFollowing(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
-      if (profiles.length < PROFILES_PER_LOAD) setFullyLoaded(true);
-      setOffset(offset + profiles.length);
-      setProfiles(existing => existing.concat(profiles));
-      setLoading(false);
-    }
-    catch (e) {
-      setLoading(false);
     }
   }
 

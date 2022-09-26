@@ -2,7 +2,7 @@ import {API_URL} from "../environment/endpoints";
 import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
-import {ProfileDisplay, ProfileFollowingDisplay, ProfileInfo} from "../models/profile";
+import {ProfileDisplay, ProfileInfo} from "../models/profile";
 import axios from "axios";
 
 const headers = {
@@ -114,29 +114,27 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export async function fetchProfileFollowers(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
-  let url = API_URL + '/lookso/profile/' + address + '/followers?limit=' + limit + '&offset=' + offset;
-  if (viewOf) url += '&viewOf=' + viewOf;
-  const res = await fetch(url);
-  if (res.ok) return await res.json();
-  else throw await res.json();
+export function fetchProfileFollowers(address: string, limit: number, offset: number, viewOf?: string): { promise: Promise<any>, cancel: any } {
+  let cancel;
+  return {promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/profile/' + address + '/followers',
+      params: { limit, offset, viewOf },
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }), cancel};
 }
 
-export async function fetchProfileFollowing(address: string, limit: number, offset: number, viewOf?: string): Promise<ProfileFollowingDisplay[]> {
-let url = API_URL + '/lookso/profile/' + address + '/following?limit=' + limit + '&offset=' + offset;
-  if (viewOf) url += '&viewOf=' + viewOf;
-  const res = await fetch(url);
-  if (res.ok) return await res.json();
-  else throw await res.json();
+export function fetchProfileFollowing(address: string, limit: number, offset: number, viewOf?: string): { promise: Promise<any>, cancel: any } {
+  let cancel;
+  return {promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/profile/' + address + '/following',
+      params: { limit, offset, viewOf },
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }), cancel};
 }
 
-export async function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/profile/' + address + '/activity?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
-  if (type) url +=  '&postType=' + type;
-  return await (await fetch(url)).json();
-}
-
-export function fetchProfileActivityWithCancellationToken(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
@@ -146,13 +144,7 @@ export function fetchProfileActivityWithCancellationToken(address: string, limit
     }), cancel};
 }
 
-export async function fetchProfileFeed(address: string, limit: number, offset: number, type?: 'event' | 'post'): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/profile/' + address + '/feed?limit=' + limit + '&offset=' + offset;
-  if (type) url +=  '&postType=' + type;
-  return await (await fetch(url)).json();
-}
-
-export function fetchProfileFeedWithCancellationToken(address: string, limit: number, offset: number, type?: 'event' | 'post'): { promise: Promise<any>, cancel: any } {
+export function fetchProfileFeed(address: string, limit: number, offset: number, type?: 'event' | 'post'): { promise: Promise<any>, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
@@ -162,13 +154,7 @@ export function fetchProfileFeedWithCancellationToken(address: string, limit: nu
     }), cancel};
 }
 
-export async function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/feed?viewOf=' + viewOf + '&limit=' + limit + '&offset=' + offset;
-  if (type) url +=  '&postType=' + type;
-  return await (await fetch(url)).json();
-}
-
-export function fetchAllFeedWithCancellationToken(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',

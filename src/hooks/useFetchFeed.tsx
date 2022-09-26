@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FeedPost} from "../components/PostBox/PostBox";
-import {fetchAllFeedWithCancellationToken, fetchProfileActivityWithCancellationToken, fetchProfileFeedWithCancellationToken} from "../core/api";
 import {POSTS_PER_LOAD} from "../environment/constants";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import {setCurrentFeedFilter, setCurrentOffset, setStoredFeed} from "../store/feed-reducer";
+import {fetchAllFeed, fetchProfileActivity, fetchProfileFeed} from "../core/api";
 
 interface UseFetchFeedProps {
   account?: string;
@@ -39,18 +39,22 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         setPosts(storedPosts[props.type]);
         setFilter(storedFilter[props.type]);
         setLoading(false);
+        setInitialized(true);
       }, 1)
     }
     else {
       setLoading(true);
       setError(false);
       setPosts([]);
-      dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
+      dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
 
-      if (props.account && props.type === 'Feed') fetch = fetchProfileFeedWithCancellationToken(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
-      else if (props.type === 'Explore') fetch = fetchAllFeedWithCancellationToken(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-      else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivityWithCancellationToken(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-      else return;
+      if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
+      else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
+      else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
+      else {
+        setInitialized(true);
+        return;
+      }
 
       console.log('Loading more posts... from ' + props.offset);
 
@@ -73,6 +77,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
             console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
           } else setError(true);
           setLoading(false);
+          setInitialized(true);
         })
         .catch(e => {
           console.log(e);
@@ -80,9 +85,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           setError(true);
      });
     }
-    setTimeout(() => {
-      setInitialized(true);
-    }, 100)
     return () => {
       if (fetch) fetch.cancel();
     }
@@ -115,15 +117,16 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   }, [props.toUnfollow]);
 
   useEffect(() => {
+    console.log(initialized)
     if (!initialized) return;
 
     setLoading(true);
     setError(false);
 
     let fetch: {promise: Promise<any>, cancel: any};
-    if (props.account && props.type === 'Feed') fetch = fetchProfileFeedWithCancellationToken(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
-    else if (props.type === 'Explore') fetch = fetchAllFeedWithCancellationToken(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-    else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivityWithCancellationToken(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
+    if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
+    else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
+    else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
     else return;
 
     console.log('Loading more posts... from ' + props.offset);
@@ -144,7 +147,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
         });
-        dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
+        dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
         console.log('Loaded ' + newPosts.length + ' new posts')
         console.log('Filtered to ' + newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)).length + ' new posts')
       } else setError(true);
