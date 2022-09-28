@@ -38,15 +38,17 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [offset, setOffset] = useState<number | null>(null);
+  const [currentAddress, setCurrentAddress] = useState('');
 
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
-    if (props.open) {
+    if (props.open && props.address !== currentAddress) {
       setOffset(0);
       setLoading(false);
       setProfiles([]);
       setFullyLoaded(false);
+      setCurrentAddress(props.address);
     }
   }, [props.open, props.address, web3, jwt]);
 
@@ -73,7 +75,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     });
 
     return () => fetch.cancel();
-  }, [offset]);
+  }, [offset, currentAddress]);
 
   function handleScroll() {
     if (ref.current && !loading && !fullyLoaded) {
