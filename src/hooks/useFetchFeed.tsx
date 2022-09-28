@@ -32,6 +32,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
   useEffect(() => {
+    if (loading) return;
     setLoading(true);
 
     console.log('load from ' + props.offset)
@@ -43,14 +44,14 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
         setPosts(storedPosts[props.type]);
         setCurrentFilter(storedFilter[props.type]);
         setLoading(false);
-        setInitialized(true);
-      }, 1)
+      }, 1);
+      setTimeout(() => setInitialized(true), 100)
     }
     else {
       setLoading(true);
       setError(false);
       setPosts([]);
-      dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
+      dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
 
       if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
       else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
@@ -88,7 +89,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     return () => {
       if (fetch) fetch.cancel();
     }
-  }, [props.profile])
+  }, [props.profile]);
 
   // TODO in case of Log in, just updated the like status of posts
   useEffect(() => {
@@ -119,7 +120,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   }, [props.toUnfollow]);
 
   useEffect(() => {
-    if (!initialized) return;
+    if (!initialized || loading) return;
 
     setLoading(true);
     setError(false);
@@ -148,7 +149,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
           dispatch(setStoredFeed({type: props.type, feed}));
           return feed;
         });
-        dispatch(setCurrentOffset({type: props.type, offset: props.offset + POSTS_PER_LOAD}));
+        dispatch(setCurrentOffset({type: props.type, offset: props.offset }));
       } else setError(true);
       setLoading(false);
     }).catch(e => {
