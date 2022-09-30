@@ -83,7 +83,9 @@ export async function insertLike(address: string, postHash: string, jwt: string)
 }
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
-  const likes = (await (await fetch(API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender)).json());
+  let query = API_URL + '/lookso/post/' + postHash + '/likes';
+  if (sender) query += '?sender=' + sender
+  const likes = (await (await fetch(query)).json());
   return likes && likes.length > 0;
 }
 
@@ -148,14 +150,17 @@ export async function fetchAllFeed(limit: number, offset: number, type?: 'event'
 }
 
 export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost> {
-  let res = await fetch(API_URL + '/lookso/post/' + hash + '?viewOf=' + viewOf);
+  let query = API_URL + '/lookso/post/' + hash;
+  if (viewOf) query += '?viewOf=' + viewOf;
+  let res = await fetch(query);
   if (res.ok) return await res.json();
   else throw await res.json();
 }
 
 export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
-  let url = API_URL + '/lookso/post/' + hash + '/comments?limit=' + limit + '&offset=' + offset + '&viewOf=' + viewOf;
-  return await (await fetch(url)).json();
+  let query = API_URL + '/lookso/post/' + hash + '/comments?limit=' + limit + '&offset=' + offset;
+  if (viewOf) query += '&viewOf=' + viewOf;
+  return await (await fetch(query)).json();
 }
 
 export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
