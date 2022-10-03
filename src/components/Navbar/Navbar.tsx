@@ -105,7 +105,7 @@ const Navbar: FC<NavbarProps> = () => {
         <NotificationsModal account={account ? account : ''} open={showNotificationsModal} onClose={() => setShowNotificationsModal(false)}/>
         <Link href='/'>
           <div className={styles.Logo}>
-            <img src={logo.src} alt="Logo"/>
+            <img src={logo.src} alt="Lookso logo"/>
           </div>
         </Link>
         <div className={styles.SearchIcon} onClick={() => setShowMobileSearchBar(true)}>

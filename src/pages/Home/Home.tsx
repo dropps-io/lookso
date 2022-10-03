@@ -48,7 +48,7 @@ const Home: FC<HomeProps> = ()  => {
                 <img src={titleUnderline.src} alt=""/>
               </h1>
               <h2>A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
-              <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="impact image"/>
+              <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="lookso presentation"/>
               <div className={styles.CallAction}>
                 <Link href={'/explore'}>
                   <button className={styles.ImportantBtn}>See what’s happening</button>
@@ -56,7 +56,7 @@ const Home: FC<HomeProps> = ()  => {
                 <p>(no login required)</p>
               </div>
               <img className={styles.Shape} src={shape1.src} alt=""/>
-              <img className={styles.ImpactImg} src={impactImage.src} alt="impact image"/>
+              <img className={styles.ImpactImg} src={impactImage.src} alt="lookso overview"/>
             </div>
           </section>
 
@@ -101,7 +101,7 @@ const Home: FC<HomeProps> = ()  => {
                 Once LUKSO’s mainnet goes live we will roll out the definitive version of our platform, along with a user-friendly interface for linking your testnet activity to your mainnet Universal Profile
               </p>
             </div>
-            <img className={styles.RightPart} src={impactImage2.src} alt=''></img>
+            <img className={styles.RightPart} src={impactImage2.src} alt='lookso overview'></img>
           </section>
           <Faq/>
         </div>

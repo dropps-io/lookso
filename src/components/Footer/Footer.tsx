@@ -12,7 +12,7 @@ const Footer: FC<FooterProps> = () => (
     <div className={styles.FooterBox}></div>
     <div className={styles.FooterContent}>
       <a href={"https://dropps.io"} target={"_blank"} rel={'noreferrer'}>
-        <Image src={droppsLogo.src} width={50} height={50} alt=""/>
+        <Image src={droppsLogo.src} width={50} height={50} alt="dropps.io dropps logo"/>
       </a>
       <div className={styles.Credentials}>
         <span>Ⓒ</span>
