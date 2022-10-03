@@ -33,6 +33,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   useEffect(() => {
     if (loading) return;
+    console.log(1)
     setLoading(true);
 
     console.log('load from ' + props.offset)
@@ -58,6 +59,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
       else {
         setInitialized(true);
+        setLoading(false);
         return;
       }
 
@@ -112,6 +114,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   useEffect(() => {
     if (!initialized) return;
+
     if (props.toUnfollow) setPosts(existing => {
       const feed = existing.filter(p => p.author.address !== props.toUnfollow);
       dispatch(setStoredFeed({type: props.type, feed}));
