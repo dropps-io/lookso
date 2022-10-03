@@ -157,7 +157,10 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       if (axios.isCancel(e)) return;
       setError(true);
     });
-    return () => fetch.cancel();
+    return () => {
+      setLoading(false);
+      fetch.cancel();
+    }
   }, [props.offset, props.filter, props.account]);
 
   return { loading, error, posts, hasMore };
