@@ -31,7 +31,7 @@ const Picker = dynamic(
 interface PostInputProps {
   parentHash?: string;
   childPost?: FeedPost;
-  onNewPost?: () => any;
+  onNewPost?: (post: FeedPost) => any;
 }
 
 const PostInput: FC<PostInputProps> = (props) => {
@@ -94,7 +94,6 @@ const PostInput: FC<PostInputProps> = (props) => {
       const author: UniversalProfile = new UniversalProfile(account(), IPFS_GATEWAY, web3);
       const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
 
-
       if (!permissions) {
         setLoadingMessage('Your first post will require you to grant LOOKSO permission to save posts on your Universal Profile');
         await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, {SETDATA: true});
@@ -148,10 +147,12 @@ const PostInput: FC<PostInputProps> = (props) => {
         isLiked: false,
         reposts: 0
       };
-      if (props.onNewPost) props.onNewPost();
+      if (props.onNewPost) props.onNewPost(newPost);
 
-      dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
-      dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
+      if (!newPost.parentPost) {
+        dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
+        dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
+      }
 
       setInputFile(null);
       setInputValue('');

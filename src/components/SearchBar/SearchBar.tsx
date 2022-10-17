@@ -39,7 +39,7 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
     setProfilesLoading(true);
     try {
       setProfiles([]);
-      setProfiles(await searchProfiles(input, 5, 0));
+      setProfiles((await searchProfiles(input, 0)).results);
       setProfilesLoading(false);
     } catch (e) {
       setProfilesLoading(false);
