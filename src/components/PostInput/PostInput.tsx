@@ -149,7 +149,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       };
       if (props.onNewPost) props.onNewPost(newPost);
 
-      if (!newPost.parentPost) {
+      if (!props.parentHash) {
         dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
         dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
       }
