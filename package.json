@@ -1,6 +1,6 @@
 {
   "name": "lookso",
-  "version": "0.1.1-1",
+  "version": "0.1.1-2",
   "private": true,
   "scripts": {
     "dev": "set NEXT_PUBLIC_ENV=development&& next dev -p 3000",

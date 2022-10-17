@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1-2](https://github.com/dropps-nft/Lookso/compare/v0.1.1-1...v0.1.1-2) (2022-10-17)
+
+
+### Bug Fixes
+
+* **dirty:** continue loading when random hook query cancellation ([8b452d9](https://github.com/dropps-nft/Lookso/commit/8b452d94b48e631407ca98f0017d034a490c08c7))
+* doesn t freeze page when leave while loading ([fb71d42](https://github.com/dropps-nft/Lookso/commit/fb71d4275751296fc12dc73354e9529703d0fe79))
+* follow lists are not wiped when modal opened twice ([a4a0673](https://github.com/dropps-nft/Lookso/commit/a4a0673d731defecb200adf6fd884f2c5302c985))
+* handle properly optional params in api queries ([41fa7f8](https://github.com/dropps-nft/Lookso/commit/41fa7f8646ceecbf543808a0586513f7436024a3))
+* loading feed properly on page loading ([e69ecaa](https://github.com/dropps-nft/Lookso/commit/e69ecaacac8614a318eefb4adb68f2c36295f0d1))
+* no post removing when going back on the feed ([f14c6ef](https://github.com/dropps-nft/Lookso/commit/f14c6ef71237a3ebbd0d8e1ef192365c171a1321))
+
 ### [0.1.1-1](https://github.com/dropps-nft/Lookso/compare/v0.1.1-0...v0.1.1-1) (2022-09-26)
 
 
