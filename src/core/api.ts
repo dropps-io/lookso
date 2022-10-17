@@ -3,7 +3,8 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import {LSPXXProfilePost} from "../models/profile-post";
 import {Notification} from "../models/notification";
 import {ProfileDisplay, ProfileInfo} from "../models/profile";
-import axios from "axios";
+import axios, {AxiosPromise} from "axios";
+import {PaginationResponse} from "../models/pagination-response";
 
 const headers = {
   Accept: 'application/json',
@@ -116,52 +117,52 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export function fetchProfileFollowers(address: string, limit: number, offset: number, viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchProfileFollowers(address: string, page?: number, viewOf?: string): { promise: AxiosPromise, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
       url: API_URL + '/lookso/profile/' + address + '/followers',
-      params: { limit, offset, viewOf },
+      params: { page, viewOf },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }), cancel};
 }
 
-export function fetchProfileFollowing(address: string, limit: number, offset: number, viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchProfileFollowing(address: string, page?: number, viewOf?: string): { promise: AxiosPromise, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
       url: API_URL + '/lookso/profile/' + address + '/following',
-      params: { limit, offset, viewOf },
+      params: { page, viewOf },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }), cancel};
 }
 
-export function fetchProfileActivity(address: string, limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchProfileActivity(address: string, page?: number, type?: 'event' | 'post', viewOf?: string): { promise: AxiosPromise, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
       url: API_URL + '/lookso/profile/' + address + '/activity',
-      params: { postType: type, limit, offset, viewOf },
+      params: { postType: type, page, viewOf },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }), cancel};
 }
 
-export function fetchProfileFeed(address: string, limit: number, offset: number, type?: 'event' | 'post'): { promise: Promise<any>, cancel: any } {
+export function fetchProfileFeed(address: string, page?: number, type?: 'event' | 'post'): { promise: AxiosPromise, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
       url: API_URL + '/lookso/profile/' + address + '/feed',
-      params: { postType: type, limit, offset },
+      params: { postType: type, page },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }), cancel};
 }
 
-export function fetchAllFeed(limit: number, offset: number, type?: 'event' | 'post', viewOf?: string): { promise: Promise<any>, cancel: any } {
+export function fetchAllFeed(page?: number, type?: 'event' | 'post', viewOf?: string): { promise: AxiosPromise, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
       url: API_URL + '/lookso/feed',
-      params: { viewOf, limit, offset, postType: type },
+      params: { viewOf, page, postType: type },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }), cancel};
 }
@@ -174,10 +175,12 @@ export async function fetchPost(hash: string, viewOf?: string): Promise<FeedPost
   else throw await res.json();
 }
 
-export async function fetchPostComments(hash: string, limit: number, offset: number, viewOf?: string): Promise<FeedPost[]> {
-  let query = API_URL + '/lookso/post/' + hash + '/comments?limit=' + limit + '&offset=' + offset;
-  if (viewOf) query += '&viewOf=' + viewOf;
-  return await (await fetch(query)).json();
+export async function fetchPostComments(hash: string, page?: number, viewOf?: string): Promise<Omit<PaginationResponse, 'results'> & {results: FeedPost[]}> {
+  return (await axios({
+    method: 'GET',
+    url: API_URL + '/lookso/post/' + hash + '/comments',
+    params: { viewOf, page }
+  })).data;
 }
 
 export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, jwt: string): Promise<LSPXXProfilePost> {
@@ -218,12 +221,20 @@ export async function fetchProfileNotificationsCount(address: string): Promise<n
   return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications/count')).json()).notifications;
 }
 
-export async function fetchProfileNotifications(address: string, limit: number, offset: number): Promise<Notification[]> {
-  return (await (await fetch(API_URL + '/lookso/profile/' + address + '/notifications?limit=' + limit + '&offset=' + offset)).json()) as Notification[];
+export async function fetchProfileNotifications(address: string, page?: number): Promise<Omit<PaginationResponse, 'results'> & {results: Notification[]}> {
+  return (await axios({
+    method: 'GET',
+    url: API_URL + '/lookso/profile/' + address + '/notifications',
+    params: { page }
+  })).data;
 }
 
-export async function searchProfiles(input: string, limit: number, offset: number): Promise<ProfileDisplay[]> {
-  return (await (await fetch(API_URL + '/lookso/search/' + input + '?limit=' + limit + '&offset=' + offset)).json()) as ProfileDisplay[];
+export async function searchProfiles(input: string, page?: number): Promise<Omit<PaginationResponse, 'results'> & {results: ProfileDisplay[]}> {
+  return (await axios({
+    method: 'GET',
+    url: API_URL + '/lookso/search/' + input,
+    params: { page }
+  })).data;
 }
 
 export async function setProfileNotificationsToViewed(address: string, jwt: string): Promise<void> {
