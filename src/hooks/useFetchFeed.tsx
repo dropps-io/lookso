@@ -27,8 +27,8 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
 
   useEffect(() => {
     if (!initialized && posts.length > 0 && !(profile && profile !== props.profile)) {
+      dispatch(getFeedActions(props.type).setLoading(false));
       setTimeout(() => {setInitialized(true)}, 200);
-      console.log('here')
       return;
     }
     dispatch(getFeedActions(props.type).setLoading(true));
