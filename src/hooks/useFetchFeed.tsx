@@ -26,7 +26,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   const account = useSelector((state: RootState) => state.web3.account);
 
   useEffect(() => {
-    console.log(`${filter};${account};${props.profile}`)
     if (!initialized && posts.length > 0 && !(profile && profile !== props.profile)) {
       setTimeout(() => {setInitialized(true)}, 200);
       console.log('here')

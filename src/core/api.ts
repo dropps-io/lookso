@@ -117,7 +117,7 @@ export async function fetchIsProfileFollower(followingAddress: string, followerA
   return followers && followers.length > 0;
 }
 
-export function fetchProfileFollowers(address: string, page?: number, viewOf?: string): { promise: AxiosPromise, cancel: any } {
+export function fetchProfileFollowers(address: string, page?: number, viewOf?: string): { promise: AxiosPromise<Omit<PaginationResponse, 'results'> & {results: ProfileDisplay[]}>, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',
@@ -127,7 +127,7 @@ export function fetchProfileFollowers(address: string, page?: number, viewOf?: s
     }), cancel};
 }
 
-export function fetchProfileFollowing(address: string, page?: number, viewOf?: string): { promise: AxiosPromise, cancel: any } {
+export function fetchProfileFollowing(address: string, page?: number, viewOf?: string): { promise: AxiosPromise<Omit<PaginationResponse, 'results'> & {results: ProfileDisplay[]}>, cancel: any } {
   let cancel;
   return {promise: axios({
       method: 'GET',

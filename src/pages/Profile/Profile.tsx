@@ -6,7 +6,7 @@ import shareIcon from '../../assets/icons/share.svg'
 
 import Navbar from "../../components/Navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
-import {getReduxFeedState, RootState} from "../../store/store";
+import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
 import chainIcon from '../../assets/icons/chain.svg';
@@ -206,8 +206,8 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <ActionModal open={isOpenFeatureSoonModal} onClose={() => setIsOpenFeatureSoonModal(false)} textToDisplay={"Sorry, this functionality will be added soon!"} btnText={"Close"} callback={() => setIsOpenFeatureSoonModal(false)}/>
-      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
-      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
