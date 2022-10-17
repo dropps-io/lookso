@@ -7,7 +7,6 @@ import SubComments from "../SubComments/SubComments";
 interface CommentsProps {
   feed: FeedPost[],
   loadNext: () => void,
-  account: string
 }
 
 const Comments: FC<CommentsProps> = (props) => {
@@ -71,7 +70,7 @@ const Comments: FC<CommentsProps> = (props) => {
                     <div className={styles.ShowReplies}>
                       {
                         showReplies.get(post.hash) ?
-                          <SubComments commentsAmount={post.comments} commentHash={post.hash} account={props.account}/>
+                          <SubComments commentsAmount={post.comments} commentHash={post.hash}/>
                           :
                           <a onClick={() => showRepliesOf(post.hash)}>Show replies</a>
                       }

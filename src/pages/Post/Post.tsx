@@ -83,7 +83,7 @@ const Post: FC<PostProps> = (props) => {
               </div>
           }
           <div className={styles.Separator}></div>
-          <Comments account={account ? account : ''} feed={comments} loadNext={loadMoreComments}/>
+          <Comments feed={comments} loadNext={loadMoreComments}/>
           {(!fullyLoadedComments) && <div className={styles.NoComments}><CircularProgress size={60}/></div>}
           {(fullyLoadedComments && comments.length === 0) &&
           <div className={styles.NoComments}>

@@ -20,9 +20,9 @@ interface FeedProps {
 const Feed: FC<FeedProps> = (props) => {
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
 
-  const posts = useSelector((state: RootState) => getReduxFeedState(state, props.type).feed);
   const hasMore = useSelector((state: RootState) => getReduxFeedState(state, props.type).hasMore);
   const filter = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentFilter);
+  const posts = useSelector((state: RootState) => getReduxFeedState(state, props.type)).feed;
 
   const [addressToUnfollow, setAddressToUnfollow] = useState('');
 

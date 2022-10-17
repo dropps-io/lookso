@@ -2,17 +2,18 @@ import React, {FC, useEffect, useState} from 'react';
 import styles from './SubComments.module.scss';
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import {fetchPostComments} from "../../core/api";
-import {SUB_COMMENTS_PER_LOAD} from "../../environment/constants";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store";
 
 interface SubCommentsProps {
   commentHash: string,
   commentsAmount: number,
-  account: string
 }
 
 const SubComments: FC<SubCommentsProps> = (props) => {
+  const account = useSelector((state: RootState) => state.web3.account);
   const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState<undefined | number>(undefined);
   const [initialized, setInitialized] = useState(false);
   let loading = false;
 
@@ -20,9 +21,9 @@ const SubComments: FC<SubCommentsProps> = (props) => {
     async function init() {
       loading = true;
       setInitialized(true);
-      const comments = await fetchPostComments(props.commentHash, SUB_COMMENTS_PER_LOAD, 0, props.account);
-      setPosts(comments);
-      setOffset(comments.length);
+      const res = await fetchPostComments(props.commentHash, undefined, account ? account : undefined);
+      setPosts(res.results);
+      setPage(res.page - 1);
       loading = false;
     }
 
@@ -32,9 +33,9 @@ const SubComments: FC<SubCommentsProps> = (props) => {
   async function loadMoreReplies() {
     if (loading) return;
     loading = true;
-    const comments = await fetchPostComments(props.commentHash, SUB_COMMENTS_PER_LOAD, offset, props.account);
-    setPosts(existing => existing.concat(comments));
-    setOffset(offset + comments.length);
+    const res = await fetchPostComments(props.commentHash, page, account ? account : undefined);
+    setPosts(existing => existing.concat(res.results));
+    if (page) setPage(page - 1);
     loading = false;
   }
 

@@ -31,6 +31,8 @@ export function getFeedActions(type: 'Explore' | 'Profile' | 'Feed') {
             return userFeedSlice.actions;
         case "Profile":
             return profileFeedSlice.actions;
+        default:
+            return exploreFeedSlice.actions;
     }
 }
 
@@ -42,5 +44,7 @@ export const getReduxFeedState = (store: RootState ,type: 'Explore' | 'Profile' 
             return store.userFeed;
         case "Profile":
             return store.profileFeed;
+        default:
+            return store.exploreFeed;
     }
 }
