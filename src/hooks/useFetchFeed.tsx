@@ -31,6 +31,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       setTimeout(() => {setInitialized(true)}, 200);
       return;
     }
+    if (profile && profile !== props.profile) dispatch(getFeedActions(props.type).setCurrentFeedFilter(undefined));
     dispatch(getFeedActions(props.type).setLoading(true));
     dispatch(getFeedActions(props.type).setCurrentPost(''));
     dispatch(getFeedActions(props.type).setHasMore(true));
