@@ -1,172 +1,141 @@
 import React, {useEffect, useState} from 'react';
 import {FeedPost} from "../components/PostBox/PostBox";
-import {POSTS_PER_LOAD} from "../environment/constants";
-import axios from "axios";
+import axios, {AxiosPromise} from "axios";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../store/store";
-import {setCurrentFeedFilter, setCurrentOffset, setStoredFeed} from "../store/feed-reducer";
+import {getFeedActions, getReduxFeedState, RootState} from "../store/store";
 import {fetchAllFeed, fetchProfileActivity, fetchProfileFeed} from "../core/api";
+import {PaginationResponse} from "../models/pagination-response";
 
 interface UseFetchFeedProps {
-  account?: string;
-  profile?: string;
   type: 'Explore' | 'Feed' | 'Profile';
-  filter: 'all' | 'post' | 'event';
-  offset: number;
   postToAdd?: FeedPost,
-  toUnfollow?: string
+  toUnfollow?: string,
+  profile?: string
 }
 // TODO change props to normal function params
 const useFetchFeed = (props: UseFetchFeedProps) => {
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [currentFilter, setCurrentFilter] = useState<'all' | 'post' | 'event'>('all');
-  const [currentAccount, setCurrentAccount] = useState<string | undefined>(undefined);
   const [initialized, setInitialized] = useState(false);
 
-  const storedPosts = useSelector((state: RootState) => state.feed.feed);
-  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
+  const posts = useSelector((state: RootState) => getReduxFeedState(state, props.type).feed);
+  const filter = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentFilter);
+  const page = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentPage);
+  const profile = useSelector((state: RootState) => getReduxFeedState(state, props.type).profile);
+  const account = useSelector((state: RootState) => state.web3.account);
 
   useEffect(() => {
-    if (loading) return;
-    console.log(1)
-    setLoading(true);
-
-    console.log('load from ' + props.offset)
-
-    let fetch: {promise: Promise<any>, cancel: any};
-
-    if (storedPosts[props.type].length > 0 && !(props.type === 'Profile' && storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.profile)) {
-      setTimeout(() => {
-        setPosts(storedPosts[props.type]);
-        setCurrentFilter(storedFilter[props.type]);
-        setLoading(false);
-      }, 1);
-      setTimeout(() => setInitialized(true), 100)
+    console.log(`${filter};${account};${props.profile}`)
+    if (!initialized && posts.length > 0 && !(profile && profile !== props.profile)) {
+      setTimeout(() => {setInitialized(true)}, 200);
+      console.log('here')
+      return;
     }
-    else {
-      setLoading(true);
-      setError(false);
-      setPosts([]);
-      dispatch(setCurrentOffset({type: props.type, offset: props.offset}));
+    dispatch(getFeedActions(props.type).setLoading(true));
+    dispatch(getFeedActions(props.type).setCurrentPost(''));
+    dispatch(getFeedActions(props.type).setHasMore(true));
+    dispatch(getFeedActions(props.type).setStoredFeed([]));
+    dispatch(getFeedActions(props.type).setCurrentPost(''));
+    console.log('fetch')
 
-      if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
-      else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-      else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-      else {
-        setInitialized(true);
-        setLoading(false);
-        return;
-      }
+    let fetch: {promise: AxiosPromise, cancel: any};
 
-      fetch.promise
-        .then(res => {
-          if (res.status === 200) {
-            const newPosts = res.data as FeedPost[];
-            setHasMore(newPosts.length !== 0);
-
-            // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
-            if (currentFilter !== props.filter) {
-              setPosts(newPosts);
-              dispatch(setStoredFeed({type: props.type, feed: newPosts}));
-            }
-            else {
-              setPosts(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
-              dispatch(setStoredFeed({type: props.type, feed: newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash))}));
-            }
-          } else setError(true);
-          setLoading(false);
-          setInitialized(true);
-        })
-        .catch(e => {
-          console.log(e);
-          if (axios.isCancel(e)) return;
-          setError(true);
-     });
-    }
-    return () => {
-      if (fetch) fetch.cancel();
-    }
-  }, [props.profile]);
-
-  // TODO in case of Log in, just updated the like status of posts
-  useEffect(() => {
-    setCurrentAccount(props.account);
-
-    if (!initialized) return;
-
-    setPosts([]);
-    dispatch(setStoredFeed({type: props.type, feed: []}));
-    setCurrentFilter(props.filter);
-    dispatch(setCurrentFeedFilter({type: props.type, filter: props.filter}));
-  }, [props.filter, props.account, props.type]);
-
-  useEffect(() => {
-    if (!initialized) return;
-
-    const post = props.postToAdd;
-    if (post && !posts.map(p => p.hash).includes(post.hash)) setPosts(existing => [post].concat(existing))
-  }, [props.postToAdd]);
-
-  useEffect(() => {
-    if (!initialized) return;
-
-    if (props.toUnfollow) setPosts(existing => {
-      const feed = existing.filter(p => p.author.address !== props.toUnfollow);
-      dispatch(setStoredFeed({type: props.type, feed}));
-      return feed;
-    });
-  }, [props.toUnfollow]);
-
-  useEffect(() => {
-    if (!initialized || loading) return;
-
-    setLoading(true);
-    setError(false);
-
-    console.log('load from ' + props.offset)
-
-    let fetch: {promise: Promise<any>, cancel: any};
-    if (props.account && props.type === 'Feed') fetch = fetchProfileFeed(props.account, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter);
-    else if (props.type === 'Explore') fetch = fetchAllFeed(POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
-    else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, POSTS_PER_LOAD, props.offset, props.filter === 'all' ? undefined : props.filter, props.account);
+    if (account && props.type === 'Feed') fetch = fetchProfileFeed(account, undefined, filter);
+    else if (props.type === 'Explore') fetch = fetchAllFeed(undefined, filter, account ? account : undefined);
+    else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, undefined, filter, account ? account : undefined);
     else return;
 
     fetch.promise.then(res => {
-      if (res.status === 200) {
-        const newPosts = res.data as FeedPost[];
-        setHasMore(newPosts.length !== 0);
-
-        // We filter the new posts to avoid duplicates, but we do it only if the filter did not change
-        if (currentFilter !== props.filter || props.account !== currentAccount) setPosts(existing => {
-          const feed = existing.concat(newPosts);
-          dispatch(setStoredFeed({type: props.type, feed}));
-          return feed;
-        });
-        else setPosts(existing => {
-          const feed = existing.concat(newPosts.filter(post => !posts.map(p => p.hash).includes(post.hash)));
-          dispatch(setStoredFeed({type: props.type, feed}));
-          return feed;
-        });
-        dispatch(setCurrentOffset({type: props.type, offset: props.offset }));
-      } else setError(true);
-      setLoading(false);
-    }).catch(e => {
-      console.log(e);
+      const data = res.data as Omit<PaginationResponse, 'results'> & {results: FeedPost[]};
+      dispatch(getFeedActions(props.type).setStoredFeed(data.results.reverse()));
+      dispatch(getFeedActions(props.type).setCurrentPage(data.page));
+      if (props.type === 'Profile' && props.profile && props.profile !== profile) dispatch(getFeedActions(props.type).setProfile(props.profile));
+      if (!data.previous) dispatch(getFeedActions(props.type).setHasMore(false));
+      dispatch(getFeedActions(props.type).setLoading(false));
+      setTimeout(() => {setInitialized(true)}, 200);
+      console.log('fetched')
+    })
+    .catch(e => {
+      console.error(e);
       if (axios.isCancel(e)) return;
       setError(true);
     });
-    return () => {
-      setLoading(false);
-      fetch.cancel();
-    }
-  }, [props.offset, props.filter, props.account]);
 
-  return { loading, error, posts, hasMore };
+    return () => {
+      if (fetch) fetch.cancel();
+    }
+  }, [filter, account, props.profile]);
+
+  // useEffect(() => {
+  //   if (loading || props.type !== 'Profile' || !profile) return;
+  //   setLoading(true);
+  //
+  //   const fetch: {promise: AxiosPromise, cancel: any} = fetchProfileActivity(profile, undefined, filter, account);
+  //
+  //   fetch.promise.then(res => {
+  //     const data = res.data as Omit<PaginationResponse, 'results'> & {results: FeedPost[]};
+  //     dispatch(getFeedActions('Profile').setStoredFeed(data.results.reverse()));
+  //     dispatch(getFeedActions('Profile').setCurrentPage(data.page - 1));
+  //     if (!data.previous) setHasMore(false);
+  //     setLoading(false);
+  //   })
+  //     .catch(e => {
+  //       console.error(e);
+  //       if (axios.isCancel(e)) return;
+  //       setError(true);
+  //       setLoading(false);
+  //     });
+  //
+  //   return () => {
+  //     if (fetch) fetch.cancel();
+  //   }
+  // }, [profile]);
+
+  // useEffect(() => {
+  //   const post = props.postToAdd;
+  //   if (post && !posts.map(p => p.hash).includes(post.hash)) dispatch(getFeedActions(props.type).addToStoredFeed([post]));
+  // }, [props.postToAdd]);
+
+  // useEffect(() => {
+    // if (props.toUnfollow) setPosts(existing => {
+    //   const feed = existing.filter(p => p.author.address !== props.toUnfollow);
+    //   dispatch(setStoredFeed({type: props.type, feed}));
+    //   return feed;
+    // });
+  // }, [props.toUnfollow]);
+
+  useEffect(() => {
+    if (posts.length === 0 || !initialized) return;
+    console.log('new page')
+    dispatch(getFeedActions(props.type).setLoading(true));
+
+    let fetch: {promise: AxiosPromise, cancel: any};
+
+    if (account && props.type === 'Feed') fetch = fetchProfileFeed(account, page, filter);
+    else if (props.type === 'Explore') fetch = fetchAllFeed(page, filter, account ? account : undefined);
+    else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, page, filter, account ? account : undefined);
+    else return;
+
+    fetch.promise.then(res => {
+      const data = res.data as Omit<PaginationResponse, 'results'> & {results: FeedPost[]};
+      dispatch(getFeedActions(props.type).addToStoredFeed(data.results.reverse()));
+      if (!data.previous) dispatch(getFeedActions(props.type).setHasMore(false));
+      dispatch(getFeedActions(props.type).setLoading(false));
+      console.log('fetched new page')
+    })
+      .catch(e => {
+        console.error(e);
+        if (axios.isCancel(e)) return;
+        setError(true);
+      });
+
+    return () => {
+      if (fetch) fetch.cancel();
+    }
+  }, [page]);
+
+  return { error };
 }
 
 export default useFetchFeed;
