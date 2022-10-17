@@ -114,7 +114,7 @@ export async function fetchProfileFollowersCount(address: string): Promise<numbe
 
 export async function fetchIsProfileFollower(followingAddress: string, followerAddress: string): Promise<boolean> {
   const followers = (await (await fetch(API_URL + '/lookso/profile/' + followingAddress + '/followers?followerAddress=' + followerAddress)).json());
-  return followers && followers.length > 0;
+  return followers.count > 0;
 }
 
 export function fetchProfileFollowers(address: string, page?: number, viewOf?: string): { promise: AxiosPromise<Omit<PaginationResponse, 'results'> & {results: ProfileDisplay[]}>, cancel: any } {
