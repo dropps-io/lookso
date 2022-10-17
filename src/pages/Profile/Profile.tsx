@@ -24,7 +24,6 @@ import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../../components/UserTag/UserTag";
-import {POSTS_PER_LOAD} from "../../environment/constants";
 import {ProfileInfo} from "../../models/profile";
 import LoadingModal from "../../components/Modals/LoadingModal/LoadingModal";
 import {updateRegistry} from "../../core/update-registry";
@@ -45,9 +44,6 @@ const Profile: FC<ProfileProps> = (props) => {
   const dispatch = useDispatch();
 
   const accountSelector = useSelector((state: RootState) => state.web3.account);
-  const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
-  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
-  const storedPosts = useSelector((state: RootState) => state.feed.feed);
 
   const connected = {
     account: (): string => {
@@ -66,8 +62,6 @@ const Profile: FC<ProfileProps> = (props) => {
   // extra button with "report" and "block" user
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState<'' | 'followers' | 'following'>('');
-  const [offset, setOffset] = useState(0);
-  const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
   const [copied, setCopied] = useState([false, false]);
   const [bgColor, setBgColor] = useState('fff');
   const [loadingMessage, setLoadingMessage] = useState('');
@@ -76,27 +70,8 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isOpenFeatureSoonModal, setIsOpenFeatureSoonModal] = useState(false);
 
   const {
-    posts,
-    hasMore,
-    loading,
     error
-  } = useFetchFeed({type: 'Profile', profile: props.address, offset, filter, account: connected.account()});
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (storedPosts.Profile[0] && storedPosts.Profile[0].author.address === props.address) {
-        setOffset(storedOffset.Profile);
-        setFilter(storedFilter.Profile);
-      }
-    }, 1)
-  }, []);
-
-  useEffect(() => {
-    if (storedPosts.Profile[0] && storedPosts.Profile[0].author.address !== props.address) {
-      setOffset(0);
-      setFilter('all');
-    }
-  }, [props.address]);
+  } = useFetchFeed({type: 'Profile', profile: props.address});
 
   useEffect(() => {
     if (props.address) setBgColor(props.address.slice(2, 6));
@@ -200,17 +175,6 @@ const Profile: FC<ProfileProps> = (props) => {
     window.open ( EXPLORER_URL + '/address/' + address, '_blank');
   }
 
-  async function loadMorePosts() {
-    if (loading || !hasMore) return;
-    setOffset(offset + POSTS_PER_LOAD);
-  }
-
-  async function changeFilter(newFilter: 'all' | 'post' | 'event') {
-    if (filter !== newFilter) {
-      setOffset(0);
-      setFilter(newFilter);
-    }
-  }
 
   async function reportUser() {
     setIsOpenExtraAction(false);
@@ -242,8 +206,8 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <ActionModal open={isOpenFeatureSoonModal} onClose={() => setIsOpenFeatureSoonModal(false)} textToDisplay={"Sorry, this functionality will be added soon!"} btnText={"Close"} callback={() => setIsOpenFeatureSoonModal(false)}/>
-      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
-      <FollowModal connectedAccount={connected.account()} onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type='followers' open={isOpenFollowModal === 'followers'} onClose={() => setIsOpenFollowModal('')}/>
+      <FollowModal onFollowChange={handleFollowChange} onPushToBlockchainRequired={pushRegistryToTheBlockchain} address={props.address} type={'following'} open={isOpenFollowModal === 'following'} onClose={() => setIsOpenFollowModal('')}/>
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       {
         isOpenExtraAction && <div className='backdrop' onClick={() => setIsOpenExtraAction(false)}/>
@@ -340,7 +304,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <MoreInfo tags={props.profileInfo.tags} bio={props.profileInfo.description} links={props.profileInfo.links}/>
           }
           <div className={styles.Activity}>
-            <Activity type={'Profile'} end={!hasMore} loading={loading} headline='Activity' feed={posts.filter(p => !p.hided)} loadNext={loadMorePosts} onFilterChange={(filter) => changeFilter(filter)}></Activity>
+            <Activity type={'Profile'} headline='Activity' profile={props.address}></Activity>
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>

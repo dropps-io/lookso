@@ -1,14 +1,12 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import styles from './Feed.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {useSelector} from "react-redux";
-import {RootState, store} from "../../store/store";
-import {FeedPost} from "../../components/PostBox/PostBox";
+import {getReduxFeedState, RootState, store} from "../../store/store";
 import PostInput from "../../components/PostInput/PostInput";
 import Head from "next/head";
-import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Link from "next/link";
 import {WEBSITE_URL} from "../../environment/endpoints";
@@ -21,51 +19,17 @@ interface FeedProps {
 
 const Feed: FC<FeedProps> = (props) => {
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
-  const storedOffset = useSelector((state: RootState) => state.feed.currentOffset);
-  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
 
-  const [offset, setOffset] = useState(0);
-  const [filter, setFilter] = useState<'all' | 'post' | 'event'>('all');
-  const [postToAdd, setPostToAdd] = useState<FeedPost | undefined>(undefined);
+  const posts = useSelector((state: RootState) => getReduxFeedState(state, props.type).feed);
+  const hasMore = useSelector((state: RootState) => getReduxFeedState(state, props.type).hasMore);
+  const filter = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentFilter);
+
   const [addressToUnfollow, setAddressToUnfollow] = useState('');
 
-  const {
-    posts,
-    hasMore,
-    loading,
-    error
-  } = useFetchFeed({type: props.type, offset, filter, postToAdd, account, toUnfollow: addressToUnfollow});
-
-  useEffect(() => {
-    setTimeout(() => {
-      setOffset(storedOffset[props.type]);
-      setFilter(storedFilter[props.type]);
-    }, 1);
-  }, []);
-
-  useEffect(() => {
-    setOffset(0);
-  }, [account]);
-
-  async function loadMorePosts() {
-    if (loading || !hasMore) return;
-    setOffset(offset + POSTS_PER_LOAD);
-  }
-
-  async function changeFilter(newFilter: 'all' | 'post' | 'event') {
-    if (filter !== newFilter) {
-      setOffset(0);
-      setFilter(newFilter);
-    }
-  }
-
-  function handleNewPost(post: FeedPost) {
-    setPostToAdd(post);
-  }
+  const {error} = useFetchFeed({type: props.type, toUnfollow: addressToUnfollow});
 
   function handleUnfollow (address: string) {
     setAddressToUnfollow(address);
-    setOffset(posts.length + POSTS_PER_LOAD);
   }
 
   return (
@@ -90,7 +54,7 @@ const Feed: FC<FeedProps> = (props) => {
         {
           account ?
             <div className={styles.PostWritingBox}>
-              <PostInput key={'FeedInput'} onNewPost={handleNewPost}/>
+              <PostInput key={'FeedInput'}/>
             </div>
             :
             <></>
@@ -105,14 +69,8 @@ const Feed: FC<FeedProps> = (props) => {
             :
             <Activity
               type={props.type}
-              loading={loading}
-              feed={posts.filter(p => !p.hided)}
               headline={props.type}
-              onFilterChange={(filterValue) => changeFilter(filterValue)}
-              newPost={handleNewPost}
-              loadNext={loadMorePosts}
               onUnfollow={handleUnfollow}
-              end={!hasMore}
             />
         }
 

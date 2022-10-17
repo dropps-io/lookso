@@ -7,8 +7,8 @@ import {EXPLORER_URL, NATIVE_TOKEN, UP_CLOUD_URL} from "../../environment/endpoi
 import {useRouter} from "next/router";
 import {useDispatch} from "react-redux";
 import {resetProfile} from "../../store/profile-reducer";
-import {resetFeed} from "../../store/feed-reducer";
 import {resetWeb3} from "../../store/web3-reducer";
+import {getFeedActions} from "../../store/store";
 
 interface ProfileDropdownProps {
   showDropdown: boolean,
@@ -32,7 +32,9 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
   function disconnectWeb3() {
     props.onClose();
     dispatch(resetProfile());
-    dispatch(resetFeed());
+    dispatch(getFeedActions('Explore').resetFeedReducer());
+    dispatch(getFeedActions('Feed').resetFeedReducer());
+    dispatch(getFeedActions('Profile').resetFeedReducer());
     dispatch(resetWeb3());
     if (router.asPath.toLowerCase().includes('feed')) router.push('/explore');
   }

@@ -3,7 +3,7 @@ import styles from './PostInput.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
 import {POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {getFeedActions, RootState} from "../../store/store";
 import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
@@ -31,7 +31,7 @@ const Picker = dynamic(
 interface PostInputProps {
   parentHash?: string;
   childPost?: FeedPost;
-  onNewPost: (post: FeedPost) => any;
+  onNewPost?: (post: FeedPost) => any;
 }
 
 const PostInput: FC<PostInputProps> = (props) => {
@@ -94,7 +94,6 @@ const PostInput: FC<PostInputProps> = (props) => {
       const author: UniversalProfile = new UniversalProfile(account(), IPFS_GATEWAY, web3);
       const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
 
-
       if (!permissions) {
         setLoadingMessage('Your first post will require you to grant LOOKSO permission to save posts on your Universal Profile');
         await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, {SETDATA: true});
@@ -125,7 +124,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
       await setNewRegistryPostedOnProfile(account(), resJWT);
 
-      props.onNewPost({
+      const newPost: FeedPost = {
         date: new Date(),
         author: {
           address: account(),
@@ -147,7 +146,13 @@ const PostInput: FC<PostInputProps> = (props) => {
         likes: 0,
         isLiked: false,
         reposts: 0
-      });
+      };
+      if (props.onNewPost) props.onNewPost(newPost);
+
+      if (!props.parentHash) {
+        dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
+        dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
+      }
 
       setInputFile(null);
       setInputValue('');
@@ -166,8 +171,8 @@ const PostInput: FC<PostInputProps> = (props) => {
     setProfilesLoading(true);
     try {
       setProfiles([]);
-      const profiles = await searchProfiles(input, 5, 0);
-      if (tagInput) setProfiles(profiles);
+      const res = await searchProfiles(input);
+      if (tagInput) setProfiles(res.results);
       setProfilesLoading(false);
     } catch (e) {
       setProfilesLoading(false);

@@ -30,7 +30,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
   useEffect(() => {
     const init = async () => {
       setInitialized(true);
-      setNotifications(await fetchProfileNotifications(props.account, 30, 0));
+      setNotifications((await fetchProfileNotifications(props.account, 0)).results);
     }
 
   if (props.account && !initialized && props.open) init();

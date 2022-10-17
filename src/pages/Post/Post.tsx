@@ -7,7 +7,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import Comments from "../../components/Comments/Comments";
 import {useRouter} from "next/router";
-import {POSTS_PER_LOAD} from "../../environment/constants";
 import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import Footer from "../../components/Footer/Footer";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -26,11 +25,10 @@ const Post: FC<PostProps> = (props) => {
   const [comments, setComments] = useState<FeedPost[]>([]);
   const [isLiking, setIsLiking] = useState(false);
   const [fullyLoadedComments, setFullyLoadedComments] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState<number | undefined>(undefined);
   const [initialized, setInitialized] = useState(false);
 
   let loading = false;
-
 
   useEffect(() => {
     async function init() {
@@ -44,14 +42,14 @@ const Post: FC<PostProps> = (props) => {
         setIsLiking(true);
       }
 
-      const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, 0, account);
+      const res = await fetchPostComments(props.hash, 0, account ? account : undefined);
       if (router.query.newComment) {
         const newComment: FeedPost = JSON.parse(router.query.newComment as string);
-        if (!comments.map(c => c.hash).includes(newComment.hash)) comments.unshift(newComment);
+        if (!res.results.map(c => c.hash).includes(newComment.hash)) res.results.unshift(newComment);
       }
-      if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
-      setOffset(comments.length);
-      setComments(comments);
+      if (res.results.length === res.count) setFullyLoadedComments(true);
+      setComments(res.results);
+      setPage(res.page - 1);
       await timer(1000);
       setInitialized(false);
     }
@@ -65,10 +63,10 @@ const Post: FC<PostProps> = (props) => {
 
   async function loadMoreComments() {
     if (loading || fullyLoadedComments) return;
-    const comments = await fetchPostComments(props.hash, POSTS_PER_LOAD, offset, account);
-    if (comments.length < POSTS_PER_LOAD) setFullyLoadedComments(true);
-    setOffset(offset + comments.length);
-    setComments(existing =>  existing.concat(comments));
+    const res = await fetchPostComments(props.hash, page, account ? account : undefined);
+    if (res.results.length === comments.length) setFullyLoadedComments(true);
+    if (page) setPage(page - 1);
+    setComments(existing =>  existing.concat(res.results));
   }
 
   return (
