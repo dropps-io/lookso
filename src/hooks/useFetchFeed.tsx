@@ -36,7 +36,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     dispatch(getFeedActions(props.type).setCurrentPost(''));
     dispatch(getFeedActions(props.type).setHasMore(true));
     dispatch(getFeedActions(props.type).setStoredFeed([]));
-    dispatch(getFeedActions(props.type).setCurrentPost(''));
+    setInitialized(false);
     console.log('fetch')
 
     let fetch: {promise: AxiosPromise, cancel: any};
@@ -106,7 +106,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
   // }, [props.toUnfollow]);
 
   useEffect(() => {
-    if (posts.length === 0 || !initialized) return;
+    if (!initialized) return;
     console.log('new page')
     dispatch(getFeedActions(props.type).setLoading(true));
 
@@ -122,6 +122,7 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       dispatch(getFeedActions(props.type).addToStoredFeed(data.results.reverse()));
       if (!data.previous) dispatch(getFeedActions(props.type).setHasMore(false));
       dispatch(getFeedActions(props.type).setLoading(false));
+      if (page === undefined && res.data.page > 0) dispatch(getFeedActions(props.type).setCurrentPage(res.data.page - 1))
       console.log('fetched new page')
     })
       .catch(e => {
