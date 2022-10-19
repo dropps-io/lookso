@@ -19,7 +19,7 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import dynamic from "next/dynamic";
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
-import {IPFS_GATEWAY} from "../../environment/constants";
+import {IPFS_GATEWAY, MAX_POST_LENGTH} from "../../environment/constants";
 
 const Picker = dynamic(
   () => {
@@ -233,6 +233,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   const onEmojiClick = (event: any, emojiObject: any) => {
+    if (inputValue.length + emojiObject.emoji.length > MAX_POST_LENGTH) return;
     if (postInput.current) postInput.current.value = inputValue + emojiObject.emoji;
     setInputValue(value => value + emojiObject.emoji);
   };
@@ -253,7 +254,7 @@ const PostInput: FC<PostInputProps> = (props) => {
             <textarea onClick={() => setShowEmojiPicker(false)}
                       disabled={!!loadingMessage}
                       onChange={handleChangeMessage}
-                      maxLength={256}
+                      maxLength={MAX_POST_LENGTH}
                       ref={postInput}
                       className={styles.PostInput}
                       style={{height: `${inputHeight}px`}}
@@ -285,7 +286,7 @@ const PostInput: FC<PostInputProps> = (props) => {
 
         }
         <div className={styles.BoxBottom}>
-          <span>{inputValue.length} / 256</span>
+          <span>{inputValue.length} / {MAX_POST_LENGTH.toString()}</span>
           <div className={styles.RightPart}>
             <div className={styles.SmileIcon}>
               <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>
