@@ -145,7 +145,8 @@ const PostInput: FC<PostInputProps> = (props) => {
         comments: 0,
         likes: 0,
         isLiked: false,
-        reposts: 0
+        reposts: 0,
+        childPost: props.childPost
       };
       if (props.onNewPost) props.onNewPost(newPost);
 
