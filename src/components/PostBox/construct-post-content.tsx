@@ -59,7 +59,7 @@ const PostContent: FC<PostContentProps> = (props) => {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
             <ParamContent onClick={props.onClick} key={index} param={props.params[entry]}></ParamContent> :
-            <PostText text={entry}/>
+            <PostText key={index} text={entry}/>
       )
       }
     </p>
@@ -83,17 +83,17 @@ const PostText = (props: PostTextProps) => {
     <>
       {
         props.text.split('\n').map((sentence, index) =>
-          <>
+          <span key={index}>
             {
               index !== 0 && <br/>
             }
             {
-              sentence.split(' ').map(word =>
+              sentence.split(' ').map((word, i) =>
                 word.match(/(< href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi) ?
-                  <a className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>
+                  <a key={i} className={'Link'} href={word} target={'_blank'} rel="noreferrer">{`${word} `}</a>
                   :
                   word.match(USER_TAG_REGEX) ?
-                    <span>
+                    <span key={i}>
                       <span onClick={() => goToProfile(word)} className={styles.ProfileTagged}>
                         {word.split('#')[0]}
                         <span className={styles.Digits}>#{word.split('#')[1]}</span>
@@ -101,10 +101,10 @@ const PostText = (props: PostTextProps) => {
                         {` `}
                     </span>
                     :
-                    <span>{`${word} `}</span>
+                    <span key={i}>{`${word} `}</span>
               )
             }
-          </>
+          </span>
         )
       }
     </>

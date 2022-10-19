@@ -1,9 +1,9 @@
-import React, {createRef, FC, useEffect, useRef, useState} from 'react';
+import React, {createRef, FC, useState} from 'react';
 import styles from './PostInput.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
 import {POST_VALIDATOR_ADDRESS} from "../../environment/endpoints";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {getFeedActions, RootState} from "../../store/store";
 import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
@@ -31,7 +31,7 @@ const Picker = dynamic(
 interface PostInputProps {
   parentHash?: string;
   childPost?: FeedPost;
-  onNewPost: (post: FeedPost) => any;
+  onNewPost?: (post: FeedPost) => any;
 }
 
 const PostInput: FC<PostInputProps> = (props) => {
@@ -56,9 +56,6 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [profilesLoading, setProfilesLoading] = useState(false);
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
   const [tagInput, setTagInput] = useState('');
-
-  const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef);
 
   async function requestJWT() {
     const resJWT = await connectToAPI(account(), web3);
@@ -97,7 +94,6 @@ const PostInput: FC<PostInputProps> = (props) => {
       const author: UniversalProfile = new UniversalProfile(account(), IPFS_GATEWAY, web3);
       const permissions = await author.fetchPermissionsOf(POST_VALIDATOR_ADDRESS);
 
-
       if (!permissions) {
         setLoadingMessage('Your first post will require you to grant LOOKSO permission to save posts on your Universal Profile');
         await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, {SETDATA: true});
@@ -128,7 +124,7 @@ const PostInput: FC<PostInputProps> = (props) => {
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
       await setNewRegistryPostedOnProfile(account(), resJWT);
 
-      props.onNewPost({
+      const newPost: FeedPost = {
         date: new Date(),
         author: {
           address: account(),
@@ -150,7 +146,13 @@ const PostInput: FC<PostInputProps> = (props) => {
         likes: 0,
         isLiked: false,
         reposts: 0
-      });
+      };
+      if (props.onNewPost) props.onNewPost(newPost);
+
+      if (!props.parentHash) {
+        dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
+        dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
+      }
 
       setInputFile(null);
       setInputValue('');
@@ -169,8 +171,8 @@ const PostInput: FC<PostInputProps> = (props) => {
     setProfilesLoading(true);
     try {
       setProfiles([]);
-      const profiles = await searchProfiles(input, 5, 0);
-      if (tagInput) setProfiles(profiles);
+      const res = await searchProfiles(input);
+      if (tagInput) setProfiles(res.results);
       setProfilesLoading(false);
     } catch (e) {
       setProfilesLoading(false);
@@ -235,34 +237,13 @@ const PostInput: FC<PostInputProps> = (props) => {
     setInputValue(value => value + emojiObject.emoji);
   };
 
-  /**
-   * Hook that alerts clicks outside of the passed ref
-   */
-  function useOutsideAlerter(ref: any) {
-    useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event: any) {
-        if (ref.current && !ref.current.contains(event.target)) {
-          setShowEmojiPicker(false)
-        }
-      }
-
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        // Unbind the event listener on clean up
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref])
-  }
-
   return (
     <>
-      {(profiles.length > 0 || profilesLoading) && <div className={'backdrop'} onClick={() => {
+      {(profiles.length > 0 || profilesLoading || showEmojiPicker) &&
+          <div className={'backdrop'} onClick={() => {
         setProfiles([]);
         setTagInput('');
+        setShowEmojiPicker(false);
       }}></div>}
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <form onSubmit={handleSubmit} className={`${props.parentHash ? styles.Comment : ''} ${props.childPost ? styles.Repost : ''}`}>
@@ -308,7 +289,7 @@ const PostInput: FC<PostInputProps> = (props) => {
           <div className={styles.RightPart}>
             <div className={styles.SmileIcon}>
               <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>
-              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`} ref={wrapperRef}>
+              <div className={`${styles.EmojiPicker} ${showEmojiPicker ? styles.ActivePicker : ''}`}>
                 <Picker onEmojiClick={onEmojiClick} disableSearchBar native/>
               </div>
             </div>

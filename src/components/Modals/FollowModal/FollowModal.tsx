@@ -20,7 +20,6 @@ import {setProfileJwt} from "../../../store/profile-reducer";
 
 interface FollowModalProps {
   address: string,
-  connectedAccount: string,
   type: 'following' | 'followers',
   open: boolean,
   onClose: () => any,
@@ -28,54 +27,63 @@ interface FollowModalProps {
   onFollowChange: (type: 'followers' | 'following', value: -1 | 1) => any;
 }
 
-const PROFILES_PER_LOAD: number = 50;
-
 const FollowModal: FC<FollowModalProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
+  const account = useSelector((state: RootState) => state.web3.account);
   const [profiles, setProfiles] = useState<ProfileFollowingDisplay[]>([]);
-  const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fullyLoaded, setFullyLoaded] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState<number | null>(null);
+  const [currentAddress, setCurrentAddress] = useState('');
 
   let ref: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
-    const init = async () => {
-      setInitialized(true);
-      loadProfiles();
+    if (props.open && props.address !== currentAddress) {
+      setPage(0);
+      setLoading(false);
+      setProfiles([]);
+      setFullyLoaded(false);
+      setCurrentAddress(props.address);
     }
-
-    if(props.address && !initialized && props.open) init();
   }, [props.open, props.address, web3, jwt]);
+
+  useEffect(() => {
+    if (fullyLoaded || loading || !props.open || page === null) return;
+    setLoading(true);
+    let fetch: {promise: Promise<any>, cancel: any};
+    if (props.type === 'followers') fetch = fetchProfileFollowers(props.address, 0, account ? account : undefined);
+    else fetch = fetchProfileFollowing(props.address, page, account ? account : undefined);
+
+    fetch.promise.then(res => {
+      if (res.status === 200) {
+
+        const profiles: ProfileFollowingDisplay[] = res.data.results;
+        setFullyLoaded(!res.data.next);
+        setProfiles(existing => existing.concat(profiles));
+      }
+      else {
+
+      }
+      setLoading(false);
+      }).catch(err => {
+      console.log(err)
+      setLoading(false);
+    });
+
+    return () => fetch.cancel();
+  }, [page, currentAddress]);
 
   function handleScroll() {
     if (ref.current && !loading && !fullyLoaded) {
       const rect = ref.current.getBoundingClientRect();
       const elemTop = rect.top;
-      if (elemTop < 0) {
-        loadProfiles();
+      if (elemTop < 0 && page) {
+        setPage(page + 1);
       }
-    }
-  }
-
-  async function loadProfiles() {
-    if (fullyLoaded) return;
-    setLoading(true);
-    let profiles: ProfileFollowingDisplay[] = [];
-    try {
-      if (props.type === 'followers') profiles = await fetchProfileFollowers(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
-      if (props.type === 'following') profiles = await fetchProfileFollowing(props.address, PROFILES_PER_LOAD, offset, props.connectedAccount);
-      if (profiles.length < PROFILES_PER_LOAD) setFullyLoaded(true);
-      setOffset(offset + profiles.length);
-      setProfiles(existing => existing.concat(profiles));
-      setLoading(false);
-    }
-    catch (e) {
-      setLoading(false);
     }
   }
 
@@ -96,6 +104,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   }
 
   async function followUser(address: string) {
+    if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
     try {
       let headersJWT = jwt;
@@ -103,8 +112,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any = await insertFollow(props.connectedAccount, address, headersJWT);
-        if (props.address === props.connectedAccount) props.onFollowChange(props.type, 1);
+        const res: any = await insertFollow(account, address, headersJWT);
+        if (props.address === account) props.onFollowChange(props.type, 1);
         if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
@@ -120,6 +129,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
   }
 
   async function unfollowUser(address: string) {
+    if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
     try {
       let headersJWT = jwt;
@@ -127,8 +137,8 @@ const FollowModal: FC<FollowModalProps> = (props) => {
         headersJWT = await requestJWT();
       }
       try {
-        const res: any = await insertUnfollow(props.connectedAccount, address, headersJWT);
-        if (props.address === props.connectedAccount) props.onFollowChange(props.type, -1);
+        const res: any = await insertUnfollow(account, address, headersJWT);
+        if (props.address === account) props.onFollowChange(props.type, -1);
         if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
       } catch (e: any) {
         setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
@@ -150,7 +160,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
           {
             profiles.length > 0 ?
             profiles.map((profile, index) =>
-              index === profiles.length - PROFILES_PER_LOAD / 2 ?
+              index === profiles.length - 25 ?
               <div ref={ref} key={index} className={`${styles.Profile}`}>
                 <div className={styles.ProfileDisplay}>
                   <div onClick={() => goToProfile(profile.address)} className={styles.ProfileImgMedium} style={{backgroundImage: `url(${profile.image ? formatUrl(profile.image) : DEFAULT_PROFILE_IMAGE})`}}/>
@@ -170,7 +180,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
                   <span onClick={() => goToProfile(profile.address)} className={styles.NotificationText}><UserTag username={profile.name} address={profile.address}/></span>
                 </div>
                 {
-                  props.connectedAccount &&
+                  account &&
                   (profile.following ?
                     <button onClick={() => unfollowUser(profile.address)} className={`btn btn-secondary-no-fill`}>Following</button>
                     :

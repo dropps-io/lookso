@@ -1,103 +1,107 @@
-import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import styles from './Activity.module.scss';
 
-import PostBox, {FeedPost} from "../PostBox/PostBox";
-import {POSTS_PER_LOAD} from "../../environment/constants";
-import {timer} from "../../core/utils/timer";
+import PostBox from "../PostBox/PostBox";
 import CircularProgress from "@mui/material/CircularProgress";
 import {useRouter} from "next/router";
-import {RootState} from "../../store/store";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getFeedActions, getReduxFeedState, RootState} from "../../store/store";
 
 interface ActivityProps {
-  feed: FeedPost[],
+  type: 'Profile' | 'Feed' | 'Explore',
   headline: string,
-  onFilterChange: (filter: 'all' | 'event' | 'post') => void
-  loadNext: (filter: 'all' | 'event' | 'post') => void,
-  newPost?: (post: FeedPost) => any,
-  onUnfollow?: ((address: string, filter: 'all' | 'post' | 'event') => any),
-  end?: boolean,
-  onScroll?: () => any,
-  loading?: boolean
+  onUnfollow?: ((address: string) => any),
+  profile?: string
 }
 
 const Activity: FC<ActivityProps> = (props) => {
   const router = useRouter();
-  const storedFilter = useSelector((state: RootState) => state.feed.currentFilter);
-  const [isListening, setIsListening] = useState(true);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'post' | 'event'>('all');
-  let ref: RefObject<HTMLDivElement> = useRef(null);
+  const dispatch = useDispatch();
 
-  const filters: {display: string, value: 'all' | 'post' | 'event'}[] = [
-    {display: 'All', value: 'all'},
+  const [scrolled, setScrolled] = useState(false);
+
+  const currentPost = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentPost);
+  const filter = useSelector((state: RootState) => getReduxFeedState(state, props.type).currentFilter);
+  const posts = useSelector((state: RootState) => getReduxFeedState(state, props.type).feed);
+  const loading = useSelector((state: RootState) => getReduxFeedState(state, props.type).loading);
+  const hasMore = useSelector((state: RootState) => getReduxFeedState(state, props.type).hasMore);
+  const profile = useSelector((state: RootState) => getReduxFeedState(state, props.type).profile);
+
+  const observer: any = useRef();
+  const postElementRef = useCallback((node: any) => {
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore && !loading) decrementPage();
+    })
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
+  const observerEnd: any = useRef();
+  const postElementEndRef = useCallback((node: any) => {
+    if (observerEnd.current) observerEnd.current.disconnect();
+    observerEnd.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore && !loading) decrementPage();
+    })
+    if (node) observerEnd.current.observe(node);
+  }, [loading, hasMore]);
+
+  const currentPostRef = useRef(null);
+
+  const filters: {display: string, value: undefined | 'post' | 'event'}[] = [
+    {display: 'All', value: undefined},
     {display: 'Posts', value: 'post'},
     {display: 'Events', value: 'event'}
   ];
 
-  function isScrolledIntoView(el: RefObject<HTMLDivElement>) {
-    if (el.current) {
-      const rect = el.current.getBoundingClientRect();
-      const elemTop = rect.top;
-      return (elemTop < 0);
-    } else {
-      return false;
+  useEffect(() => {
+    if (!scrolled && currentPostRef && currentPostRef.current && props.profile === profile) {
+      (currentPostRef.current as any).scrollIntoView({block: 'center'});
     }
+    setScrolled(true);
+  }, [posts]);
+
+  function decrementPage() {
+    dispatch(getFeedActions(props.type).decrementPage());
   }
 
   async function setActive(i: number) {
-    if (filters[i].value !== activeFilter) {
-      props.onFilterChange(filters[i].value);
-      setActiveFilter(filters[i].value);
+    if (filters[i].value !== filter) {
+      dispatch(getFeedActions(props.type).setCurrentFeedFilter(filters[i].value))
     }
   }
 
-  useEffect(() => {
-    if (isListening) {
-      const listener = async () => {
-        if (isScrolledIntoView(ref) && storedFilter) {
-          setIsListening(!isListening);
-          props.loadNext(router.asPath.includes('Profile') ? activeFilter : storedFilter);
-          await timer(3000);
-          setIsListening(true);
-        }
-        if (props.onScroll) props.onScroll();
-      }
-
-      document.addEventListener("scroll", listener);
-
-      return () => {
-        document.removeEventListener("scroll", listener);
-      };
-    }
-
-    if (!router.asPath.includes('Profile')) {
-      setActiveFilter(storedFilter);
-    }
-  }, [props.loadNext, isListening, props.onFilterChange])
+  function refresh() {
+    dispatch(getFeedActions(props.type).setStoredFeed([]));
+    dispatch(getFeedActions(props.type).setCurrentPage(undefined));
+  }
 
   return (
     <div className={styles.Feed}>
       <div className={styles.FeedHeader}>
-        <h5>{props.headline}</h5>
+        <h5 onClick={() => console.log(currentPostRef)}>{props.headline}</h5>
         <div className={styles.Filters}>
           {
-            filters.map((filter, index) =>
-              <span key={filter.display} onClick={() => setActive(index)} className={`${activeFilter === filter.value ? styles.ActiveFilter : ''}`}>{filter.display}</span>
+            filters.map((f, index) =>
+              <span key={f.display} onClick={() => setActive(index)} className={`${filter === f.value ? styles.ActiveFilter : ''}`}>{f.display}</span>
             )
           }
         </div>
       </div>
       {
-        props.feed && props.feed.length > 0 ?
+        posts && posts.length > 0 ?
           <div className={styles.FeedPosts}>
             {
-              props.feed.map((post, index) =>
-                index === props.feed.length - (POSTS_PER_LOAD / 2) ?
-                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                           newRepost={props.newPost} ref={ref} key={post.hash} post={post}/>
+              posts.map((post, index) =>
+                post.hash === currentPost ?
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={currentPostRef} key={post.hash + index} post={post} type={props.type}/>
                   :
-                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address, activeFilter)}}
-                           newRepost={props.newPost} key={post.hash + index} post={post}/>
+                  index === posts.length - 15 ?
+                    <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementRef} key={post.hash + index} post={post} type={props.type}/>
+                    :
+                    index === posts.length - 1 ?
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementEndRef} key={post.hash + index} post={post} type={props.type}/>
+                      :
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} key={post.hash + index} post={post} type={props.type}/>
               )
             }
           </div>
@@ -105,21 +109,22 @@ const Activity: FC<ActivityProps> = (props) => {
           <></>
       }
       {
-        props.loading !== undefined && !props.loading && router.asPath.includes('Profile') ?
-          props.feed.length === 0 &&
-            <div className={styles.Loading}>
+        loading !== undefined && !loading && router.asPath.includes('Profile') && (posts.length === 0 && !hasMore) &&
+          <div className={styles.Loading}>
               <p>This profile has no posts yet 🤷</p>
-            </div> :
-          (props.loading && !props.end) &&
+          </div>
+      }
+      {
+          loading &&
           <div className={styles.Loading}>
             <CircularProgress size={60}/>
           </div>
       }
       {
-        props.end &&
+        !hasMore &&
           <div className={styles.FeedEnd}>
               <p>Looks like you reached the end of the feed 😔</p>
-              <button onClick={() => props.onFilterChange(activeFilter)} className={'btn btn-secondary'}>Refresh</button>
+              <button onClick={refresh} className={'btn btn-secondary'}>Refresh</button>
           </div>
       }
     </div>

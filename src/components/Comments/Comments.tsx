@@ -1,14 +1,12 @@
 import React, {FC, RefObject, useEffect, useRef, useState} from 'react';
 import styles from './Comments.module.scss';
 import {timer} from "../../core/utils/timer";
-import {POSTS_PER_LOAD} from "../../environment/constants";
 import PostBox, {FeedPost} from "../PostBox/PostBox";
 import SubComments from "../SubComments/SubComments";
 
 interface CommentsProps {
   feed: FeedPost[],
   loadNext: () => void,
-  account: string
 }
 
 const Comments: FC<CommentsProps> = (props) => {
@@ -63,7 +61,7 @@ const Comments: FC<CommentsProps> = (props) => {
                 }
                 <div className={styles.PostBox}>
                   {
-                    index === props.feed.length - (POSTS_PER_LOAD / 2) ?
+                    index === props.feed.length - (15 / 2) ?
                       <PostBox ref={ref} key={post.hash + index} post={post} comment/> :
                       <PostBox key={post.hash + index} post={post} comment/>
                   }
@@ -72,7 +70,7 @@ const Comments: FC<CommentsProps> = (props) => {
                     <div className={styles.ShowReplies}>
                       {
                         showReplies.get(post.hash) ?
-                          <SubComments commentsAmount={post.comments} commentHash={post.hash} account={props.account}/>
+                          <SubComments commentsAmount={post.comments} commentHash={post.hash}/>
                           :
                           <a onClick={() => showRepliesOf(post.hash)}>Show replies</a>
                       }

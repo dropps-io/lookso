@@ -1,11 +1,14 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import styles from './ProfileDropdown.module.scss';
 import {formatUrl} from "../../core/utils/url-formating";
 import UserTag from "../UserTag/UserTag";
 import miniLogoLukso from "../../assets/images/logo_lukso_mini.png";
-import {EXPLORER_URL, NATIVE_TOKEN} from "../../environment/endpoints";
+import {EXPLORER_URL, NATIVE_TOKEN, UP_CLOUD_URL} from "../../environment/endpoints";
 import {useRouter} from "next/router";
-import ActionModal from "../Modals/ActionModal/ActionModal";
+import {useDispatch} from "react-redux";
+import {resetProfile} from "../../store/profile-reducer";
+import {resetWeb3} from "../../store/web3-reducer";
+import {getFeedActions} from "../../store/store";
 
 interface ProfileDropdownProps {
   showDropdown: boolean,
@@ -18,8 +21,7 @@ interface ProfileDropdownProps {
 
 const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
   const router = useRouter();
-  const [showNoUpCloud, setShowNoUpCloud] = useState(false);
-  const [showNoDisconnect, setShowNoDisconnect] = useState(false);
+  const dispatch = useDispatch();
 
   function goTo(path: string) {
     props.onClose();
@@ -27,10 +29,18 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
     else router.push(path);
   }
 
+  function disconnectWeb3() {
+    props.onClose();
+    dispatch(resetProfile());
+    dispatch(getFeedActions('Explore').resetFeedReducer());
+    dispatch(getFeedActions('Feed').resetFeedReducer());
+    dispatch(getFeedActions('Profile').resetFeedReducer());
+    dispatch(resetWeb3());
+    if (router.asPath.toLowerCase().includes('feed')) router.push('/explore');
+  }
+
   return (
     <>
-      <ActionModal open={showNoUpCloud} onClose={() => setShowNoUpCloud(false)} textToDisplay={'Unavailable (still running on L14 testnet)'} btnText={'Ok 😔'} callback={() => setShowNoUpCloud(false)}/>
-      <ActionModal open={showNoDisconnect} onClose={() => setShowNoDisconnect(false)} textToDisplay={'Soon! For now please disconnect using the “logins” section on LUKSO’s UP extension'} btnText={'Ok 🙂'} callback={() => setShowNoDisconnect(false)}/>
       <div className={props.showDropdown ? 'backdrop' : ''} onClick={props.onClose}></div>
       <div className={`${styles.ProfileDropdown} ${!props.showDropdown ? styles.InactiveDropdown : ''}`}>
         <div className={styles.DropdownHeader}>
@@ -54,10 +64,10 @@ const ProfileDropdown: FC<ProfileDropdownProps> = (props) => {
             <span>{props.balance.slice(0, 7)} {NATIVE_TOKEN}</span>
           </div>
           <div className={styles.TopButtons}>
-            <button className={'btn btn-secondary'}><a onClick={() => goTo(EXPLORER_URL + 'address/' + props.account)}>Explorer</a></button>
-            <button className={'btn btn-secondary'} onClick={() => setShowNoUpCloud(true)}>UP.cloud</button>
+            <button className={'btn btn-secondary'} onClick={() => goTo(EXPLORER_URL + 'address/' + props.account)}>Explorer</button>
+            <button className={'btn btn-secondary'} onClick={() => goTo(UP_CLOUD_URL + '/' + props.account)}>UP.cloud</button>
           </div>
-          <button className={'btn btn-main'} onClick={() => setShowNoDisconnect(true)}>Disconnect</button>
+          <button className={'btn btn-main'} onClick={() => disconnectWeb3()}>Disconnect</button>
         </div>
       </div>
     </>

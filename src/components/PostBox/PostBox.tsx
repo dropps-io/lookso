@@ -25,7 +25,7 @@ import {
   setNewRegistryPostedOnProfile, uploadPostObject
 } from "../../core/api";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {getFeedActions, RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
 import UserTag from "../UserTag/UserTag";
@@ -65,7 +65,7 @@ export interface FeedPost {
   childPost?: FeedPost,
   parentPost?: FeedPost,
   trusted?: boolean,
-  hided?: boolean
+  hided?: boolean //TODO misspelled, verify in DB if same name
 }
 
 export const initialFeedPost: FeedPost = {
@@ -111,9 +111,9 @@ export const INITIAL_FEED_DISPLAY: FeedDisplay = {
 
 interface PostProps {
   post: FeedPost;
+  type?: 'Profile' | 'Feed' | 'Explore',
   isLiked?: boolean;
   newComment?: ((comment: FeedPost) => any);
-  newRepost?: ((repost: FeedPost) => any);
   onUnfollow?: ((address: string) => any);
   comment?: boolean;
   repost?: boolean;
@@ -124,14 +124,15 @@ interface PostProps {
 
 // eslint-disable-next-line react/display-name
 const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>): React.ReactElement => {
-
   const router = useRouter();
   const dispatch = useDispatch();
+
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const username = useSelector((state: RootState) => state.profile.name);
   const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
+
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -142,12 +143,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const [showWarningModal, setShowWarningModal] = useState(false);
   // extra button with "Explore" | "Hide"
   const [isOpenExtraAction, setIsOpenExtraAction] = useState(false);
-
   const [isOpenRepostAction, setIsOpenRepostAction] = useState(false);
+  const [isExtendPostImage, setIsExtendPostImage] = useState(false);
 
   let clickLoading = false;
 
-  const [isExtendPostImage, setIsExtendPostImage] = useState(false);
 
   useEffect(() => {
     setLikes(props.post.likes);
@@ -183,7 +183,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       }
 
       try {
-        console.log(account ? account : '')
         const res: any = await insertLike(account ? account : '', props.post.hash, headersJWT);
         if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
       } catch (e: any) {
@@ -221,23 +220,18 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     if (newComment && props.newComment) props.newComment(newComment);
   }
 
-  function closeRepostModal(newPost?: FeedPost) {
+  function closeRepostModal() {
     if (props.static  || !account) return;
     setShowRepostModal(false);
-    if (newPost && props.newRepost) props.newRepost(newPost);
   }
 
   function goToPost() {
-    router.push('/Post/' +props.post.hash);
+    router.push('/Post/' + props.post.hash);
   }
 
   function shareOnTwitter() {
     const content: string = `Checkout ${account === props.post.author.address ? 'my' : 'this'} post on @lookso_io! \n\n${WEBSITE_URL}/Post/${props.post.hash}`
     window.open(  'https://twitter.com/intent/tweet?text=' + content, '_blank');
-  }
-
-  function openCommentModal(hash: string) {
-    router.push('/Post/' + hash);
   }
 
   function openRepostModal() {
@@ -288,6 +282,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function handleClick(e: any, value?: string) {
+    if (props.type) dispatch(getFeedActions(props.type).setCurrentPost(props.post.hash));
 
     // stop process if user is highlighting something
     if (window.getSelection()?.toString()) return
@@ -302,8 +297,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     clickLoading = true;
 
     const el: HTMLElement = e.target as HTMLElement;
-
-    console.log(el.className)
 
     if (value) {
       if(el.className.includes('UserTag')) goToProfile(value);
@@ -324,6 +317,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       && !el.className.includes('IconNumber')
       && !el.className.includes('Explorer')
       && !el.className.includes('RepostHandler')
+      && !el.className.includes('backdrop')
     ) {
       goToPost();
     }
@@ -380,13 +374,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     }
   }
 
-  async function onClickProfile() {
-    // stop process if user is highlighting something
-    if (window.getSelection()?.toString()) return
-    // redirect to pro
-    goToProfile(props?.post?.author?.address)
-  }
-
   async function createPost(childHash?: string) {
     setIsOpenRepostAction(false);
     if (!account) {
@@ -425,32 +412,33 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       const receipt = await updateRegistryWithPost(account ? account : '', postUploaded.postHash, postUploaded.jsonUrl, web3);
       await setNewRegistryPostedOnProfile(account ? account : '', resJWT);
 
-      if (props.newRepost) {
-        props.newRepost({
-          date: new Date(),
-          author: {
-            address: account ? account : '',
-            name: username,
-            image: profileImage
-          },
-          name: '',
-          type: 'post',
-          display: {
-            text: '',
-            params: {},
-            image: '',
-            tags: {standard: null, standardType: null, copies: null}
-          },
-          hash: postUploaded.postHash,
-          transactionHash: receipt.transactionHash,
-          blockNumber: receipt.blockNumber,
-          comments: 0,
-          likes: 0,
-          isLiked: false,
-          reposts: 0,
-          childPost: childHash ? props.post : undefined
-        });
-      }
+      const newPost: FeedPost = {
+        date: new Date(),
+        author: {
+          address: account ? account : '',
+          name: username,
+          image: profileImage
+        },
+        name: '',
+        type: 'post',
+        display: {
+          text: '',
+          params: {},
+          image: '',
+          tags: {standard: null, standardType: null, copies: null}
+        },
+        hash: postUploaded.postHash,
+        transactionHash: receipt.transactionHash,
+        blockNumber: receipt.blockNumber,
+        comments: 0,
+        likes: 0,
+        isLiked: false,
+        reposts: 0,
+        childPost: childHash ? props.post : undefined
+      };
+
+      dispatch(getFeedActions('Explore').addToTopOfStoredFeed([newPost]));
+      dispatch(getFeedActions('Feed').addToTopOfStoredFeed([newPost]));
 
       setLoadingMessage('');
 

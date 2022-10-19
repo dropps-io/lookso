@@ -3,7 +3,7 @@ import styles from './Home.module.scss';
 import Navbar from "../../components/Navbar/Navbar";
 import impactImage from "../../assets/images/impact-image.png";
 import impactImage2 from "../../assets/images/impact-image-2.png";
-import looksoLogo from "../../assets/images/lookso_logo.png";
+import looksoBanner from "../../assets/images/lookso-banner.png";
 import shape1 from "../../assets/images/shape1.png";
 import titleUnderline from "../../assets/images/title_underline.png";
 import layerHeadlines from "../../assets/images/layer-headlines.png";
@@ -14,6 +14,7 @@ import Footer from "../../components/Footer/Footer";
 import Head from "next/head";
 import Link from "next/link";
 import Faq from '../../components/Faq/Faq';
+import {WEBSITE_URL} from "../../environment/endpoints";
 
 interface HomeProps {}
 
@@ -35,7 +36,7 @@ const Home: FC<HomeProps> = ()  => {
           <meta property='twitter:creator' content='@undeveloped'/>
           <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='og:title' content={`LOOKSO`}/>
-          <meta property='og:image' itemProp='image' content={'https://lookso.io/_next/static/media/lookso-banner.6b51eb2c.png'}/>
+          <meta property='og:image' itemProp='image' content={WEBSITE_URL + looksoBanner.src}/>
           <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
         </Head>
         <div className={styles.Content}>
@@ -47,7 +48,7 @@ const Home: FC<HomeProps> = ()  => {
                 <img src={titleUnderline.src} alt=""/>
               </h1>
               <h2>A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain</h2>
-              <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="impact image"/>
+              <img className={styles.ImpactImgPhoneSize} src={impactImage.src} alt="lookso presentation"/>
               <div className={styles.CallAction}>
                 <Link href={'/explore'}>
                   <button className={styles.ImportantBtn}>See what’s happening</button>
@@ -55,7 +56,7 @@ const Home: FC<HomeProps> = ()  => {
                 <p>(no login required)</p>
               </div>
               <img className={styles.Shape} src={shape1.src} alt=""/>
-              <img className={styles.ImpactImg} src={impactImage.src} alt="impact image"/>
+              <img className={styles.ImpactImg} src={impactImage.src} alt="lookso overview"/>
             </div>
           </section>
 
@@ -100,7 +101,7 @@ const Home: FC<HomeProps> = ()  => {
                 Once LUKSO’s mainnet goes live we will roll out the definitive version of our platform, along with a user-friendly interface for linking your testnet activity to your mainnet Universal Profile
               </p>
             </div>
-            <img className={styles.RightPart} src={impactImage2.src} alt=''></img>
+            <img className={styles.RightPart} src={impactImage2.src} alt='lookso overview'></img>
           </section>
           <Faq/>
         </div>
