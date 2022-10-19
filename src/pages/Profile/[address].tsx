@@ -48,7 +48,7 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
       <meta property='og:image' itemProp='image' content={formatUrl(profile.profileImage) || WEBSITE_URL + looksoLogo.src}/>
       <meta property='og:description' content={profile.description}/>
     </Head>
-    <Profile userTag={userTag} address={address as string} profileInfo={props}></Profile>;
+    <Profile userTag={userTag} address={address as string} profileInfo={props}></Profile>
   </>)
   else return <FourOhFour></FourOhFour>
 }
