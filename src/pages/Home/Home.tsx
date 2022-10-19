@@ -32,12 +32,15 @@ const Home: FC<HomeProps> = ()  => {
           <meta name="twitter:card" content={'summary_large_image'}/>
           <meta name="twitter:site" content="@lookso_io"/>
           <meta name="twitter:title" content={`LOOKSO`}/>
-          <meta property='twitter:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
-          <meta property='twitter:creator' content='@undeveloped'/>
+          <meta name='twitter:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+          <meta name='twitter:creator' content='@undeveloped'/>
+          <meta name='twitter:image' content={WEBSITE_URL + looksoBanner.src}/>
+          <meta name='twitter:image:alt' content='Lookso'/>
           <meta name='description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
           <meta property='og:title' content={`LOOKSO`}/>
           <meta property='og:image' itemProp='image' content={WEBSITE_URL + looksoBanner.src}/>
           <meta property='og:description' content={'A decentralized social feed geared towards Universal Profiles and the LUKSO blockchain'}/>
+          <link rel="canonical" href={WEBSITE_URL + '/'}/>
         </Head>
         <div className={styles.Content}>
           <Navbar/>

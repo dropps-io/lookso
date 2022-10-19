@@ -41,8 +41,10 @@ export default function ProfileAddress(props: InferGetServerSidePropsType<typeof
       <meta name="twitter:card" content={'summary'}/>
       <meta name="twitter:site" content="@lookso_io"/>
       <meta name="twitter:title" content={`${userTag} | LOOKSO`}/>
-      <meta property='twitter:description' content={profile.description}/>
-      <meta property='twitter:creator' content='@undeveloped'/>
+      <meta name='twitter:description' content={profile.description}/>
+      <meta name='twitter:creator' content='@undeveloped'/>
+      <meta name='twitter:image' content={formatUrl(profile.profileImage) || WEBSITE_URL + looksoLogo.src}/>
+      <meta name='twitter:image:alt' content={`${userTag} Lookso`}/>
       <meta name='description' content={profile.description}/>
       <meta property='og:title' content={`${userTag} | Lookso`}/>
       <meta property='og:image' itemProp='image' content={formatUrl(profile.profileImage) || WEBSITE_URL + looksoLogo.src}/>
