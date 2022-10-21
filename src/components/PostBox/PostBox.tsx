@@ -23,7 +23,7 @@ import {
   insertUnfollow,
   requestNewRegistryJsonUrl,
   setNewRegistryPostedOnProfile, uploadPostObject
-} from "../../core/api";
+} from "../../core/api/api";
 import {useDispatch, useSelector} from "react-redux";
 import {getFeedActions, RootState} from "../../store/store";
 import PostContent from "./construct-post-content";
@@ -164,7 +164,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setIsLiked(newLikes > 0);
 
     try {
-      const res: any = await insertLike(account ? account : '', props.post.hash);
+      const res: any = await insertLike(account ? account : '', props.post.hash, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       console.error(e);
@@ -181,9 +181,9 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️');
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account ? account : '')).jsonUrl
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account ? account : '', web3)).jsonUrl
       await updateRegistry(account ? account : '', JSONURL, web3);
-      await setNewRegistryPostedOnProfile(account ? account : '');
+      await setNewRegistryPostedOnProfile(account ? account : '', web3);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');
@@ -311,7 +311,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setIsOpenExtraAction(false);
 
     try {
-      const res: any  = await insertUnfollow(account ? account : '', address);
+      const res: any  = await insertUnfollow(account ? account : '', address, web3);
       if (props.onUnfollow) props.onUnfollow(address);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
@@ -325,7 +325,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setIsOpenExtraAction(false);
 
     try {
-      const res: any  = await insertFollow(account ? account : '', address);
+      const res: any  = await insertFollow(account ? account : '', address, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       if (e.message.includes('registry')) {
@@ -364,11 +364,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       setLoadingMessage('Please sign your post');
       const signedMessage = await signMessage(account ? account : '', JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage);
+      const postUploaded = await uploadPostObject(post, signedMessage, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account ? account : '', postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account ? account : '');
+      await setNewRegistryPostedOnProfile(account ? account : '', web3);
 
       const newPost: FeedPost = {
         date: new Date(),

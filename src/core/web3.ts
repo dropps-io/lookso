@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import {fetchProfileAuthJwtToken, fetchProfileAuthNonce, fetchProfileInfo} from "./api";
+import {fetchProfileAuthJwtToken, fetchProfileAuthNonce, fetchProfileInfo} from "./api/api";
 
 declare const window: any;
 
@@ -55,7 +55,7 @@ export async function connectToAPI(address: string, web3: Web3) {
   const nonce = await fetchProfileAuthNonce(address);
   const signedNonce = await signMessage(address, nonce, web3);
   const res = await fetchProfileAuthJwtToken(address, signedNonce);
-  if (res.ok) return;
+  if (res.status === 200) return;
   else throw res.status;
 }
 

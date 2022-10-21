@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Post.module.scss';
 import PostBox, {FeedPost} from "../../components/PostBox/PostBox";
-import {fetchIsLikedPost, fetchPostComments} from "../../core/api";
+import {fetchIsLikedPost, fetchPostComments} from "../../core/api/api";
 import Navbar from "../../components/Navbar/Navbar";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";

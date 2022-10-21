@@ -17,7 +17,7 @@ import {
   fetchProfileFollowingCount,
   insertFollow,
   insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile
-} from "../../core/api";
+} from "../../core/api/api";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
@@ -100,7 +100,7 @@ const Profile: FC<ProfileProps> = (props) => {
     setFollowers(existing => existing + 1);
 
     try {
-      const res: any = await insertFollow(connected.account(), props.address);
+      const res: any = await insertFollow(connected.account(), props.address, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       setIsFollowing(false);
@@ -115,7 +115,7 @@ const Profile: FC<ProfileProps> = (props) => {
     setFollowers(existing => existing - 1);
 
     try {
-      const res: any  = await insertUnfollow(connected.account(), props.address);
+      const res: any  = await insertUnfollow(connected.account(), props.address, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       setIsFollowing(true);
@@ -129,9 +129,9 @@ const Profile: FC<ProfileProps> = (props) => {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account())).jsonUrl
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), web3)).jsonUrl
       await updateRegistry(connected.account(), JSONURL, web3);
-      await setNewRegistryPostedOnProfile(connected.account());
+      await setNewRegistryPostedOnProfile(connected.account(), web3);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');

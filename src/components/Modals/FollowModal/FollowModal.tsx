@@ -12,7 +12,7 @@ import {
   fetchProfileFollowing,
   insertFollow,
   insertUnfollow
-} from "../../../core/api";
+} from "../../../core/api/api";
 import {ProfileFollowingDisplay} from "../../../models/profile";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -93,7 +93,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
     try {
-      const res: any = await insertFollow(account, address);
+      const res: any = await insertFollow(account, address, web3);
       if (props.address === account) props.onFollowChange(props.type, 1);
       if (res.jsonUrl) props.onPushToBlockchainRequired(res.jsonUrl);
     } catch (e: any) {
@@ -108,7 +108,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
     try {
-      const res: any = await insertUnfollow(account, address);
+      const res: any = await insertUnfollow(account, address, web3);
       if (props.address === account) props.onFollowChange(props.type, -1);
       if (res.jsonUrl) props.onPushToBlockchainRequired(res.jsonUrl);
     } catch (e: any) {

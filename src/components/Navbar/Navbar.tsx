@@ -14,7 +14,7 @@ import {getFeedActions, RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
 import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
-import {fetchProfileNotificationsCount} from "../../core/api";
+import {fetchProfileNotificationsCount} from "../../core/api/api";
 import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import ActionModal from "../Modals/ActionModal/ActionModal";

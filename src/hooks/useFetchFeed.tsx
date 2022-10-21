@@ -3,7 +3,7 @@ import {FeedPost} from "../components/PostBox/PostBox";
 import axios, {AxiosPromise} from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {getFeedActions, getReduxFeedState, RootState} from "../store/store";
-import {fetchAllFeed, fetchProfileActivity, fetchProfileFeed} from "../core/api";
+import {fetchAllFeed, fetchProfileActivity, fetchProfileFeed} from "../core/api/api";
 import {PaginationResponse} from "../models/pagination-response";
 
 interface UseFetchFeedProps {

@@ -1,10 +1,13 @@
-import {API_URL} from "../environment/endpoints";
-import {FeedPost} from "../components/PostBox/PostBox";
-import {LSPXXProfilePost} from "../models/profile-post";
-import {Notification} from "../models/notification";
-import {ProfileDisplay, ProfileInfo} from "../models/profile";
+import {API_URL} from "../../environment/endpoints";
+import {FeedPost} from "../../components/PostBox/PostBox";
+import {LSPXXProfilePost} from "../../models/profile-post";
+import {Notification} from "../../models/notification";
+import {ProfileDisplay, ProfileInfo} from "../../models/profile";
 import axios, {AxiosPromise} from "axios";
-import {PaginationResponse} from "../models/pagination-response";
+import {PaginationResponse} from "../../models/pagination-response";
+import Web3 from "web3";
+import {handleAxiosNonGetError} from "./utils";
+axios.defaults.withCredentials = true;
 
 const headers = {
   Accept: 'application/json',
@@ -19,67 +22,61 @@ export async function fetchProfileAuthJwtToken(address: string, signedNonce: str
   const content = {
     signedNonce
   };
-
-  return await fetch(API_URL + '/auth/' + address + '/controller-signature', {
-    method: 'POST',
-    body: JSON.stringify(content),
-    headers
-  });
+  return await axios.post(API_URL + '/auth/' + address + '/controller-signature', content, {headers});
 }
 
-export async function insertFollow(followerAddress: string, followingAddress: string): Promise<void> {
-  const content = {
-    follower: followerAddress,
-    following: followingAddress
-  };
+export async function insertFollow(follower: string, following: string, web3: Web3, recursive?: boolean): Promise<void> {
+  const data = {follower, following};
+  let res;
 
-  const res = await fetch(API_URL + '/lookso/follow', {
-    method: 'POST',
-    body: JSON.stringify(content),
-    headers
-  });
+  try {
+    res = await axios.post(API_URL + '/lookso/follow', data, {headers});
+  } catch (e) {
+    return await handleAxiosNonGetError(follower, web3, e,  () => {
+      return insertFollow(follower, following, web3, true)
+    }, recursive);
+  }
 
-  if(!res.ok) throw await res.json();
-  else return await res.json();
+  if (res.status === 200) return res.data;
+  else throw 'Request ended with status ' + res.status;
 }
 
-export async function insertUnfollow(followerAddress: string, followingAddress: string): Promise<void> {
-  const content = {
-    follower: followerAddress,
-    following: followingAddress
-  };
+export async function insertUnfollow(follower: string, following: string, web3: Web3, recursive?: boolean): Promise<void> {
+  const data = {follower, following};
+  let res;
 
-  const res = await fetch(API_URL + '/lookso/unfollow', {
-    method: 'DELETE',
-    body: JSON.stringify(content),
-    headers
-  });
+  try {
+    res = await axios.delete(API_URL + '/lookso/unfollow', {headers, data});
+  } catch (e) {
+    return await handleAxiosNonGetError(follower, web3, e,  () => {
+      return insertUnfollow(follower, following, web3, true)
+    }, recursive);
+  }
 
-  if(!res.ok) throw await res.json();
-  else return await res.json();
+  if (res.status === 200) return res.data;
+  else throw 'Request ended with status ' + res.status;
 }
 
-export async function insertLike(address: string, postHash: string): Promise<void> {
-    const content = {
-      sender: address,
-      postHash
-    };
+export async function insertLike(sender: string, postHash: string, web3: Web3, recursive?: boolean): Promise<void> {
+  const data = {sender, postHash};
+  let res;
 
-    const res = await fetch(API_URL + '/lookso/like', {
-      method: 'POST',
-      body: JSON.stringify(content),
-      headers
-    });
-
-    if(!res.ok) throw await res.json();
-    else return await res.json();
+  try {
+    res = await axios.post(API_URL + '/lookso/like', data, {headers});
+  } catch (e: any) {
+    return await handleAxiosNonGetError(sender, web3, e,() => {
+      return insertLike(sender, postHash, web3, true)
+    }, recursive);
+  }
+  if (res.status === 200) return res.data;
+  else throw 'Request ended with status ' + res.status;
 }
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
   let query = API_URL + '/lookso/post/' + postHash + '/likes';
   if (sender) query += '?sender=' + sender
   const likes = (await (await fetch(query)).json());
-  return likes && likes.length > 0;
+  return likes && likes.count > 0;
 }
 
 
@@ -174,37 +171,43 @@ export async function fetchPostComments(hash: string, page?: number, viewOf?: st
   })).data;
 }
 
-export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File): Promise<LSPXXProfilePost> {
-  const formData = new FormData();
-  formData.append('lspXXProfilePost', JSON.stringify(post));
-  formData.append('fileType', asset.type);
-  formData.append('asset', asset);
-
+export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: File, web3: Web3, recursive?: boolean): Promise<LSPXXProfilePost> {
   const headersLocal = {
     Accept: 'application/json',
   };
 
-  const res = await fetch(API_URL + '/lookso/post/asset', {
-    method: 'POST',
-    body: formData,
-    headers: headersLocal
-  });
+  const formData = new FormData();
+  formData.append('lspXXProfilePost', JSON.stringify(post));
+  formData.append('fileType', asset.type);
+  formData.append('asset', asset);
+  let res;
 
-  return (await res.json()).LSPXXProfilePost;
+  try {
+    res = await axios.post(API_URL + '/lookso/post/asset', formData, {headers: headersLocal});
+  } catch (e) {
+    return await handleAxiosNonGetError(post.author, web3, e, () => {
+      return fetchPostObjectWithAsset(post, asset, web3, true)
+    }, recursive);
+  }
+
+  if (res.status === 200) return res.data.LSPXXProfilePost;
+  else throw 'Request ended with status ' + res.status;
 }
 
-export async function uploadPostObject(post: LSPXXProfilePost, signature: string): Promise<{postHash: string, jsonUrl: string}> {
-  const content = {
-    lspXXProfilePost: post,
-    signature
-  };
+export async function uploadPostObject(post: LSPXXProfilePost, signature: string, web3: Web3, recursive?: boolean): Promise<{postHash: string, jsonUrl: string}> {
+  const data = { lspXXProfilePost: post, signature };
+  let res;
 
-  const res = await fetch(API_URL + '/lookso/post/upload', {
-    method: 'POST',
-    body: JSON.stringify(content),
-    headers
-  });
-  return await res.json();
+  try {
+    res = await axios.post(API_URL + '/lookso/post/upload', data, {headers});
+  } catch (e) {
+    return await handleAxiosNonGetError(post.author, web3, e, () => {
+      return uploadPostObject(post, signature, web3, true);
+    }, recursive);
+  }
+
+  if (res.status === 200) return res.data;
+  else throw 'Request ended with status ' + res.status;
 }
 
 export async function fetchProfileNotificationsCount(address: string): Promise<number> {
@@ -227,30 +230,47 @@ export async function searchProfiles(input: string, page?: number): Promise<Omit
   })).data;
 }
 
-export async function setProfileNotificationsToViewed(address: string): Promise<void> {
-  await fetch(API_URL + '/lookso/profile/' + address + '/notifications',
-    {
-      method: 'PUT',
-      body: JSON.stringify({}),
-      headers
-    });
+export async function setProfileNotificationsToViewed(address: string, web3: Web3, recursive?: boolean): Promise<void> {
+  let res;
+
+  try {
+    res = await axios.put(API_URL + '/lookso/profile/' + address + '/notifications', {}, {headers});
+  } catch (e) {
+    return await handleAxiosNonGetError(address, web3, e,  () => {
+      return setProfileNotificationsToViewed(address, web3, true)
+    }, recursive);
+  }
+
+  if (res.status === 200) return;
+  else throw 'Request ended with status ' + res.status;
 }
 
-export async function requestNewRegistryJsonUrl(address: string): Promise<{jsonUrl: string}> {
-  const res = await fetch(API_URL + '/lookso/profile/' + address + '/registry', {
-    method: 'POST',
-    body: JSON.stringify({}),
-    headers
-  });
-  if (res.ok) return await res.json();
-  else throw await res.json();
+export async function requestNewRegistryJsonUrl(address: string, web3: Web3, recursive?: boolean): Promise<{jsonUrl: string}> {
+  let res;
+
+  try {
+    res = await axios.post(API_URL + '/lookso/profile/' + address + '/registry', {}, {headers});
+  } catch (e) {
+    return await handleAxiosNonGetError(address, web3, e, () => {
+      return requestNewRegistryJsonUrl(address, web3, true)
+  }, recursive);
+  }
+
+  if (res.status === 200) return res.data;
+  else throw 'Request ended with status ' + res.status;
 }
 
-export async function setNewRegistryPostedOnProfile(address: string): Promise<void> {
-  const res = await fetch(API_URL + '/lookso/profile/' + address + '/registry/uploaded', {
-    method: 'POST',
-    body: JSON.stringify({}),
-    headers
-  });
-  if (!res.ok) throw await res.json();
+export async function setNewRegistryPostedOnProfile(address: string, web3: Web3, recursive?: boolean): Promise<void> {
+  let res;
+
+  try {
+    res = await axios.post(API_URL + '/lookso/profile/' + address + '/registry/uploaded', {}, {headers});
+  } catch (e) {
+    return await handleAxiosNonGetError(address, web3, e,  () => {
+      return setNewRegistryPostedOnProfile(address, web3, true)
+    }, recursive);
+  }
+
+  if (res.status === 200) return;
+  else throw 'Request ended with status ' + res.status;
 }

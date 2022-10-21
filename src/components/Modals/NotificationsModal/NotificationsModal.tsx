@@ -2,7 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import styles from './NotificationsModal.module.scss';
 import CustomModal from "../../CustomModal/CustomModal";
 import {Notification} from "../../../models/notification";
-import {fetchProfileNotifications, setProfileNotificationsToViewed} from "../../../core/api";
+import {fetchProfileNotifications, setProfileNotificationsToViewed} from "../../../core/api/api";
 import bell from '../../../assets/icons/bell-filled-purple.svg';
 import {formatUrl} from "../../../core/utils/url-formating";
 import {DEFAULT_PROFILE_IMAGE} from "../../../core/utils/constants";
@@ -36,7 +36,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
 
   async function onClose () {
     if (web3 && !notifications.every(n => n.viewed)) {
-      await setProfileNotificationsToViewed(props.account);
+      await setProfileNotificationsToViewed(props.account, web3);
     }
     props.onClose();
   }
