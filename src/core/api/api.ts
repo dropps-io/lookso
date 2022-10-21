@@ -76,7 +76,7 @@ export async function fetchIsLikedPost(sender: string, postHash: string): Promis
   let query = API_URL + '/lookso/post/' + postHash + '/likes';
   if (sender) query += '?sender=' + sender
   const likes = (await (await fetch(query)).json());
-  return likes && likes.count > 0;
+  return likes && likes.results.length > 0;
 }
 
 

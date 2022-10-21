@@ -53,8 +53,11 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
       if (props.type === 'Profile' && props.profile && props.profile !== profile) dispatch(getFeedActions(props.type).setProfile(props.profile));
       if (!data.previous) dispatch(getFeedActions(props.type).setHasMore(false));
       dispatch(getFeedActions(props.type).setLoading(false));
-      setTimeout(() => {setInitialized(true)}, 200);
-      console.log('fetched')
+      setTimeout(() => {
+        setInitialized(true);
+        if (data.results.length < 10) setTimeout(() => {dispatch(getFeedActions(props.type).setCurrentPage(data.page - 1))},100) ;
+      }, 200);
+      console.log('fetched ' + data.results.length);
     })
     .catch(e => {
       console.error(e);
