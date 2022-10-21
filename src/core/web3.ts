@@ -53,10 +53,10 @@ export async function connectWeb3() {
 
 export async function connectToAPI(address: string, web3: Web3) {
   const nonce = await fetchProfileAuthNonce(address);
-  if (nonce) {
-    const signed = await signMessage(address, nonce, web3);
-    return (await fetchProfileAuthJwtToken(address, signed)).token;
-  }
+  const signedNonce = await signMessage(address, nonce, web3);
+  const res = await fetchProfileAuthJwtToken(address, signedNonce);
+  if (res.ok) return;
+  else throw res.status;
 }
 
 export async function signMessage(address: string, data: string, web3: Web3) {

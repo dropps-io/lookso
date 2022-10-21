@@ -7,9 +7,7 @@ import bell from '../../../assets/icons/bell-filled-purple.svg';
 import {formatUrl} from "../../../core/utils/url-formating";
 import {DEFAULT_PROFILE_IMAGE} from "../../../core/utils/constants";
 import UserTag from "../../UserTag/UserTag";
-import {connectToAPI} from "../../../core/web3";
-import {setProfileJwt} from "../../../store/profile-reducer";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 import {useRouter} from "next/router";
 
@@ -20,9 +18,7 @@ interface NotificationsModalProps {
 }
 
 const NotificationsModal: FC<NotificationsModalProps> = (props) => {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [initialized, setInitialized] = useState(false)
@@ -34,23 +30,13 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
     }
 
   if (props.account && !initialized && props.open) init();
-  }, [props.open, props.account, web3, jwt])
+  }, [props.open, props.account, web3])
 
-  async function requestJWT() {
-    const resJWT = await connectToAPI(props.account, web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
+
 
   async function onClose () {
     if (web3 && !notifications.every(n => n.viewed)) {
-      const resJWT = jwt ? jwt : await requestJWT();
-      await setProfileNotificationsToViewed(props.account, resJWT);
+      await setProfileNotificationsToViewed(props.account);
     }
     props.onClose();
   }

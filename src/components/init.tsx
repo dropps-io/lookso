@@ -1,9 +1,8 @@
 import {useDispatch} from "react-redux";
 import {ReactNode, useEffect} from "react";
-import {connectToAPI, getAccount, getWeb3Info, listenChanges} from "../core/web3";
+import {getAccount, getWeb3Info, listenChanges} from "../core/web3";
 import {setAccount, setBalance, setInitialized, setNetworkId, setWeb3} from "../store/web3-reducer";
-import {setProfileInfo, setProfileJwt} from "../store/profile-reducer";
-import Web3 from "web3";
+import {setProfileInfo} from "../store/profile-reducer";
 import {useRouter} from "next/router";
 
 import packageJson from '../../package.json';
@@ -31,23 +30,11 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
       dispatch(setBalance(web3Info.balance));
       dispatch(setNetworkId(web3Info.networkId));
       dispatch(setProfileInfo(web3Info.profileInfo));
-      requestJWT(web3Info.account, web3Info.web3)
     } catch (e) {
       dispatch(setAccount(''));
     }
     dispatch(setInitialized(true));
     await listenChanges();
-  }
-
-  async function requestJWT(account: string, web3: Web3) {
-    const resJWT = await connectToAPI(account, web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
   }
 
   return (<>{children}</>

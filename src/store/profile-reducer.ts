@@ -1,18 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {ProfileInfo} from "../models/profile";
 
-interface ProfileWithJWT extends ProfileInfo{
-    jwt: string
-}
 
-const initialState: ProfileWithJWT = {
+const initialState: ProfileInfo = {
     name: '',
     description: '',
     tags: [],
     links: [],
     profileImage: '',
     backgroundImage: '',
-    jwt: ''
 };
 
 export const profileSlice = createSlice({
@@ -27,9 +23,6 @@ export const profileSlice = createSlice({
             state.links = action.payload.links;
             state.description = action.payload.description;
         },
-        setProfileJwt: (state, action: PayloadAction<string>) => {
-            state.jwt = action.payload;
-        },
         resetProfile: () => {
             return initialState;
         }
@@ -37,6 +30,6 @@ export const profileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfileInfo, setProfileJwt, resetProfile } = profileSlice.actions;
+export const { setProfileInfo, resetProfile } = profileSlice.actions;
 
 export default profileSlice.reducer;

@@ -15,8 +15,8 @@ import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import warningIcon from "../../assets/icons/warning.png";
-import {connectToAPI, connectWeb3, signMessage} from "../../core/web3";
-import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
+import {connectWeb3, signMessage} from "../../core/web3";
+import {setProfileInfo} from "../../store/profile-reducer";
 import {
   insertFollow,
   insertLike,
@@ -130,7 +130,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   const account: string | undefined = useSelector((state: RootState) => state.web3.account);
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const username = useSelector((state: RootState) => state.profile.name);
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
 
   const [likes, setLikes] = useState(0);
@@ -156,17 +155,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     if (props.isLiked) setIsLiked(props.isLiked)
   }, [props.post, props.isLiked]);
 
-  async function requestJWT() {
-    const resJWT = await connectToAPI(account ? account : '', web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
-
   async function likeOrUnlikePost() {
     if (props.static) return;
     if (!account) setShowLogInModal(true);
@@ -176,38 +164,26 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
     setIsLiked(newLikes > 0);
 
     try {
-      let headersJWT = jwt;
-
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-
-      try {
-        const res: any = await insertLike(account ? account : '', props.post.hash, headersJWT);
-        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        console.error(e);
-        setLikes(existing => existing - newLikes);
-        setIsLiked(newLikes < 0);
-        if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain(headersJWT)
-        }
-      }
-    }
-    catch (e: any) {
+      const res: any = await insertLike(account ? account : '', props.post.hash);
+      if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
+    } catch (e: any) {
       console.error(e);
       setLikes(existing => existing - newLikes);
       setIsLiked(newLikes < 0);
+      if (e.message.includes('registry')) {
+        await pushRegistryToTheBlockchain();
+      }
     }
+
   }
 
-  async function pushRegistryToTheBlockchain(_jwt: string, jsonUrl?: string) {
-    setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
+  async function pushRegistryToTheBlockchain(jsonUrl?: string) {
+    setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️');
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account ? account : '', _jwt)).jsonUrl
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(account ? account : '')).jsonUrl
       await updateRegistry(account ? account : '', JSONURL, web3);
-      await setNewRegistryPostedOnProfile(account ? account : '', _jwt);
+      await setNewRegistryPostedOnProfile(account ? account : '');
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');
@@ -333,44 +309,28 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
    */
   async function unfollowUser(address: string) {
     setIsOpenExtraAction(false);
+
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
+      const res: any  = await insertUnfollow(account ? account : '', address);
+      if (props.onUnfollow) props.onUnfollow(address);
+      if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
+    } catch (e: any) {
+      if (e.message.includes('registry')) {
+        await pushRegistryToTheBlockchain()
       }
-      try {
-        const res: any  = await insertUnfollow(account ? account : '', address, headersJWT);
-        if (props.onUnfollow) props.onUnfollow(address);
-        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
     }
   }
 
   async function followUser(address: string) {
     setIsOpenExtraAction(false);
+
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
+      const res: any  = await insertFollow(account ? account : '', address);
+      if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
+    } catch (e: any) {
+      if (e.message.includes('registry')) {
+        await pushRegistryToTheBlockchain()
       }
-      try {
-        const res: any  = await insertFollow(account ? account : '', address, headersJWT);
-        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
     }
   }
 
@@ -401,16 +361,14 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
         childHash: childHash,
       };
 
-      const resJWT = jwt ? jwt : await requestJWT();
-
       setLoadingMessage('Please sign your post');
       const signedMessage = await signMessage(account ? account : '', JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
+      const postUploaded = await uploadPostObject(post, signedMessage);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account ? account : '', postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account ? account : '', resJWT);
+      await setNewRegistryPostedOnProfile(account ? account : '');
 
       const newPost: FeedPost = {
         date: new Date(),
