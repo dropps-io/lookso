@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <link rel="icon" type="image/png" sizes="32x32" href={fav32.src}/>
           <link rel="icon" type="image/png" sizes="16x16" href={fav16.src}/>
           <link rel="manifest" href="/site.webmanifest"/>
-          <meta name="keywords" content="Lukso, Lookso, NFT, NFTs, blockchain, ERC725, smart contracts, page builder, store, marketplace, social media, explorer"/>
+          <meta name="keywords" content="Lukso, Lookso, Dropps, NFT, NFTs, blockchain, ERC725, smart contracts, profile, social media, explorer, feed, SBT, SBTs"/>
         </Head>
         <Component {...pageProps} />
       </InitProvider>
