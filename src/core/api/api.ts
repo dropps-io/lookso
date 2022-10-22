@@ -14,13 +14,14 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-export async function fetchProfileAuthNonce(address:string): Promise<string> {
-  return (await (await fetch(API_URL + '/auth/' + address + '/nonce')).json()).nonce;
+export async function fetchProfileAuthSiwe(address:string): Promise<{ message: string, issuedAt: string }> {
+  return await (await fetch(API_URL + '/auth/' + address + '/siwe')).json();
 }
 
-export async function fetchProfileAuthJwtToken(address: string, signedNonce: string): Promise<Response> {
+export async function fetchProfileAuthJwtToken(address: string, signedMessage: string, issuedAt: string): Promise<Response> {
   const content = {
-    signedNonce
+    signedMessage,
+    issuedAt
   };
   return await axios.post(API_URL + '/auth/' + address + '/controller-signature', content, {headers});
 }
