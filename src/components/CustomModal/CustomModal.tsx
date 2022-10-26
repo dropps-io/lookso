@@ -4,6 +4,7 @@ import styles from './CustomModal.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
+import {Modal} from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -20,7 +21,7 @@ const BackdropUnstyled = React.forwardRef<
   );
 });
 
-const Modal = styled(ModalUnstyled)`
+const StyledModal = styled(ModalUnstyled)`
   position: fixed;
   z-index: 1300;
   right: 0;
@@ -30,7 +31,7 @@ const Modal = styled(ModalUnstyled)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+` as typeof Modal;
 
 const Backdrop = styled(BackdropUnstyled)`
   z-index: -1;
@@ -49,7 +50,7 @@ interface CustomModalProps extends React.PropsWithChildren {
 }
 
 const CustomModal: FC<CustomModalProps> = (props) => (
-  <Modal
+  <StyledModal
     aria-labelledby="unstyled-modal-title"
     aria-describedby="unstyled-modal-description"
     open={props.open}
@@ -62,7 +63,7 @@ const CustomModal: FC<CustomModalProps> = (props) => (
         {props.children}
       </div>
     </Box>
-  </Modal>
+  </StyledModal>
 );
 
 export default CustomModal;
