@@ -4,6 +4,7 @@ import styles from './CustomModal.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
+import {Modal} from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -30,7 +31,7 @@ const StyledModal = styled(ModalUnstyled)`
   display: flex;
   align-items: center;
   justify-content: center;
-` as any;
+` as typeof Modal;
 
 const Backdrop = styled(BackdropUnstyled)`
   z-index: -1;
@@ -41,7 +42,7 @@ const Backdrop = styled(BackdropUnstyled)`
   left: 0;
   background-color: rgba(256, 256, 256, 0.4);
   -webkit-tap-highlight-color: transparent;
-` as any;
+`;
 
 interface CustomModalProps extends React.PropsWithChildren {
   open: boolean,
