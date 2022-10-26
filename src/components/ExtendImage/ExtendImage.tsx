@@ -5,6 +5,7 @@ import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
 import {formatUrl} from "../../core/utils/url-formating";
+import {Backdrop, Modal} from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -21,7 +22,7 @@ const BackdropUnstyled = React.forwardRef<
     );
 });
 
-const Modal = styled(ModalUnstyled)`
+const StyledModal = styled(ModalUnstyled)`
   position: fixed;
   z-index: 1300;
   right: 0;
@@ -31,9 +32,9 @@ const Modal = styled(ModalUnstyled)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+` as typeof Modal;
 
-const Backdrop = styled(BackdropUnstyled)`
+const StyledBackdrop = styled(BackdropUnstyled)`
   z-index: -1;
   position: fixed;
   right: 0;
@@ -42,7 +43,7 @@ const Backdrop = styled(BackdropUnstyled)`
   left: 0;
   background-color: rgba(256, 256, 256, 0.4);
   -webkit-tap-highlight-color: transparent;
-`;
+` as typeof Backdrop;
 
 interface ExtendImageProps extends React.PropsWithChildren {
     open: boolean,
@@ -53,12 +54,12 @@ interface ExtendImageProps extends React.PropsWithChildren {
 }
 
 const ExtendImage: FC<ExtendImageProps> = (props) => (
-    <Modal
+    <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
         open={props.open}
         onClose={props.callback}
-        components={{ Backdrop }}
+        components={{ Backdrop: StyledBackdrop }}
     >
         <div className={styles.ExtendImage}>
             <div className={styles.ExtendImageBackDrop} onClick={() => props.callback()}></div>
@@ -69,7 +70,7 @@ const ExtendImage: FC<ExtendImageProps> = (props) => (
                     : <div className={styles.ExtendImageRounded} style={{backgroundImage: props.image ? `url(${formatUrl(props.image)})` : ''}}></div>
             }
         </div>
-    </Modal>
+    </StyledModal>
 );
 
 export default ExtendImage;

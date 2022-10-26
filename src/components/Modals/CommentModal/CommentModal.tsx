@@ -7,6 +7,7 @@ import crossIcon from '../../../assets/icons/cross.svg';
 import PostBox, {FeedPost} from "../../PostBox/PostBox";
 import PostInput from "../../PostInput/PostInput";
 import {useRouter} from "next/router";
+import {Backdrop, Modal} from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -23,7 +24,7 @@ const BackdropUnstyled = React.forwardRef<
   );
 });
 
-const Modal = styled(ModalUnstyled)`
+const StyledModal = styled(ModalUnstyled)`
   position: fixed;
   z-index: 1300;
   right: 0;
@@ -33,9 +34,9 @@ const Modal = styled(ModalUnstyled)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+` as typeof Modal;
 
-const Backdrop = styled(BackdropUnstyled)`
+const StyledBackdrop = styled(BackdropUnstyled)`
   z-index: -1;
   position: fixed;
   right: 0;
@@ -44,7 +45,7 @@ const Backdrop = styled(BackdropUnstyled)`
   left: 0;
   background-color: rgba(256, 256, 256, 0.4);
   -webkit-tap-highlight-color: transparent;
-`;
+` as typeof Backdrop;
 
 interface CustomModalProps extends React.PropsWithChildren {
   open: boolean,
@@ -68,12 +69,12 @@ const CommentModal: FC<CustomModalProps> = (props) => {
   }
 
   return (
-    <Modal
+    <StyledModal
       aria-labelledby="unstyled-modal-title"
       aria-describedby="unstyled-modal-description"
       open={props.open}
       onClose={() => props.onClose()}
-      components={{ Backdrop }}
+      components={{ Backdrop: StyledBackdrop }}
     >
       <Box className={styles.CommentModal}>
         <img className={styles.Close} onClick={() => props.onClose()} src={crossIcon.src} alt=""/>
@@ -85,7 +86,7 @@ const CommentModal: FC<CustomModalProps> = (props) => {
           </div>
         </div>
       </Box>
-    </Modal>
+    </StyledModal>
   );
 }
 

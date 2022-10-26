@@ -4,6 +4,7 @@ import styles from './CustomModal.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
+import {Backdrop, Modal} from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const BackdropUnstyled = React.forwardRef<
@@ -20,7 +21,7 @@ const BackdropUnstyled = React.forwardRef<
   );
 });
 
-const Modal = styled(ModalUnstyled)`
+const StyledModal = styled(ModalUnstyled)`
   position: fixed;
   z-index: 1300;
   right: 0;
@@ -30,9 +31,9 @@ const Modal = styled(ModalUnstyled)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+` as typeof Modal;
 
-const Backdrop = styled(BackdropUnstyled)`
+const StyledBackdrop = styled(BackdropUnstyled)`
   z-index: -1;
   position: fixed;
   right: 0;
@@ -41,7 +42,7 @@ const Backdrop = styled(BackdropUnstyled)`
   left: 0;
   background-color: rgba(256, 256, 256, 0.4);
   -webkit-tap-highlight-color: transparent;
-`;
+` as typeof Backdrop;
 
 interface CustomModalProps extends React.PropsWithChildren {
   open: boolean,
@@ -49,12 +50,12 @@ interface CustomModalProps extends React.PropsWithChildren {
 }
 
 const CustomModal: FC<CustomModalProps> = (props) => (
-  <Modal
+  <StyledModal
     aria-labelledby="unstyled-modal-title"
     aria-describedby="unstyled-modal-description"
     open={props.open}
     onClose={props.onClose}
-    components={{ Backdrop }}
+    components={{Backdrop: StyledBackdrop}}
   >
     <Box className={styles.CustomModal}>
       <div className={styles.Close}><img onClick={props.onClose} src={crossIcon.src} alt=""/></div>
@@ -62,7 +63,7 @@ const CustomModal: FC<CustomModalProps> = (props) => (
         {props.children}
       </div>
     </Box>
-  </Modal>
+  </StyledModal>
 );
 
 export default CustomModal;
