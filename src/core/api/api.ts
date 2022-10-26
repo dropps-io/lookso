@@ -74,10 +74,9 @@ export async function insertLike(sender: string, postHash: string, web3: Web3, r
 }
 
 export async function fetchIsLikedPost(sender: string, postHash: string): Promise<boolean> {
-  let query = API_URL + '/lookso/post/' + postHash + '/likes';
-  if (sender) query += '?sender=' + sender
+  let query = API_URL + '/lookso/post/' + postHash + '/likes?sender=' + sender;
   const likes = (await (await fetch(query)).json());
-  return likes && likes.results.length > 0;
+  return likes && likes.results && likes.results.length > 0;
 }
 
 

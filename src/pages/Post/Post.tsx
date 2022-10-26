@@ -37,9 +37,10 @@ const Post: FC<PostProps> = (props) => {
       setIsLiking(false);
       setComments([]);
 
-      const isLiking = await fetchIsLikedPost(account ? account : '', props.hash);
-      if (isLiking) {
-        setIsLiking(true);
+      try {
+      if (account) setIsLiking(await fetchIsLikedPost(account ? account : '', props.hash));
+      } catch (e) {
+        console.error(e);
       }
 
       const res = await fetchPostComments(props.hash, 0, account ? account : undefined);
