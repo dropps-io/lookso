@@ -73,7 +73,7 @@ const CommentModal: FC<CustomModalProps> = (props) => {
       aria-describedby="unstyled-modal-description"
       open={props.open}
       onClose={() => props.onClose()}
-      components={{ Backdrop }}
+      slots={{ backdrop: Backdrop }}
     >
       <Box className={styles.CommentModal}>
         <img className={styles.Close} onClick={() => props.onClose()} src={crossIcon.src} alt=""/>

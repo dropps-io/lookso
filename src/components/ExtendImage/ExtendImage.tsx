@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { styled, Box } from "@mui/system";
+import { styled } from "@mui/system";
 import styles from './ExtendImage.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";
@@ -58,7 +58,7 @@ const ExtendImage: FC<ExtendImageProps> = (props) => (
         aria-describedby="unstyled-modal-description"
         open={props.open}
         onClose={props.callback}
-        components={{ Backdrop }}
+        slots={{ backdrop: Backdrop }}
     >
         <div className={styles.ExtendImage}>
             <div className={styles.ExtendImageBackDrop} onClick={() => props.callback()}></div>
