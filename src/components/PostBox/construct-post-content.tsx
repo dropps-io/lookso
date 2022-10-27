@@ -4,7 +4,7 @@ import styles from './PostBox.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
 import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 import {USER_TAG_REGEX} from "../../core/utils/constants";
-import {fetchAddressFromUserTag} from "../../core/api";
+import {fetchAddressFromUserTag} from "../../core/api/api";
 import {useRouter} from "next/router";
 
 interface ParamContentProps {

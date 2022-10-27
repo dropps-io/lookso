@@ -3,7 +3,7 @@ import styles from './SearchBar.module.scss';
 import searchIcon from '../../assets/icons/search.svg';
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
-import {searchProfiles} from "../../core/api";
+import {searchProfiles} from "../../core/api/api";
 import {useRouter} from "next/router";
 
 interface SearchBarProps {

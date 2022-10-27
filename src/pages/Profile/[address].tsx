@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import Profile from "./Profile";
-import {fetchProfileInfo} from "../../core/api";
+import {fetchProfileInfo} from "../../core/api/api";
 import {InferGetServerSidePropsType} from "next";
 import FourOhFour from "../404";
 import Head from "next/head";

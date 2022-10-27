@@ -8,9 +8,8 @@ import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
 import {LSPXXProfilePost} from "../../models/profile-post";
-import {fetchPostObjectWithAsset, searchProfiles, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api";
-import {connectToAPI, signMessage} from "../../core/web3";
-import {setProfileJwt} from "../../store/profile-reducer";
+import {fetchPostObjectWithAsset, searchProfiles, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api/api";
+import {signMessage} from "../../core/web3";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistryWithPost} from "../../core/update-registry";
 import PostBox, {FeedPost} from "../PostBox/PostBox";
@@ -39,7 +38,6 @@ const PostInput: FC<PostInputProps> = (props) => {
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const accountSelector: string | undefined = useSelector((state: RootState) => state.web3.account);
   const username = useSelector((state: RootState) => state.profile.name);
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const imageInput = createRef<HTMLInputElement>();
   const postInput = React.useRef<HTMLTextAreaElement>(null);
@@ -56,17 +54,6 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [profilesLoading, setProfilesLoading] = useState(false);
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
   const [tagInput, setTagInput] = useState('');
-
-  async function requestJWT() {
-    const resJWT = await connectToAPI(account(), web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
 
   function textAreaAdjust() {
     if (postInput.current) {
@@ -110,19 +97,17 @@ const PostInput: FC<PostInputProps> = (props) => {
         parentHash: props.parentHash
       };
 
-      const resJWT = jwt ? jwt : await requestJWT();
-
       if (inputFile) {
-        post = await fetchPostObjectWithAsset(post, inputFile, resJWT);
+        post = await fetchPostObjectWithAsset(post, inputFile, web3);
       }
       setLoadingMessage('Please sign your post');
       const signedMessage = await signMessage(account(), JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
+      const postUploaded = await uploadPostObject(post, signedMessage, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account(), resJWT);
+      await setNewRegistryPostedOnProfile(account(), web3);
 
       const newPost: FeedPost = {
         date: new Date(),

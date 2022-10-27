@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './SubComments.module.scss';
 import PostBox, {FeedPost} from "../PostBox/PostBox";
-import {fetchPostComments} from "../../core/api";
+import {fetchPostComments} from "../../core/api/api";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 

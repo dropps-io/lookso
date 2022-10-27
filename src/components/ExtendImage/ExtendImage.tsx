@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { styled } from "@mui/system";
+import { styled, Box } from "@mui/system";
 import styles from './ExtendImage.module.scss';
 import {ModalUnstyled} from "@mui/base";
 import clsx from "clsx";

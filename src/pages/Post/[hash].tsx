@@ -3,7 +3,7 @@ import Post from "./Post";
 import Head from "next/head";
 import React from "react";
 import FourOhFour from "../404";
-import {fetchPost} from "../../core/api";
+import {fetchPost} from "../../core/api/api";
 import {InferGetServerSidePropsType} from "next";
 import {FeedPost, initialFeedPost} from "../../components/PostBox/PostBox";
 import {formatUrl} from "../../core/utils/url-formating";
