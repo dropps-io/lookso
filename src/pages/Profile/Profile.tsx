@@ -80,7 +80,9 @@ const Profile: FC<ProfileProps> = (props) => {
     }
 
     async function initProfile() {
-      setIsFollowing(await fetchIsProfileFollower(props.address, connected.account()));
+      if (connected.account()) {
+        setIsFollowing(await fetchIsProfileFollower(props.address, connected.account()));
+      }
     }
 
     initPageData();
