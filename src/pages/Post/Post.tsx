@@ -56,11 +56,7 @@ const Post: FC<PostProps> = (props) => {
     }
 
     if (props.hash && !initialized && typeof account === 'string') init();
-  }, [account]);
-
-  useEffect(() => {
-    setComments([]);
-  }, [props.hash]);
+  }, [account, props.hash]);
 
   function newComment(comment: FeedPost) {
     setComments(existing => [comment].concat(existing));
