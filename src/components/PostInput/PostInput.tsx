@@ -19,6 +19,7 @@ import dynamic from "next/dynamic";
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
 import {IPFS_GATEWAY, MAX_POST_LENGTH} from "../../environment/constants";
+import {useRouter} from "next/router";
 
 const Picker = dynamic(
   () => {
@@ -35,6 +36,7 @@ interface PostInputProps {
 
 const PostInput: FC<PostInputProps> = (props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const accountSelector: string | undefined = useSelector((state: RootState) => state.web3.account);
   const username = useSelector((state: RootState) => state.profile.name);
@@ -98,16 +100,16 @@ const PostInput: FC<PostInputProps> = (props) => {
       };
 
       if (inputFile) {
-        post = await fetchPostObjectWithAsset(post, inputFile, web3);
+        post = await fetchPostObjectWithAsset(post, inputFile, router.asPath, web3);
       }
       setLoadingMessage('Please sign your post');
       const signedMessage = await signMessage(account(), JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, web3);
+      const postUploaded = await uploadPostObject(post, signedMessage, router.asPath, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account(), web3);
+      await setNewRegistryPostedOnProfile(account(), router.asPath, web3);
 
       const newPost: FeedPost = {
         date: new Date(),

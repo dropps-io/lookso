@@ -31,6 +31,7 @@ import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import FollowModal from "../../components/Modals/FollowModal/FollowModal";
 import ActionModal from "../../components/Modals/ActionModal/ActionModal";
 import useFetchFeed from "../../hooks/useFetchFeed";
+import {useRouter} from "next/router";
 
 interface ProfileProps {
   address: string,
@@ -39,6 +40,7 @@ interface ProfileProps {
 }
 
 const Profile: FC<ProfileProps> = (props) => {
+  const router = useRouter();
   const accountSelector = useSelector((state: RootState) => state.web3.account);
 
   const connected = {
@@ -102,7 +104,7 @@ const Profile: FC<ProfileProps> = (props) => {
     setFollowers(existing => existing + 1);
 
     try {
-      const res: any = await insertFollow(connected.account(), props.address, web3);
+      const res: any = await insertFollow(connected.account(), props.address, router.asPath, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       setIsFollowing(false);
@@ -117,7 +119,7 @@ const Profile: FC<ProfileProps> = (props) => {
     setFollowers(existing => existing - 1);
 
     try {
-      const res: any  = await insertUnfollow(connected.account(), props.address, web3);
+      const res: any  = await insertUnfollow(connected.account(), props.address, router.asPath, web3);
       if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
     } catch (e: any) {
       setIsFollowing(true);
@@ -131,9 +133,9 @@ const Profile: FC<ProfileProps> = (props) => {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), web3)).jsonUrl
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), router.asPath, web3)).jsonUrl
       await updateRegistry(connected.account(), JSONURL, web3);
-      await setNewRegistryPostedOnProfile(connected.account(), web3);
+      await setNewRegistryPostedOnProfile(connected.account(), router.asPath, web3);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');

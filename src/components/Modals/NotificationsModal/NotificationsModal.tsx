@@ -36,7 +36,7 @@ const NotificationsModal: FC<NotificationsModalProps> = (props) => {
 
   async function onClose () {
     if (web3 && !notifications.every(n => n.viewed)) {
-      await setProfileNotificationsToViewed(props.account, web3);
+      await setProfileNotificationsToViewed(props.account, router.asPath, web3);
     }
     props.onClose();
   }
