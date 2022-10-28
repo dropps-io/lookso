@@ -24,7 +24,7 @@ const AddressFeedDisplay: FC<AddressFeedDisplayProps> = (props) => {
   else if (props.standard === 'LSP6') {
     return (
       <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.KeyManager} ${props.postHierarchy}`} data-testid="AddressFeedDisplay">
-        <span>🔑 </span>
+        <span className={props.postHierarchy}>🔑 </span>
         {shortenAddress(props.address, 3)}
       </span>
     )
@@ -32,7 +32,7 @@ const AddressFeedDisplay: FC<AddressFeedDisplayProps> = (props) => {
   else if (props.standard === 'LSP7' || props.standard === 'LSP8' || props.standard === 'ERC20' || props.standard === 'ERC721' || props.standard === 'ERC777' || props.standard === 'ERC1155') {
     return (
       <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.Asset}`} data-testid="AddressFeedDisplay">
-        <AssetTag address={props.address} name={props.name} />
+        <AssetTag address={props.address} name={props.name} postHierarchy={props.postHierarchy}/>
       </span>
     );
   }

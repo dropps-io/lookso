@@ -6,7 +6,7 @@ interface AssetTagProps {
   address: string,
   colorReversed?: boolean,
   onClick?: () => any,
-  postHierarchy?: 'main' | 'parent' | 'child'
+  postHierarchy: 'main' | 'parent' | 'child'
 }
 
 const AssetTag: FC<AssetTagProps> = (props) => (
