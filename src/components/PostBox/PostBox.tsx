@@ -447,7 +447,7 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
                         isOpenExtraAction && (
                         <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
                               <a className={styles.Explorer} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
-                              <span>Hide</span>
+                              <span>Hide (soon)</span>
                         </PopupButton>
                         )
                     }
