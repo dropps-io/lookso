@@ -8,21 +8,22 @@ interface AddressFeedDisplayProps {
   address: string,
   name: string,
   standard: string,
-  onClick: (e: any, value?: string) => void
+  onClick: (e: any, value?: string) => void,
+  postHierarchy: 'main' | 'parent' | 'child'
 }
 
 const AddressFeedDisplay: FC<AddressFeedDisplayProps> = (props) => {
 
   if (props.standard === 'LSP0') {
     return (
-      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.Profile}`} data-testid="AddressFeedDisplay">
-        <UserTag username={props.name} address={props.address}></UserTag>
+      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.Profile} ${props.postHierarchy}`} data-testid="AddressFeedDisplay">
+        <UserTag username={props.name} address={props.address} postHierarchy={props.postHierarchy}></UserTag>
       </span>
     );
   }
   else if (props.standard === 'LSP6') {
     return (
-      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.KeyManager}`} data-testid="AddressFeedDisplay">
+      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.KeyManager} ${props.postHierarchy}`} data-testid="AddressFeedDisplay">
         <span>🔑 </span>
         {shortenAddress(props.address, 3)}
       </span>

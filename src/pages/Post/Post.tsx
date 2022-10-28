@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import styles from './Post.module.scss';
 import PostBox, {FeedPost} from "../../components/PostBox/PostBox";
-import {fetchIsLikedPost, fetchPostComments} from "../../core/api";
+import {fetchIsLikedPost, fetchPostComments} from "../../core/api/api";
 import Navbar from "../../components/Navbar/Navbar";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -37,9 +37,10 @@ const Post: FC<PostProps> = (props) => {
       setIsLiking(false);
       setComments([]);
 
-      const isLiking = await fetchIsLikedPost(account ? account : '', props.hash);
-      if (isLiking) {
-        setIsLiking(true);
+      try {
+      if (account) setIsLiking(await fetchIsLikedPost(account ? account : '', props.hash));
+      } catch (e) {
+        console.error(e);
       }
 
       const res = await fetchPostComments(props.hash, 0, account ? account : undefined);
@@ -55,7 +56,7 @@ const Post: FC<PostProps> = (props) => {
     }
 
     if (props.hash && !initialized && typeof account === 'string') init();
-  }, [account]);
+  }, [account, props.hash]);
 
   function newComment(comment: FeedPost) {
     setComments(existing => [comment].concat(existing));
@@ -75,7 +76,7 @@ const Post: FC<PostProps> = (props) => {
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PostPageContent}>
         <div className={`${styles.Content} ${props.post && props.post.type === 'post' ? styles.PostType : ''}`}>
-          <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
+          <PostBox newComment={newComment} post={props.post} isLiked={isLiking} postHierarchy={'main'}/>
           {
             account &&
               <div className={styles.NewComment}>

@@ -7,16 +7,15 @@ import crossIcon from "../../assets/icons/cross.svg";
 import searchIcon from "../../assets/icons/search.svg";
 import bellIcon from "../../assets/icons/bell.svg";
 import bellIconFilled from "../../assets/icons/bell-filled.svg";
-import {connectToAPI, connectWeb3} from "../../core/web3";
+import {connectWeb3} from "../../core/web3";
 import {setAccount, setBalance, setNetworkId, setWeb3} from "../../store/web3-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {getFeedActions, RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
-import {setProfileInfo, setProfileJwt} from "../../store/profile-reducer";
+import {setProfileInfo} from "../../store/profile-reducer";
 import Link from "next/link";
-import {fetchProfileNotificationsCount} from "../../core/api";
+import {fetchProfileNotificationsCount} from "../../core/api/api";
 import NotificationsModal from "../Modals/NotificationsModal/NotificationsModal";
-import Web3 from "web3";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import ActionModal from "../Modals/ActionModal/ActionModal";
 import {useRouter} from "next/router";
@@ -56,18 +55,6 @@ const Navbar: FC<NavbarProps> = () => {
       dispatch(setProfileInfo(web3Info.profileInfo));
       //TODO go to feed only if on the home, but manage to make the explore page stay when logging in
       await router.push('/feed');
-      await requestJWT(web3Info.account, web3Info.web3);
-    }
-  }
-
-  async function requestJWT(account: string, web3: Web3) {
-    const resJWT = await connectToAPI(account, web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
     }
   }
 
@@ -84,6 +71,18 @@ const Navbar: FC<NavbarProps> = () => {
 
   function goTo(url: string) {
     window.open(url, '_blank');
+  }
+
+  async function goToRoute(route: string) {
+    if (router.asPath.includes('explore') && route.includes('explore')) {
+      dispatch(getFeedActions('Explore').setCurrentPage(undefined));
+      dispatch(getFeedActions('Explore').setStoredFeed([]));
+    }
+    if (router.asPath.includes('feed') && route.includes('feed')) {
+      dispatch(getFeedActions('Feed').setCurrentPage(undefined));
+      dispatch(getFeedActions('Feed').setStoredFeed([]));
+    }
+    await router.push(route);
   }
 
   useEffect(() => {
@@ -127,10 +126,10 @@ const Navbar: FC<NavbarProps> = () => {
                 <li><a onClick={() => goTo('https://twitter.com/lookso_io')}>Twitter</a></li>
               </>
           }
-          <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
+          <li><a onClick={() => goToRoute('/explore')} className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></li>
           {
             account ?
-              <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
+              <li><a onClick={() => goToRoute('/feed')} className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></li>
               :
               <></>
           }
@@ -186,10 +185,10 @@ const Navbar: FC<NavbarProps> = () => {
                     <li><a onClick={() => goTo('https://twitter.com/dropps_io')}>Twitter</a></li>
                   </>
               }
-              <li><Link href='/explore'><a href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></Link></li>
+              <li><a onClick={() => goToRoute('/explore')} href="" className={router.asPath.includes('explore') ? styles.ActiveLink : ''}>Explore</a></li>
               {
                 account ?
-                  <li><Link href='/feed'><a href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></Link></li>
+                  <li><a onClick={() => goToRoute('/feed')} href="" className={router.asPath.includes('feed') ? styles.ActiveLink : ''}>My feed</a></li>
                   :
                   <></>
               }

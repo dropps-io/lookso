@@ -5,7 +5,7 @@ import reportIcon from '../../assets/icons/report.svg'
 import shareIcon from '../../assets/icons/share.svg'
 
 import Navbar from "../../components/Navbar/Navbar";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {formatUrl} from "../../core/utils/url-formating";
 import {EXPLORER_URL, WEBSITE_URL} from "../../environment/endpoints";
@@ -17,9 +17,7 @@ import {
   fetchProfileFollowingCount,
   insertFollow,
   insertUnfollow, requestNewRegistryJsonUrl, setNewRegistryPostedOnProfile
-} from "../../core/api";
-import {connectToAPI} from "../../core/web3";
-import {setProfileJwt} from "../../store/profile-reducer";
+} from "../../core/api/api";
 import Activity from "../../components/Activity/Activity";
 import Footer from "../../components/Footer/Footer";
 import {DEFAULT_PROFILE_IMAGE} from "../../core/utils/constants";
@@ -33,6 +31,7 @@ import SidebarButtons from "../../components/SidebarButtons/SidebarButtons";
 import FollowModal from "../../components/Modals/FollowModal/FollowModal";
 import ActionModal from "../../components/Modals/ActionModal/ActionModal";
 import useFetchFeed from "../../hooks/useFetchFeed";
+import {useRouter} from "next/router";
 
 interface ProfileProps {
   address: string,
@@ -41,8 +40,7 @@ interface ProfileProps {
 }
 
 const Profile: FC<ProfileProps> = (props) => {
-  const dispatch = useDispatch();
-
+  const router = useRouter();
   const accountSelector = useSelector((state: RootState) => state.web3.account);
 
   const connected = {
@@ -53,7 +51,6 @@ const Profile: FC<ProfileProps> = (props) => {
     profileImage: useSelector((state: RootState) => state.profile.profileImage),
     backgroundImage: useSelector((state: RootState) => state.profile.backgroundImage),
   }
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
 
   const [following, setFollowing] = useState(0);
@@ -85,22 +82,14 @@ const Profile: FC<ProfileProps> = (props) => {
     }
 
     async function initProfile() {
-      setIsFollowing(await fetchIsProfileFollower(props.address, connected.account()));
+      if (connected.account()) {
+        setIsFollowing(await fetchIsProfileFollower(props.address, connected.account()));
+      }
     }
 
     initPageData();
   }, [props.address, connected.account()]);
 
-  async function requestJWT() {
-    const resJWT = await connectToAPI(connected.account(), web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
 
   function copyToClipboard(toCopy: string, index: number) {
     setCopied(existing => existing.map((e, i) => i === index));
@@ -113,58 +102,40 @@ const Profile: FC<ProfileProps> = (props) => {
   async function followUser() {
     setIsFollowing(true);
     setFollowers(existing => existing + 1);
+
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-      try {
-        const res: any = await insertFollow(connected.account(), props.address, headersJWT);
-        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        setIsFollowing(false);
-        if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
+      const res: any = await insertFollow(connected.account(), props.address, router.asPath, web3);
+      if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
+    } catch (e: any) {
       setIsFollowing(false);
+      if (e.message.includes('registry')) {
+        await pushRegistryToTheBlockchain()
+      }
     }
   }
 
   async function unfollowUser() {
     setIsFollowing(false);
     setFollowers(existing => existing - 1);
+
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-      try {
-        const res: any  = await insertUnfollow(connected.account(), props.address, headersJWT);
-        if (res.jsonUrl) await pushRegistryToTheBlockchain(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        setIsFollowing(true);
-        if (e.message.includes('registry')) {
-          await pushRegistryToTheBlockchain(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
+      const res: any  = await insertUnfollow(connected.account(), props.address, router.asPath, web3);
+      if (res.jsonUrl) await pushRegistryToTheBlockchain(res.jsonUrl);
+    } catch (e: any) {
       setIsFollowing(true);
+      if (e.message.includes('registry')) {
+        await pushRegistryToTheBlockchain()
+      }
     }
   }
 
-  async function pushRegistryToTheBlockchain(_jwt: string, jsonUrl?: string) {
+  async function pushRegistryToTheBlockchain(jsonUrl?: string) {
     setLoadingMessage('It\'s time to push everything to the blockchain! ⛓️')
 
     try {
-      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), _jwt)).jsonUrl
+      const JSONURL = jsonUrl ? jsonUrl : (await requestNewRegistryJsonUrl(connected.account(), router.asPath, web3)).jsonUrl
       await updateRegistry(connected.account(), JSONURL, web3);
-      await setNewRegistryPostedOnProfile(connected.account(), _jwt);
+      await setNewRegistryPostedOnProfile(connected.account(), router.asPath, web3);
       setLoadingMessage('');
     } catch (e) {
       setLoadingMessage('');

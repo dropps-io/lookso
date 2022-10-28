@@ -77,3 +77,7 @@ button:hover {
   height: 100vh;
   cursor: default;
 }
+
+.main, .parent, .child {
+  opacity: 1;
+}

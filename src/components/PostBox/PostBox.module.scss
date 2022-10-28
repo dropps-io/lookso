@@ -276,7 +276,7 @@
 
 }
 
-.Repost {
+.Child {
   margin-top: 0;
   padding: 15px 35px 15px 30px;
   background-color: var(--color-background-main-l2);
@@ -635,7 +635,12 @@
     }
   }
 
-  .Repost {
+  .Child {
     margin-top: 0;
   }
+}
+
+
+.Parent{
+  opacity: 1;
 }

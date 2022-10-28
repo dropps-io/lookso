@@ -58,7 +58,7 @@ const ExtendImage: FC<ExtendImageProps> = (props) => (
         aria-describedby="unstyled-modal-description"
         open={props.open}
         onClose={props.callback}
-        components={{ Backdrop }}
+        slots={{ backdrop: Backdrop }}
     >
         <div className={styles.ExtendImage}>
             <div className={styles.ExtendImageBackDrop} onClick={() => props.callback()}></div>

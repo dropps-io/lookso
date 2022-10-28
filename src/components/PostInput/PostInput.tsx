@@ -8,9 +8,8 @@ import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
 import {LSPXXProfilePost} from "../../models/profile-post";
-import {fetchPostObjectWithAsset, searchProfiles, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api";
-import {connectToAPI, signMessage} from "../../core/web3";
-import {setProfileJwt} from "../../store/profile-reducer";
+import {fetchPostObjectWithAsset, searchProfiles, setNewRegistryPostedOnProfile, uploadPostObject} from "../../core/api/api";
+import {signMessage} from "../../core/web3";
 import {UniversalProfile} from "../../core/UniversalProfile/UniversalProfile.class";
 import {updateRegistryWithPost} from "../../core/update-registry";
 import PostBox, {FeedPost} from "../PostBox/PostBox";
@@ -19,7 +18,8 @@ import LoadingModal from "../Modals/LoadingModal/LoadingModal";
 import dynamic from "next/dynamic";
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
-import {IPFS_GATEWAY} from "../../environment/constants";
+import {IPFS_GATEWAY, MAX_POST_LENGTH} from "../../environment/constants";
+import {useRouter} from "next/router";
 
 const Picker = dynamic(
   () => {
@@ -36,10 +36,10 @@ interface PostInputProps {
 
 const PostInput: FC<PostInputProps> = (props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const profileImage = useSelector((state: RootState) => state.profile.profileImage);
   const accountSelector: string | undefined = useSelector((state: RootState) => state.web3.account);
   const username = useSelector((state: RootState) => state.profile.name);
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const imageInput = createRef<HTMLInputElement>();
   const postInput = React.useRef<HTMLTextAreaElement>(null);
@@ -56,17 +56,6 @@ const PostInput: FC<PostInputProps> = (props) => {
   const [profilesLoading, setProfilesLoading] = useState(false);
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
   const [tagInput, setTagInput] = useState('');
-
-  async function requestJWT() {
-    const resJWT = await connectToAPI(account(), web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
 
   function textAreaAdjust() {
     if (postInput.current) {
@@ -110,19 +99,17 @@ const PostInput: FC<PostInputProps> = (props) => {
         parentHash: props.parentHash
       };
 
-      const resJWT = jwt ? jwt : await requestJWT();
-
       if (inputFile) {
-        post = await fetchPostObjectWithAsset(post, inputFile, resJWT);
+        post = await fetchPostObjectWithAsset(post, inputFile, router.asPath, web3);
       }
       setLoadingMessage('Please sign your post');
       const signedMessage = await signMessage(account(), JSON.stringify(post), web3);
       setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, resJWT);
+      const postUploaded = await uploadPostObject(post, signedMessage, router.asPath, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
-      await setNewRegistryPostedOnProfile(account(), resJWT);
+      await setNewRegistryPostedOnProfile(account(), router.asPath, web3);
 
       const newPost: FeedPost = {
         date: new Date(),
@@ -145,7 +132,8 @@ const PostInput: FC<PostInputProps> = (props) => {
         comments: 0,
         likes: 0,
         isLiked: false,
-        reposts: 0
+        reposts: 0,
+        childPost: props.childPost
       };
       if (props.onNewPost) props.onNewPost(newPost);
 
@@ -233,6 +221,7 @@ const PostInput: FC<PostInputProps> = (props) => {
   }
 
   const onEmojiClick = (event: any, emojiObject: any) => {
+    if (inputValue.length + emojiObject.emoji.length > MAX_POST_LENGTH) return;
     if (postInput.current) postInput.current.value = inputValue + emojiObject.emoji;
     setInputValue(value => value + emojiObject.emoji);
   };
@@ -253,7 +242,7 @@ const PostInput: FC<PostInputProps> = (props) => {
             <textarea onClick={() => setShowEmojiPicker(false)}
                       disabled={!!loadingMessage}
                       onChange={handleChangeMessage}
-                      maxLength={256}
+                      maxLength={MAX_POST_LENGTH}
                       ref={postInput}
                       className={styles.PostInput}
                       style={{height: `${inputHeight}px`}}
@@ -280,12 +269,12 @@ const PostInput: FC<PostInputProps> = (props) => {
           props.childPost &&
             <>
                 <br/>
-              <PostBox post={props.childPost} static repost/>
+              <PostBox post={props.childPost} static postHierarchy={'child'}/>
             </>
 
         }
         <div className={styles.BoxBottom}>
-          <span>{inputValue.length} / 256</span>
+          <span>{inputValue.length} / {MAX_POST_LENGTH.toString()}</span>
           <div className={styles.RightPart}>
             <div className={styles.SmileIcon}>
               <img onClick={() => setShowEmojiPicker(!showEmojiPicker)}  src={smileIcon.src} alt=""/>

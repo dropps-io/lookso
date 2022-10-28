@@ -62,8 +62,8 @@ const Comments: FC<CommentsProps> = (props) => {
                 <div className={styles.PostBox}>
                   {
                     index === props.feed.length - (15 / 2) ?
-                      <PostBox ref={ref} key={post.hash + index} post={post} comment/> :
-                      <PostBox key={post.hash + index} post={post} comment/>
+                      <PostBox ref={ref} key={post.hash + index} post={post} comment postHierarchy={'main'}/> :
+                      <PostBox key={post.hash + index} post={post} comment postHierarchy={'main'}/>
                   }
                 </div>
                 {post.comments > 0 &&

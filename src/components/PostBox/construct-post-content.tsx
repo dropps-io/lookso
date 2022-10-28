@@ -4,12 +4,13 @@ import styles from './PostBox.module.scss';
 import {shortenAddress} from "../../core/utils/address-formating";
 import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 import {USER_TAG_REGEX} from "../../core/utils/constants";
-import {fetchAddressFromUserTag} from "../../core/api";
+import {fetchAddressFromUserTag} from "../../core/api/api";
 import {useRouter} from "next/router";
 
 interface ParamContentProps {
   param: FeedDisplayParam,
-  onClick: (e: any, value?: string) => void
+  onClick: (e: any, value?: string) => void,
+  postHierarchy: 'main' | 'parent' | 'child'
 }
 
 const ParamContent: FC<ParamContentProps> = (props) => {
@@ -26,22 +27,28 @@ const ParamContent: FC<ParamContentProps> = (props) => {
   if (props.param.type === 'address') {
     return (
       <strong title={props.param.value}>
-        <AddressFeedDisplay onClick={props.onClick} address={props.param.value} name={props.param.display} standard={props.param.additionalProperties.interfaceCode ? props.param.additionalProperties.interfaceCode : ''} />
+        <AddressFeedDisplay
+          onClick={props.onClick}
+          address={props.param.value}
+          name={props.param.display}
+          standard={props.param.additionalProperties.interfaceCode ? props.param.additionalProperties.interfaceCode : ''}
+          postHierarchy={props.postHierarchy}
+        />
       </strong>
     );
   }
   else if (props.param.type === 'bytes32' || props.param.type === 'bytes') {
     return (
       <>
-        <strong className={styles.Bytes32Parameter} title={props.param.value} onClick={(e) => copyToClipboard(e, props.param.value)}>
+        <strong className={`${styles.Bytes32Parameter} ${props.postHierarchy}`} title={props.param.value} onClick={(e) => copyToClipboard(e, props.param.value)}>
           {shortenAddress(props.param.value, 5)}
         </strong>
-        <span className={`copied ${copied ? 'copied-active' : ''}`}>Copied to clipboard</span>
+        <span className={`copied ${copied ? 'copied-active' : ''} ${props.postHierarchy}`}>Copied to clipboard</span>
       </>
       );
   }
   return (
-    <strong className={styles.Parameter}>
+    <strong className={`${styles.Parameter} ${props.postHierarchy}`}>
       {props.param.display ? props.param.display : props.param.value}
     </strong>);
 }
@@ -49,7 +56,8 @@ const ParamContent: FC<ParamContentProps> = (props) => {
 interface PostContentProps {
   text: string,
   params: {[key: string]: FeedDisplayParam},
-  onClick: (e: any) => void
+  onClick: (e: any) => void,
+  postHierarchy: 'main' | 'parent' | 'child'
 }
 
 const PostContent: FC<PostContentProps> = (props) => {
@@ -58,8 +66,8 @@ const PostContent: FC<PostContentProps> = (props) => {
       {
         props.text.split(/{([^}]+)}/).map((entry, index) =>
           props.params[entry] ?
-            <ParamContent onClick={props.onClick} key={index} param={props.params[entry]}></ParamContent> :
-            <PostText key={index} text={entry}/>
+            <ParamContent onClick={props.onClick} key={index} param={props.params[entry]} postHierarchy={props.postHierarchy}/> :
+            <PostText key={index} text={entry} postHierarchy={props.postHierarchy}/>
       )
       }
     </p>
@@ -68,6 +76,7 @@ const PostContent: FC<PostContentProps> = (props) => {
 
 interface PostTextProps {
   text: string,
+  postHierarchy: 'main' | 'parent' | 'child'
 }
 
 const PostText = (props: PostTextProps) => {
@@ -94,14 +103,14 @@ const PostText = (props: PostTextProps) => {
                   :
                   word.match(USER_TAG_REGEX) ?
                     <span key={i}>
-                      <span onClick={() => goToProfile(word)} className={styles.ProfileTagged}>
+                      <span onClick={() => goToProfile(word)} className={`${styles.ProfileTagged} ${props.postHierarchy}`}>
                         {word.split('#')[0]}
-                        <span className={styles.Digits}>#{word.split('#')[1]}</span>
+                        <span className={`${styles.Digits} ${props.postHierarchy}`}>#{word.split('#')[1]}</span>
                       </span>
                         {` `}
                     </span>
                     :
-                    <span key={i}>{`${word} `}</span>
+                    <span key={i} className={props.postHierarchy}>{`${word} `}</span>
               )
             }
           </span>

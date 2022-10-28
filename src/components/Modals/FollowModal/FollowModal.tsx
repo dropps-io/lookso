@@ -4,7 +4,7 @@ import {formatUrl} from "../../../core/utils/url-formating";
 import {DEFAULT_PROFILE_IMAGE} from "../../../core/utils/constants";
 import UserTag from "../../UserTag/UserTag";
 import CustomModal from "../../CustomModal/CustomModal";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {RootState} from "../../../store/store";
 import {
@@ -12,25 +12,21 @@ import {
   fetchProfileFollowing,
   insertFollow,
   insertUnfollow
-} from "../../../core/api";
+} from "../../../core/api/api";
 import {ProfileFollowingDisplay} from "../../../models/profile";
 import CircularProgress from "@mui/material/CircularProgress";
-import {connectToAPI} from "../../../core/web3";
-import {setProfileJwt} from "../../../store/profile-reducer";
 
 interface FollowModalProps {
   address: string,
   type: 'following' | 'followers',
   open: boolean,
   onClose: () => any,
-  onPushToBlockchainRequired: (jwt: string, jsonUrl?: string) => any,
+  onPushToBlockchainRequired: (jsonUrl?: string) => any,
   onFollowChange: (type: 'followers' | 'following', value: -1 | 1) => any;
 }
 
 const FollowModal: FC<FollowModalProps> = (props) => {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const jwt = useSelector((state: RootState) => state.profile.jwt);
   const web3 = useSelector((state: RootState) => state.web3.web3);
   const account = useSelector((state: RootState) => state.web3.account);
   const [profiles, setProfiles] = useState<ProfileFollowingDisplay[]>([]);
@@ -49,7 +45,7 @@ const FollowModal: FC<FollowModalProps> = (props) => {
       setFullyLoaded(false);
       setCurrentAddress(props.address);
     }
-  }, [props.open, props.address, web3, jwt]);
+  }, [props.open, props.address, web3]);
 
   useEffect(() => {
     if (fullyLoaded || loading || !props.open || page === null) return;
@@ -92,39 +88,19 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     props.onClose();
   }
 
-  async function requestJWT() {
-    const resJWT = await connectToAPI(props.address, web3);
-    if (resJWT) {
-      dispatch(setProfileJwt(resJWT));
-      return resJWT;
-    }
-    else {
-      throw 'Failed to connect';
-    }
-  }
 
   async function followUser(address: string) {
     if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-      try {
-        const res: any = await insertFollow(account, address, headersJWT);
-        if (props.address === account) props.onFollowChange(props.type, 1);
-        if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
-        if (e.message.includes('registry')) {
-          props.onPushToBlockchainRequired(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
+      const res: any = await insertFollow(account, address, router.asPath, web3);
+      if (props.address === account) props.onFollowChange(props.type, 1);
+      if (res.jsonUrl) props.onPushToBlockchainRequired(res.jsonUrl);
+    } catch (e: any) {
       setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
+      if (e.message.includes('registry')) {
+        props.onPushToBlockchainRequired()
+      }
     }
   }
 
@@ -132,24 +108,14 @@ const FollowModal: FC<FollowModalProps> = (props) => {
     if (!account) return;
     setProfiles(existing => existing.map(p => {if (p.address === address) p.following = false;return p}));
     try {
-      let headersJWT = jwt;
-      if (!headersJWT) {
-        headersJWT = await requestJWT();
-      }
-      try {
-        const res: any = await insertUnfollow(account, address, headersJWT);
-        if (props.address === account) props.onFollowChange(props.type, -1);
-        if (res.jsonUrl) props.onPushToBlockchainRequired(headersJWT, res.jsonUrl);
-      } catch (e: any) {
-        setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
-        if (e.message.includes('registry')) {
-          props.onPushToBlockchainRequired(headersJWT)
-        }
-      }
-    }
-    catch (e) {
-      console.error(e);
+      const res: any = await insertUnfollow(account, address, router.asPath, web3);
+      if (props.address === account) props.onFollowChange(props.type, -1);
+      if (res.jsonUrl) props.onPushToBlockchainRequired(res.jsonUrl);
+    } catch (e: any) {
       setProfiles(existing => existing.map(p => {if (p.address === address) p.following = true;return p}));
+      if (e.message.includes('registry')) {
+        props.onPushToBlockchainRequired();
+      }
     }
   }
 
