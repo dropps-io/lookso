@@ -80,7 +80,7 @@ const Post: FC<PostProps> = (props) => {
       <div className={styles.Header}><Navbar/></div>
       <div className={styles.PostPageContent}>
         <div className={`${styles.Content} ${props.post && props.post.type === 'post' ? styles.PostType : ''}`}>
-          <PostBox newComment={newComment} post={props.post} isLiked={isLiking}/>
+          <PostBox newComment={newComment} post={props.post} isLiked={isLiking} postHierarchy={'main'}/>
           {
             account &&
               <div className={styles.NewComment}>

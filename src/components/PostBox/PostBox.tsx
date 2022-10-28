@@ -115,8 +115,8 @@ interface PostProps {
   isLiked?: boolean;
   newComment?: ((comment: FeedPost) => any);
   onUnfollow?: ((address: string) => any);
-  comment?: boolean;
-  repost?: boolean;
+  postHierarchy: 'main' | 'parent' | 'child',
+  comment?: boolean,
   static?: boolean;
   noPadding?: boolean;
 }
@@ -258,6 +258,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
   }
 
   async function handleClick(e: any, value?: string) {
+    const el: HTMLElement = e.target as HTMLElement;
+    if (!el.className.includes(props.postHierarchy)) return;
     if (props.type) dispatch(getFeedActions(props.type).setCurrentPost(props.post.hash));
 
     // stop process if user is highlighting something
@@ -271,8 +273,6 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
     if (clickLoading) return;
     clickLoading = true;
-
-    const el: HTMLElement = e.target as HTMLElement;
 
     if (value) {
       if(el.className.includes('UserTag')) goToProfile(value);
@@ -416,11 +416,18 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
       <LoadingModal open={!!loadingMessage} onClose={() => {}} textToDisplay={loadingMessage}/>
       <CommentModal open={showCommentModal} onClose={closeCommentModal} post={props.post} />
       <RepostModal open={showRepostModal} onClose={closeRepostModal} post={props.post}/>
-      <div onClick={handleClick} ref={ref} className={`${styles.FeedPost} ${props.noPadding ? styles.NoPadding : ''} ${props.post.type === 'post' ? styles.PostType : styles.EventType} ${(props.comment) ? styles.Comment : ''} ${props.repost ? styles.Repost : ''}`}>
+      <div onClick={handleClick} ref={ref}
+           className={`${styles.FeedPost} 
+           ${props.noPadding ? styles.NoPadding : ''} 
+           ${props.post.type === 'post' ? styles.PostType : styles.EventType} 
+           ${(props.postHierarchy === 'parent') || props.comment ? styles.Comment : ''} 
+           ${props.postHierarchy === 'child' ? styles.Child : ''}
+           ${props.postHierarchy}`
+      }>
         {props.post.parentPost &&
           <div className={styles.ParentPost}>
             <div className={styles.Post}>
-              <PostBox key={'parent-post'} post={props.post.parentPost} comment noPadding/>
+              <PostBox key={'parent-post'} post={props.post.parentPost} postHierarchy={'parent'} noPadding/>
             </div>
           </div>
         }
@@ -428,45 +435,45 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
           setIsOpenExtraAction(false);
           setIsOpenRepostAction(false);
         }}></div>}
-        <div className={styles.PostHeader}>
-          <div className={styles.LeftPart}>
+        <div className={`${styles.PostHeader} ${props.postHierarchy}`}>
+          <div className={`${styles.LeftPart} ${props.postHierarchy}`}>
             <Link href={`/Profile/${props.post.author.address}`}>
-              <div className={styles.ProfileImageMedium} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
+              <div className={`${styles.ProfileImageMedium} ${props.postHierarchy}`} style={{backgroundImage: props.post.author.image ? `url(${formatUrl(props.post.author.image)})` : `url(${DEFAULT_PROFILE_IMAGE})`}}></div>
             </Link>
-            <div className={styles.UserTag} onClick={(e) => handleClick(e, props.post.author.address)}>
-              <UserTag username={props.post.author.name} address={props.post.author.address}/>
+            <div className={`${styles.UserTag} ${props.postHierarchy}`} onClick={(e) => handleClick(e, props.post.author.address)}>
+              <UserTag username={props.post.author.name} address={props.post.author.address} postHierarchy={props.postHierarchy}/>
             </div>
           </div>
-          <div className={styles.RightPart}>
+          <div className={`${styles.RightPart} ${props.postHierarchy}`}>
             <span>{dateDifference(new Date(Date.now()), new Date(props.post.date))} ago</span>
             {
               props.post.author.address === account ?
-                  <div className={styles.RightPartButton}>
-                    <span className={styles.MoreOptions} onClick={handleClick}>...</span>
+                  <div className={`${styles.RightPartButton} ${props.postHierarchy}`}>
+                    <span className={`${styles.MoreOptions} ${props.postHierarchy}`} onClick={handleClick}>...</span>
                     {
                         isOpenExtraAction && (
-                        <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
-                              <a className={styles.Explorer} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
+                        <PopupButton className={`${styles.MoreActionPopup} ${props.postHierarchy}`} callback={() => setIsOpenExtraAction(false)}>
+                              <a className={`${styles.Explorer} ${props.postHierarchy}`} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               <span>Hide (soon)</span>
                         </PopupButton>
                         )
                     }
                   </div>
                   :
-                  <div className={styles.RightPartButton}>
-                    <span className={styles.MoreOptions} onClick={handleClick}>...</span>
+                  <div className={`${styles.RightPartButton} ${props.postHierarchy}`}>
+                    <span className={`${styles.MoreOptions} ${props.postHierarchy}`} onClick={handleClick}>...</span>
                     {
                         isOpenExtraAction && (
-                            <PopupButton className={styles.MoreActionPopup} callback={() => setIsOpenExtraAction(false)}>
-                              <a className={styles.Explorer} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
+                            <PopupButton className={`${styles.MoreActionPopup} ${props.postHierarchy}`} callback={() => setIsOpenExtraAction(false)}>
+                              <a className={`${styles.Explorer} ${props.postHierarchy}`} onClick={() => goTo(EXPLORER_URL + 'tx/' + props.post.transactionHash)}>Explorer</a>
                               {
-                                  router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                  router.asPath === '/feed' && <div onClick={() => unfollowUser(props.post.author.address)} className={`${styles.RightPartButtonUnfollow} ${props.postHierarchy}`}>
                                     <span>Unfollow </span>
                                     <UserTag username={props.post.author.name} address={props.post.author.address}/>
                                   </div>
                               }
                               {
-                                  router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={styles.RightPartButtonUnfollow}>
+                                  router.asPath === '/explore' && <div onClick={() => followUser(props.post.author.address)} className={`${styles.RightPartButtonUnfollow} ${props.postHierarchy}`}>
                                     <span>Follow <UserTag username={props.post.author.name} address={props.post.author.address}/></span>
                                   </div>
                               }
@@ -477,50 +484,58 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
             }
             {
              (props.post.type === 'post' && props.post.trusted !== undefined && !props.post.trusted) &&
-                <div className={styles.Warning} onClick={() => setShowWarningModal(true)}>
+                <div className={`${styles.Warning} ${props.postHierarchy}`} onClick={() => setShowWarningModal(true)}>
                   <img src={warningIcon.src} alt=""/>
                 </div>
             }
           </div>
         </div>
-        <div className={styles.PostTags}>
+        <div className={`${styles.PostTags} ${props.postHierarchy}`}>
           {props.post.display.tags.standard ?
-            <div className={styles.PostTag}>{props.post.display.tags.standard}</div>
+            <div className={`${styles.PostTag} ${props.postHierarchy}`}>{props.post.display.tags.standard}</div>
            : <></>}
           {props.post.display.tags.standardType ?
-            <div className={styles.PostTag}>{props.post.display.tags.standardType}</div>
+            <div className={`${styles.PostTag} ${props.postHierarchy}`}>{props.post.display.tags.standardType}</div>
             : <></>}
         </div>
-        <div className={styles.PostContent}>
+        <div className={`${styles.PostContent} ${props.postHierarchy}`}>
           {
             props.post.type === 'event' ?
               props.post.display.image ?
                   <>
-                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={styles.EventImage} onClick={() => setIsExtendPostImage(true)} />
+                    <div style={{backgroundImage: `url(${formatUrl(props.post.display.image)})`}} className={`${styles.EventImage} ${props.postHierarchy}`} onClick={() => setIsExtendPostImage(true)} />
                     {
                       isExtendPostImage && <ExtendImage open={isExtendPostImage} image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                     }
                   </>
                 :
                 props.post.name === 'ValueReceived' || props.post.name === 'UniversalReceiver' ?
-                  <img className={styles.EventIcon} src={receivedEventIcon.src} onClick={handleClick} alt="Received Event"/>
+                  <img className={`${styles.EventIcon} ${props.postHierarchy}`} src={receivedEventIcon.src} onClick={handleClick} alt="Received Event"/>
                   :
                   props.post.name === 'OwnershipTransferred' ?
-                    <img className={styles.EventIcon} src={ownershipTransferredEventIcon.src} onClick={handleClick} alt="Ownership transferred Event"/>
+                    <img className={`${styles.EventIcon} ${props.postHierarchy}`} src={ownershipTransferredEventIcon.src} onClick={handleClick} alt="Ownership transferred Event"/>
                     :
                     props.post.name === 'DataChanged' ?
-                    <img className={styles.EventIcon} src={dataChangedEventIcon.src} onClick={handleClick} alt="Data changed Event"/>
+                    <img className={`${styles.EventIcon} ${props.postHierarchy}`} src={dataChangedEventIcon.src} onClick={handleClick} alt="Data changed Event"/>
                       :
-                    <img className={styles.EventIcon} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
+                    <img className={`${styles.EventIcon} ${props.postHierarchy}`} src={executedEventIcon.src} onClick={handleClick} alt="Executed Event"/>
               :
               <></>
           }
-          {props.post.display.text ? <PostContent onClick={handleClick} text={props.post.display.text} params={props.post.display.params}/> : props.post.type === 'event' && <p>Event: {props.post.name}</p>}
+          {props.post.display.text ?
+            <PostContent
+              onClick={handleClick}
+              text={props.post.display.text}
+              params={props.post.display.params}
+              postHierarchy={props.postHierarchy}
+            />
+            :
+            props.post.type === 'event' && <p>Event: {props.post.name}</p>}
           {
             props.post.type === 'post' && props.post.display.image ?
 
                 <>
-                  <img src={formatUrl(props.post.display.image)} className={styles.PostImage} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(true)} />
+                  <img src={formatUrl(props.post.display.image)} className={`${styles.PostImage} ${props.postHierarchy}`} alt={`Image of post by ${props.post.author}`} onClick={() => setIsExtendPostImage(true)} />
                   {
                       isExtendPostImage && <ExtendImage open={isExtendPostImage} image={props.post.display?.image} alt={`Image of post by ${props.post.author}`} callback={() => setIsExtendPostImage(false)} rounded={false}/>
                   }
@@ -531,38 +546,38 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
         </div>
         {
           props.post.childPost ?
-            <PostBox post={props.post.childPost} static repost/> : <></>
+            <PostBox post={props.post.childPost} static postHierarchy={'child'}/> : <></>
         }
         {props.static ?
           <></> :
-          <div className={styles.PostFooter}>
+          <div className={`${styles.PostFooter} ${props.postHierarchy}`}>
             <div></div>
-            <div className={styles.PostActions}>
-              <div title={'Comment'} className={`${styles.IconNumber} ${styles.CommentIcon}`} onClick={handleClick}>
-                <img className={styles.CommentIcon} src={commentIcon.src} alt=""/>
-                <span className={styles.CommentIcon}>{props.post.comments}</span>
+            <div className={`${styles.PostActions} ${props.postHierarchy}`}>
+              <div title={'Comment'} className={`${styles.IconNumber} ${styles.CommentIcon} ${props.postHierarchy}`} onClick={handleClick}>
+                <img className={`${styles.CommentIcon} ${props.postHierarchy}`} src={commentIcon.src} alt=""/>
+                <span className={`${styles.CommentIcon} ${props.postHierarchy}`}>{props.post.comments}</span>
               </div>
-              <div title={'Repost'} className={`${styles.IconNumber} ${styles.RepostIcon}`} onClick={handleClick}>
-                <img className={styles.RepostIcon} src={repostIcon.src} alt=""/>
-                <span className={styles.RepostIcon}>{props.post.reposts}</span>
+              <div title={'Repost'} className={`${styles.IconNumber} ${styles.RepostIcon} ${props.postHierarchy}`} onClick={handleClick}>
+                <img className={`${styles.RepostIcon} ${props.postHierarchy}`} src={repostIcon.src} alt=""/>
+                <span className={`${styles.RepostIcon} ${props.postHierarchy}`}>{props.post.reposts}</span>
                 {
                     isOpenRepostAction && (
-                        <PopupButton className={styles.RepostPopup} callback={() => setIsOpenRepostAction(false)}>
+                        <PopupButton className={`${styles.RepostPopup} ${props.postHierarchy}`} callback={() => setIsOpenRepostAction(false)}>
                           <div onClick={() => createPost(props.post.hash)} className={styles.PopupButtonItem}>
-                            <img className={styles.RepostHandler} src={repostIcon.src} alt="Repost"/>
-                            <span className={styles.RepostHandler}>Repost </span>
+                            <img className={`${styles.RepostHandler} ${props.postHierarchy}`} src={repostIcon.src} alt="Repost"/>
+                            <span className={`${styles.RepostHandler} ${props.postHierarchy}`}>Repost </span>
                           </div>
                           <div onClick={() => openRepostModal()} className={styles.PopupButtonItem}>
-                            <img className={styles.RepostHandler} src={repostComment.src} alt="Repost"/>
-                            <span className={styles.RepostHandler}>Repost with comment </span>
+                            <img className={`${styles.RepostHandler} ${props.postHierarchy}`} src={repostComment.src} alt="Repost"/>
+                            <span className={`${styles.RepostHandler} ${props.postHierarchy}`}>Repost with comment </span>
                           </div>
                         </PopupButton>
                     )
                 }
               </div>
-              <div title={'Like'} onClick={handleClick} className={`${styles.IconNumber} ${styles.LikeIcon}`}>
-                {isLiked ? <img className={styles.LikeIcon} src={heartFullIcon.src} alt=""/> : <img className={styles.LikeIcon} src={heartIcon.src} alt=""/>}
-                <span className={styles.LikeIcon}>{likes}</span>
+              <div title={'Like'} onClick={handleClick} className={`${styles.IconNumber} ${styles.LikeIcon} ${props.postHierarchy}`}>
+                {isLiked ? <img className={`${styles.LikeIcon} ${props.postHierarchy}`} src={heartFullIcon.src} alt=""/> : <img className={`${styles.LikeIcon} ${props.postHierarchy}`} src={heartIcon.src} alt=""/>}
+                <span className={`${styles.LikeIcon} ${props.postHierarchy}`}>{likes}</span>
               </div>
             </div>
             <img title={'Share'} onClick={handleClick} className={styles.PostShare} src={shareIcon.src} alt=""/>

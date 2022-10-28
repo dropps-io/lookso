@@ -78,7 +78,7 @@ const CommentModal: FC<CustomModalProps> = (props) => {
       <Box className={styles.CommentModal}>
         <img className={styles.Close} onClick={() => props.onClose()} src={crossIcon.src} alt=""/>
         <div className={styles.Content}>
-          <PostBox post={props.post} static/>
+          <PostBox post={props.post} static postHierarchy={'main'}/>
           <div className={styles.Separator}></div>
           <div className={styles.CommentSection}>
             <PostInput key={'CommentInput'} onNewPost={handleNewPost} parentHash={props.post.hash}/>

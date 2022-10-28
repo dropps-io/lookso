@@ -5,7 +5,8 @@ interface UserTagProps {
   username: string,
   address: string,
   colorReversed?: boolean,
-  onClick?: () => any
+  onClick?: () => any,
+  postHierarchy?: 'main' | 'child' | 'parent' //Prop just to set a 'Parent' class name, in order to differentiate a click on a parent post, than on a comment or repost
 }
 
 const UserTag: FC<UserTagProps> = (props) => (
@@ -15,11 +16,11 @@ const UserTag: FC<UserTagProps> = (props) => (
   >
     {
       props.username ?
-        <span className={styles.Username}>@{props.username.length > 15 ? props.username.slice(0, 15) + '...' : props.username}</span>
+        <span className={`${styles.Username} ${props.postHierarchy}`}>@{props.username.length > 15 ? props.username.slice(0, 15) + '...' : props.username}</span>
         :
-        <span className={styles.Unnamed}>unnamed</span>
+        <span className={`${styles.Unnamed} ${props.postHierarchy}`}>unnamed</span>
     }
-    <span className={styles.Address}>#{props.address ? props.address.slice(2, 6).toUpperCase() : ''}</span>
+    <span className={`${styles.Address} ${props.postHierarchy}`}>#{props.address ? props.address.slice(2, 6).toUpperCase() : ''}</span>
   </span>
 );
 

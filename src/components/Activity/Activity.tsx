@@ -93,15 +93,15 @@ const Activity: FC<ActivityProps> = (props) => {
             {
               posts.map((post, index) =>
                 post.hash === currentPost ?
-                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={currentPostRef} key={post.hash + index} post={post} type={props.type}/>
+                  <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={currentPostRef} key={post.hash + index} post={post} type={props.type} postHierarchy='main'/>
                   :
                   index === posts.length - 15 ?
-                    <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementRef} key={post.hash + index} post={post} type={props.type}/>
+                    <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementRef} key={post.hash + index} post={post} type={props.type} postHierarchy='main'/>
                     :
                     index === posts.length - 1 ?
-                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementEndRef} key={post.hash + index} post={post} type={props.type}/>
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} ref={postElementEndRef} key={post.hash + index} post={post} type={props.type} postHierarchy='main'/>
                       :
-                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} key={post.hash + index} post={post} type={props.type}/>
+                      <PostBox onUnfollow={(address) => {if (props.onUnfollow) props.onUnfollow(address)}} key={post.hash + index} post={post} type={props.type} postHierarchy='main'/>
               )
             }
           </div>

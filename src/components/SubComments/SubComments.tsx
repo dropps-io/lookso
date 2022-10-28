@@ -44,7 +44,7 @@ const SubComments: FC<SubCommentsProps> = (props) => {
       {
         posts.map(post =>
           <div key={post.hash} className={styles.SubComment}>
-            <PostBox post={post} comment noPadding/>
+            <PostBox post={post} comment noPadding postHierarchy={'main'}/>
           </div>
         )
       }

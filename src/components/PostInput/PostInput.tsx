@@ -269,7 +269,7 @@ const PostInput: FC<PostInputProps> = (props) => {
           props.childPost &&
             <>
                 <br/>
-              <PostBox post={props.childPost} static repost/>
+              <PostBox post={props.childPost} static postHierarchy={'child'}/>
             </>
 
         }
