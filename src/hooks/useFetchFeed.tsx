@@ -49,14 +49,38 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     fetch.promise.then(res => {
       const data = res.data as Omit<PaginationResponse, 'results'> & {results: FeedPost[]};
       dispatch(getFeedActions(props.type).setStoredFeed(data.results.reverse()));
-      dispatch(getFeedActions(props.type).setCurrentPage(data.page));
       if (props.type === 'Profile' && props.profile && props.profile !== profile) dispatch(getFeedActions(props.type).setProfile(props.profile));
       if (!data.previous) dispatch(getFeedActions(props.type).setHasMore(false));
-      dispatch(getFeedActions(props.type).setLoading(false));
-      setTimeout(() => {
-        setInitialized(true);
-        if (data.results.length < 10) setTimeout(() => {dispatch(getFeedActions(props.type).setCurrentPage(data.page - 1))},100) ;
-      }, 200);
+
+      if (data.results.length < 10 && data.page > 0) {
+        dispatch(getFeedActions(props.type).setCurrentPage(data.page - 1));
+        if (account && props.type === 'Feed') fetch = fetchProfileFeed(account, data.page - 1, filter);
+        else if (props.type === 'Explore') fetch = fetchAllFeed(data.page - 1, filter, account ? account : undefined);
+        else if (props.type === 'Profile' && props.profile) fetch = fetchProfileActivity(props.profile, data.page - 1, filter, account ? account : undefined);
+        else return;
+
+        fetch.promise.then(res => {
+          const data2 = res.data as Omit<PaginationResponse, 'results'> & {results: FeedPost[]};
+          dispatch(getFeedActions(props.type).addToStoredFeed(data2.results.reverse()));
+          if (!data2.previous) dispatch(getFeedActions(props.type).setHasMore(false));
+          dispatch(getFeedActions(props.type).setLoading(false));
+          setTimeout(() => {
+            setInitialized(true);
+          }, 200);
+          console.log('fetched ' + data2.results.length);
+        })
+          .catch(e => {
+            console.error(e);
+            if (axios.isCancel(e)) return;
+            setError(true);
+          });
+      } else {
+        dispatch(getFeedActions(props.type).setCurrentPage(data.page));
+        dispatch(getFeedActions(props.type).setLoading(false));
+        setTimeout(() => {
+          setInitialized(true);
+        }, 200);
+      }
       console.log('fetched ' + data.results.length);
     })
     .catch(e => {
