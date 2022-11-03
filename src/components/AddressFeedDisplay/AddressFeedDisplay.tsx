@@ -38,7 +38,7 @@ const AddressFeedDisplay: FC<AddressFeedDisplayProps> = (props) => {
   }
   else {
     return (
-      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.UnknownStandard}`} data-testid="AddressFeedDisplay">
+      <span onClick={(e) => props.onClick(e, props.address)} className={`${styles.AddressFeedDisplay} ${styles.UnknownStandard} ${props.postHierarchy}`} data-testid="AddressFeedDisplay">
         {shortenAddress(props.address, 3)}
       </span>
     )

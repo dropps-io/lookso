@@ -6,6 +6,7 @@ import AddressFeedDisplay from "../AddressFeedDisplay/AddressFeedDisplay";
 import {USER_TAG_REGEX} from "../../core/utils/constants";
 import {fetchAddressFromUserTag} from "../../core/api/api";
 import {useRouter} from "next/router";
+import {keccak256} from "web3-utils";
 
 interface ParamContentProps {
   param: FeedDisplayParam,
@@ -45,10 +46,26 @@ const ParamContent: FC<ParamContentProps> = (props) => {
         </strong>
         <span className={`copied ${copied ? 'copied-active' : ''} ${props.postHierarchy}`}>Copied to clipboard</span>
       </>
-      );
+    );
+  }
+  else if (props.param.type === 'permissions') {
+    return (
+      <>
+          {
+            props.param.display.split(';').map(permission => (
+              <>
+                <span title={props.param.value} key={permission} style={{backgroundColor: `#${keccak256(permission).slice(4, 8)}`}} className={styles.PermissionTag}>{permission}</span>
+                <span> </span>
+              </>
+              )
+            )
+          }
+        <span className={`copied ${copied ? 'copied-active' : ''} ${props.postHierarchy}`}>Copied to clipboard</span>
+      </>
+    );
   }
   return (
-    <strong className={`${styles.Parameter} ${props.postHierarchy}`}>
+    <strong className={`${styles.Parameter} ${props.postHierarchy}`} title={props.param.value}>
       {props.param.display ? props.param.display : props.param.value}
     </strong>);
 }

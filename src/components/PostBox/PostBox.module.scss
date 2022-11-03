@@ -641,6 +641,11 @@
 }
 
 
-.Parent{
-  opacity: 1;
-}
+  .PermissionTag {
+    border-radius: 30px;
+    padding: 2px 8px;
+    background-color: #0066FF;
+    font-weight: lighter;
+    font-size: 0.6em;
+    width: max-content;
+  }

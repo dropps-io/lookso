@@ -259,8 +259,11 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
 
   async function handleClick(e: any, value?: string) {
     const el: HTMLElement = e.target as HTMLElement;
+    console.log(el.className)
+
     if (!el.className.includes(props.postHierarchy)) return;
     if (props.type) dispatch(getFeedActions(props.type).setCurrentPost(props.post.hash));
+
 
     // stop process if user is highlighting something
     if (window.getSelection()?.toString()) return
