@@ -195,15 +195,15 @@ export async function fetchPostObjectWithAsset(post: LSPXXProfilePost, asset: Fi
   else throw 'Request ended with status ' + res.status;
 }
 
-export async function uploadPostObject(post: LSPXXProfilePost, signature: string, currentPath: string, web3: Web3, recursive?: boolean): Promise<{postHash: string, jsonUrl: string}> {
-  const data = { lspXXProfilePost: post, signature };
+export async function uploadPostObject(post: LSPXXProfilePost, currentPath: string, web3: Web3, recursive?: boolean): Promise<{postHash: string, jsonUrl: string}> {
+  const data = { lspXXProfilePost: post };
   let res;
 
   try {
     res = await axios.post(API_URL + '/lookso/post/upload', data, {headers});
   } catch (e) {
     return await handleAxiosNonGetError(post.author, currentPath, web3, e, () => {
-      return uploadPostObject(post, signature, currentPath, web3, true);
+      return uploadPostObject(post, currentPath, web3, true);
     }, recursive);
   }
 

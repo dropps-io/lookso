@@ -15,7 +15,7 @@ import heartFullIcon from "../../assets/icons/heart-full.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import warningIcon from "../../assets/icons/warning.png";
-import {connectWeb3, signMessage} from "../../core/web3";
+import {connectWeb3} from "../../core/web3";
 import {setProfileInfo} from "../../store/profile-reducer";
 import {
   insertFollow,
@@ -364,10 +364,8 @@ const PostBox = forwardRef((props: PostProps, ref: ForwardedRef<HTMLDivElement>)
         childHash: childHash,
       };
 
-      setLoadingMessage('Please sign your post');
-      const signedMessage = await signMessage(account ? account : '', JSON.stringify(post), web3);
-      setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, router.asPath, web3);
+      setLoadingMessage('We\'re uploading your post 😎');
+      const postUploaded = await uploadPostObject(post, router.asPath, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account ? account : '', postUploaded.postHash, postUploaded.jsonUrl, web3);

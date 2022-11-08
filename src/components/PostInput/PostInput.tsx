@@ -102,10 +102,9 @@ const PostInput: FC<PostInputProps> = (props) => {
       if (inputFile) {
         post = await fetchPostObjectWithAsset(post, inputFile, router.asPath, web3);
       }
-      setLoadingMessage('Please sign your post');
-      const signedMessage = await signMessage(account(), JSON.stringify(post), web3);
-      setLoadingMessage('Thanks, we\'re uploading your post 😎');
-      const postUploaded = await uploadPostObject(post, signedMessage, router.asPath, web3);
+
+      setLoadingMessage('We\'re uploading your post 😎');
+      const postUploaded = await uploadPostObject(post, router.asPath, web3);
 
       setLoadingMessage('Last step: sending your post to the blockchain! ⛓️');
       const receipt = await updateRegistryWithPost(account(), postUploaded.postHash, postUploaded.jsonUrl, web3);
