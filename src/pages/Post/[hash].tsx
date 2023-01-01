@@ -24,7 +24,7 @@ export const getServerSideProps = async ({ query }:any) => {
   }
 };
 
-export default function ProfileAddress(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function PostHash(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { hash } = router.query;
   const post = props as FeedPost;

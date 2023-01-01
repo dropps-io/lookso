@@ -8,6 +8,7 @@ import {PaginationResponse} from "../../models/pagination-response";
 import Web3 from "web3";
 import {handleAxiosNonGetError} from "./utils";
 import {SearchResults} from "../../models/search";
+import {GetTransactionResponse} from "../../models/transaction";
 axios.defaults.withCredentials = true;
 
 const headers = {
@@ -275,4 +276,11 @@ export async function setNewRegistryPostedOnProfile(address: string, currentPath
 
   if (res.status === 200) return;
   else throw 'Request ended with status ' + res.status;
+}
+
+export async function fetchTransaction(hash: string): Promise<GetTransactionResponse> {
+  return (await axios({
+    method: 'GET',
+    url: API_URL + '/lookso/tx/' + hash,
+  })).data;
 }

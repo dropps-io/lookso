@@ -16,3 +16,7 @@ export interface ProfileDisplay {
 export interface ProfileFollowingDisplay extends ProfileDisplay {
   following: boolean
 }
+
+export interface AddressDisplay extends ProfileDisplay{
+  interfaceCode: string;
+}
