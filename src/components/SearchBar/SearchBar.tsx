@@ -3,9 +3,8 @@ import styles from './SearchBar.module.scss';
 import searchIcon from '../../assets/icons/search.svg';
 import SearchResults from "../SearchResults/SearchResults";
 import {ProfileDisplay} from "../../models/profile";
+import {searchProfiles} from "../../core/api/api";
 import {useRouter} from "next/router";
-import {searchInDatabase} from "../../core/api/api";
-import {Transaction} from "../../models/transaction";
 
 interface SearchBarProps {
   noBorder?: boolean,
@@ -16,14 +15,13 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState('');
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
-  const [tx, setTx] = useState<Transaction | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [profilesLoading, setProfilesLoading] = useState(false);
 
   const ref = createRef<HTMLInputElement>();
 
-  async function handleChange(e: any) {
+  function handleChange(e: any) {
     setSearchInput(e.target.value);
-    await search(e.target.value);
+    fetchProfiles(e.target.value);
   }
 
   function handleClose(profile?: ProfileDisplay) {
@@ -37,17 +35,14 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
     router.push('/Profile/' + account);
   }
 
-  async function search(input: string) {
-    setLoading(true);
+  async function fetchProfiles(input: string) {
+    setProfilesLoading(true);
     try {
       setProfiles([]);
-      setTx(null)
-      const searchResults = await searchInDatabase(input, 0);
-      setProfiles(searchResults.search.profiles.results);
-      if (searchResults.search.transactions.results.length > 0) setTx(searchResults.search.transactions.results[0]);
-      setLoading(false);
+      setProfiles((await searchProfiles(input, 0)).results);
+      setProfilesLoading(false);
     } catch (e) {
-      setLoading(false);
+      setProfilesLoading(false);
       console.error(e);
     }
   }
@@ -60,7 +55,7 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
       }
       <img src={searchIcon.src} alt="search"/>
       <input ref={ref} onChange={handleChange} data-testid="SearchBar" placeholder='Search by address or username'></input>
-      <SearchResults loading={loading} transactions={tx ? [tx] : []} profiles={profiles} onClose={handleClose} open={!!searchInput}/>
+      <SearchResults loading={profilesLoading} profiles={profiles} onClose={handleClose} open={!!searchInput}/>
     </div>
   );
 }

@@ -7,7 +7,6 @@ import axios, {AxiosPromise} from "axios";
 import {PaginationResponse} from "../../models/pagination-response";
 import Web3 from "web3";
 import {handleAxiosNonGetError} from "./utils";
-import {SearchResults} from "../../models/search";
 axios.defaults.withCredentials = true;
 
 const headers = {
@@ -224,7 +223,7 @@ export async function fetchProfileNotifications(address: string, page?: number):
   })).data;
 }
 
-export async function searchInDatabase(input: string, page?: number): Promise<Omit<PaginationResponse, 'results | count'> & {search: SearchResults}> {
+export async function searchProfiles(input: string, page?: number): Promise<Omit<PaginationResponse, 'results'> & {results: ProfileDisplay[]}> {
   return (await axios({
     method: 'GET',
     url: API_URL + '/lookso/search/' + input,
