@@ -13,6 +13,7 @@ import SidebarButtons from '../../components/SidebarButtons/SidebarButtons';
 import { WEBSITE_URL } from '../../environment/endpoints';
 import looksoBanner from '../../assets/images/lookso-banner.png';
 import useFetchFeed from '../../hooks/useFetchFeed';
+import TabSelector from '../../components/TabSelector/TabSelector';
 
 interface FeedProps {
   type: 'Feed' | 'Explore';
@@ -93,7 +94,10 @@ const Feed: FC<FeedProps> = props => {
             </Link>
           </div>
         ) : (
-          <Activity type={props.type} headline={props.type} onUnfollow={handleUnfollow} />
+          <div className={styles.Activity}>
+            <TabSelector tabs={[props.type]} selectedTab={props.type} />
+            <Activity type={props.type} headline={props.type} onUnfollow={handleUnfollow} />
+          </div>
         )}
       </div>
       <div className={styles.FeedPageFooter}>

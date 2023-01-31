@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostBox from '../PostBox/PostBox';
 import styles from './Activity.module.scss';
 import { getFeedActions, getReduxFeedState, type RootState } from '../../store/store';
+import TabSelector from '../TabSelector/TabSelector';
 
 interface ActivityProps {
   type: 'Profile' | 'Feed' | 'Explore';
@@ -88,13 +89,6 @@ const Activity: FC<ActivityProps> = props => {
   return (
     <div className={styles.Feed}>
       <div className={styles.FeedHeader}>
-        <h5
-          onClick={() => {
-            console.log(currentPostRef);
-          }}
-        >
-          {props.headline}
-        </h5>
         <div className={styles.Filters}>
           {filters.map((f, index) => (
             <span

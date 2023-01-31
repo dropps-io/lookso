@@ -34,6 +34,7 @@ import SidebarButtons from '../../components/SidebarButtons/SidebarButtons';
 import FollowModal from '../../components/Modals/FollowModal/FollowModal';
 import ActionModal from '../../components/Modals/ActionModal/ActionModal';
 import useFetchFeed from '../../hooks/useFetchFeed';
+import TabSelector from '../../components/TabSelector/TabSelector';
 
 interface ProfileProps {
   address: string;
@@ -472,6 +473,7 @@ const Profile: FC<ProfileProps> = props => {
               />
             )}
           <div className={styles.Activity}>
+            <TabSelector tabs={['Activity']} selectedTab="Activity" />
             <Activity type={'Profile'} headline="Activity" profile={props.address}></Activity>
           </div>
         </div>
