@@ -13,7 +13,7 @@ import smileIcon from '../../assets/icons/smile.svg';
 import { type LSPXXProfilePost } from '../../models/profile-post';
 import {
   fetchPostObjectWithAsset,
-  searchProfiles,
+  searchInDatabase,
   setNewRegistryPostedOnProfile,
   uploadPostObject,
 } from '../../core/api/api';
@@ -170,8 +170,8 @@ const PostInput: FC<PostInputProps> = props => {
     setProfilesLoading(true);
     try {
       setProfiles([]);
-      const res = await searchProfiles(input);
-      if (tagInput) setProfiles(res.results);
+      const res = await searchInDatabase(input);
+      if (tagInput) setProfiles(res.search.profiles.results);
       setProfilesLoading(false);
     } catch (e) {
       setProfilesLoading(false);
@@ -308,6 +308,7 @@ const PostInput: FC<PostInputProps> = props => {
                   onClose={handleTaggingClose}
                   open={true}
                   loading={profilesLoading}
+                  transactions={[]}
                 />
               </div>
             )}

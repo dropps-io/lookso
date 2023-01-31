@@ -7,6 +7,7 @@ import { type Notification } from '../../models/notification';
 import { type ProfileDisplay, type ProfileInfo } from '../../models/profile';
 import { type PaginationResponse } from '../../models/pagination-response';
 import { handleAxiosNonGetError } from './utils';
+import { SearchResults } from '../../models/search';
 
 import type Web3 from 'web3';
 
@@ -363,10 +364,10 @@ export async function fetchProfileNotifications(
   ).data;
 }
 
-export async function searchProfiles(
+export async function searchInDatabase(
   input: string,
   page?: number
-): Promise<Omit<PaginationResponse, 'results'> & { results: ProfileDisplay[] }> {
+): Promise<Omit<PaginationResponse, 'results | count'> & { search: SearchResults }> {
   return (
     await axios({
       method: 'GET',

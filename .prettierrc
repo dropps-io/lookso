@@ -4,6 +4,5 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "semi": true,
-  "endOfLine": "lf"
+  "semi": true
 }

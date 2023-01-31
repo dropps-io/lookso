@@ -67,7 +67,9 @@ const ParamContent: FC<ParamContentProps> = props => {
             <span
               title={props.param.value}
               key={permission}
-              style={{ backgroundColor: `#${keccak256(permission).slice(4, 8)}` }}
+              style={{
+                backgroundColor: `#${keccak256(permission ? permission : 'default').slice(4, 8)}`,
+              }}
               className={styles.PermissionTag}
             >
               {permission}

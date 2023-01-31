@@ -6,9 +6,13 @@ import { type ProfileDisplay } from '../../models/profile';
 import { formatUrl } from '../../core/utils/url-formating';
 import { DEFAULT_PROFILE_IMAGE } from '../../core/utils/constants';
 import UserTag from '../UserTag/UserTag';
+import { Transaction } from '../../models/transaction';
+import transactionIcon from '../../assets/icons/transaction.svg';
+import { shortenAddress } from '../../core/utils/address-formating';
 
 interface SearchResultsProps {
   profiles: ProfileDisplay[];
+  transactions: Transaction[];
   onClose: (profile?: ProfileDisplay) => void;
   open: boolean;
   loading: boolean;
@@ -42,6 +46,13 @@ const SearchResults: FC<SearchResultsProps> = props => {
               }}
             />
             <UserTag username={profile.name} address={profile.address} />
+          </div>
+        ))
+      ) : props.transactions.length > 0 ? (
+        props.transactions.map(transaction => (
+          <div key={transaction.hash} className={styles.Transaction}>
+            <img src={transactionIcon.src} alt="" />
+            <span title={transaction.hash}>{shortenAddress(transaction.hash, 15)}</span>
           </div>
         ))
       ) : (

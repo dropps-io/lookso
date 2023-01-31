@@ -5,7 +5,8 @@ import styles from './SearchBar.module.scss';
 import searchIcon from '../../assets/icons/search.svg';
 import SearchResults from '../SearchResults/SearchResults';
 import { type ProfileDisplay } from '../../models/profile';
-import { searchProfiles } from '../../core/api/api';
+import { Transaction } from '../../models/transaction';
+import { searchInDatabase } from '../../core/api/api';
 
 interface SearchBarProps {
   noBorder?: boolean;
@@ -16,13 +17,14 @@ const SearchBar: FC<SearchBarProps> = props => {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState('');
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
-  const [profilesLoading, setProfilesLoading] = useState(false);
+  const [tx, setTx] = useState<Transaction | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const ref = createRef<HTMLInputElement>();
 
-  function handleChange(e: any) {
+  async function handleChange(e: any) {
     setSearchInput(e.target.value);
-    fetchProfiles(e.target.value);
+    await search(e.target.value);
   }
 
   function handleClose(profile?: ProfileDisplay) {
@@ -36,14 +38,18 @@ const SearchBar: FC<SearchBarProps> = props => {
     router.push('/Profile/' + account);
   }
 
-  async function fetchProfiles(input: string) {
-    setProfilesLoading(true);
+  async function search(input: string) {
+    setLoading(true);
     try {
       setProfiles([]);
-      setProfiles((await searchProfiles(input, 0)).results);
-      setProfilesLoading(false);
+      setTx(null);
+      const searchResults = await searchInDatabase(input, 0);
+      setProfiles(searchResults.search.profiles.results);
+      if (searchResults.search.transactions.results.length > 0)
+        setTx(searchResults.search.transactions.results[0]);
+      setLoading(false);
     } catch (e) {
-      setProfilesLoading(false);
+      setLoading(false);
       console.error(e);
     }
   }
@@ -66,7 +72,8 @@ const SearchBar: FC<SearchBarProps> = props => {
         placeholder="Search by address or username"
       ></input>
       <SearchResults
-        loading={profilesLoading}
+        loading={loading}
+        transactions={tx ? [tx] : []}
         profiles={profiles}
         onClose={handleClose}
         open={!!searchInput}
