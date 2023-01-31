@@ -1,10 +1,16 @@
-import {useDispatch} from "react-redux";
-import {ReactNode, useEffect} from "react";
-import {getAccount, getWeb3Info, listenChanges} from "../core/web3";
-import {setAccount, setBalance, setInitialized, setNetworkId, setWeb3} from "../store/web3-reducer";
-import {setProfileInfo} from "../store/profile-reducer";
-import {useRouter} from "next/router";
+import { useDispatch } from 'react-redux';
+import { type ReactNode, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
+import { getAccount, getWeb3Info, listenChanges } from '../core/web3';
+import {
+  setAccount,
+  setBalance,
+  setInitialized,
+  setNetworkId,
+  setWeb3,
+} from '../store/web3-reducer';
+import { setProfileInfo } from '../store/profile-reducer';
 import packageJson from '../../package.json';
 
 const InitProvider = ({ children }: { children: ReactNode }) => {
@@ -12,10 +18,10 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   let initializing = false;
 
-  useEffect( () => {
+  useEffect(() => {
     if (!initializing) {
       initializing = true;
-      initApp();
+      initApp().then();
     }
   }, []);
 
@@ -37,8 +43,7 @@ const InitProvider = ({ children }: { children: ReactNode }) => {
     await listenChanges();
   }
 
-  return (<>{children}</>
-  )
-}
+  return <>{children}</>;
+};
 
-export default InitProvider
+export default InitProvider;

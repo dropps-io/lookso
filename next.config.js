@@ -8,6 +8,6 @@ const nextConfig = {
     // Reference a variable that was defined in the .env.* file and make it available at Build Time
     NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -1,4 +1,4 @@
-import {createFeedSlice} from "./generate-feed-slice";
+import { createFeedSlice } from './generate-feed-slice';
 
 export const exploreFeedSlice = createFeedSlice('explore-feed');
 

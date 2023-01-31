@@ -1,3 +1,55 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "sourceType": "module"
+    },
+    "sourceType": "module",
+    "project": "tsconfig.json"
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "import",
+    "@typescript-eslint/eslint-plugin"
+  ],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          [
+            "builtin",
+            "external",
+            "index"
+          ],
+          [
+            "sibling",
+            "parent",
+            "internal"
+          ],
+          "object",
+          "type"
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "import/no-unresolved": "off",
+    "import/named": "off",
+    "import/no-named-as-default": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@next/next/no-img-element": "off",
+    "react-hooks/exhaustive-deps": "off"
+  }
 }

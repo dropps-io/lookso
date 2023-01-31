@@ -1,7 +1,5 @@
-import Feed from "./Feed/Feed";
+import Feed from './Feed/Feed';
 
-const feed = () => (
-  <Feed type='Feed'/>
-);
+const feed = () => <Feed type="Feed" />;
 
 export default feed;

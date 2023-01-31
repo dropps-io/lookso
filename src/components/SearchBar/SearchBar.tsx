@@ -1,17 +1,18 @@
-import React, {createRef, FC, useState} from 'react';
+import React, { createRef, type FC, useState } from 'react';
+import { useRouter } from 'next/router';
+
 import styles from './SearchBar.module.scss';
 import searchIcon from '../../assets/icons/search.svg';
-import SearchResults from "../SearchResults/SearchResults";
-import {ProfileDisplay} from "../../models/profile";
-import {searchProfiles} from "../../core/api/api";
-import {useRouter} from "next/router";
+import SearchResults from '../SearchResults/SearchResults';
+import { type ProfileDisplay } from '../../models/profile';
+import { searchProfiles } from '../../core/api/api';
 
 interface SearchBarProps {
-  noBorder?: boolean,
-  onClose?: () => any
+  noBorder?: boolean;
+  onClose?: () => any;
 }
 
-const  SearchBar: FC<SearchBarProps> = (props) => {
+const SearchBar: FC<SearchBarProps> = props => {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState('');
   const [profiles, setProfiles] = useState<ProfileDisplay[]>([]);
@@ -25,10 +26,10 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
   }
 
   function handleClose(profile?: ProfileDisplay) {
-    if (profile) goToProfile(profile.address);
+    if (profile != null) goToProfile(profile.address);
     setSearchInput('');
-    if (ref.current) ref.current.value = '';
-    if (props.onClose) props.onClose();
+    if (ref.current != null) ref.current.value = '';
+    if (props.onClose != null) props.onClose();
   }
 
   function goToProfile(account: string) {
@@ -49,15 +50,29 @@ const  SearchBar: FC<SearchBarProps> = (props) => {
 
   return (
     <div className={`${styles.SearchBar} ${props.noBorder ? styles.NoBorder : ''}`}>
-      {
-        searchInput !== '' &&
-        <div className={'backdrop'} onClick={() => handleClose()}></div>
-      }
-      <img src={searchIcon.src} alt="search"/>
-      <input ref={ref} onChange={handleChange} data-testid="SearchBar" placeholder='Search by address or username'></input>
-      <SearchResults loading={profilesLoading} profiles={profiles} onClose={handleClose} open={!!searchInput}/>
+      {searchInput !== '' && (
+        <div
+          className={'backdrop'}
+          onClick={() => {
+            handleClose();
+          }}
+        ></div>
+      )}
+      <img src={searchIcon.src} alt="search" />
+      <input
+        ref={ref}
+        onChange={handleChange}
+        data-testid="SearchBar"
+        placeholder="Search by address or username"
+      ></input>
+      <SearchResults
+        loading={profilesLoading}
+        profiles={profiles}
+        onClose={handleClose}
+        open={!!searchInput}
+      />
     </div>
   );
-}
+};
 
 export default SearchBar;

@@ -14,7 +14,7 @@ This standard defines a timestamp registry smart contract where any address (con
 
 ## Abstract
 
-This standard defines a registry with an [ERC725Y](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-725.md#erc725y) store. The hash of a message stored of-chain is the key to which current block timestamp and the message sender are assigned as a bytes32 value. 
+This standard defines a registry with an [ERC725Y](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-725.md#erc725y) store. The hash of a message stored of-chain is the key to which current block timestamp and the message sender are assigned as a bytes32 value.
 
 Anyone can query the registry to validate that a certain address indeed timestamped a given hash, thus providing proof that the address knew the original message at the time.
 
@@ -22,7 +22,7 @@ Anyone can query the registry to validate that a certain address indeed timestam
 
 One should not trust the author of a message to provide an accurate timestamp because it can be faked. Instead, a trustless timestamping service should be used to determine the message's creation date. This is possible using the blockchain as the source of time.
 
-Furthermore, notice that timestamping a given hash is proof that the author was able to generate that hash at that time. This can be used to approach another problem: Cryptographic signatures are usually used to provide proof of ownership and timestamp. However, because a smart contract cannot sign, this method cannot be used for contract based accounts like an [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md). Current practice if for an Externally Owned Address (EOA) to sign on behalf of the contract. However, it's hard to know if the EOA had permissions to sign at the time and to timestamp the signed message in a trustless way. 
+Furthermore, notice that timestamping a given hash is proof that the author was able to generate that hash at that time. This can be used to approach another problem: Cryptographic signatures are usually used to provide proof of ownership and timestamp. However, because a smart contract cannot sign, this method cannot be used for contract based accounts like an [ERC725Account](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md). Current practice if for an Externally Owned Address (EOA) to sign on behalf of the contract. However, it's hard to know if the EOA had permissions to sign at the time and to timestamp the signed message in a trustless way.
 
 ## Specification
 
@@ -32,16 +32,17 @@ Furthermore, notice that timestamping a given hash is proof that the author was 
 function validate(bytes32 contentHash) external
 ```
 
-Verifies there isn't already a timestamp for this content. Stores the msgSender and the blocktimestamp under a key equal to the hash of the content to timestamp and claim.  
+Verifies there isn't already a timestamp for this content. Stores the msgSender and the blocktimestamp under a key equal to the hash of the content to timestamp and claim.
 
 _Parameters:_
+
 - `contentHash`: the content hash to bind to a timestamp and address.
 
-#### setData 
+#### setData
 
 ```solidity
-    function setData(bytes32 dataKey, bytes memory dataValue) public virtual override
-    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) public virtual override
+    function setData(bytes32 dataKey, bytes memory dataValue) public virtual override;
+    function setData(bytes32[] memory dataKeys, bytes[] memory dataValues) public virtual override;
 ```
 
 Overrides the setData function from the ERC725Y core in order to remove the ownership requirements, making this registry public to use and immutable.
@@ -49,12 +50,13 @@ Overrides the setData function from the ERC725Y core in order to remove the owne
 #### getTimestamp
 
 ```solidity
-function getTimestamp(bytes32 key) public view returns(bytes12)
+function getTimestamp(bytes32 key) public view returns(bytes12);
 ```
 
 Returns only the Timestamp part stored under a give key.
 
 _Parameters:_
+
 - `key`: Key to access the storage. Most frequently will represent the hash of some off-chain content.
 
 #### getAddress
@@ -62,9 +64,11 @@ _Parameters:_
 ```solidity
 function getAddress(bytes32 key) public view returns (bytes20)
 ```
+
 Returns only the Address part stored under a give key.
 
 _Parameters:_
+
 - `key`: Key to access the storage. Most frequently will represent the hash of some off-chain content.
 
 ## Implementation
@@ -86,7 +90,7 @@ contract Validator is ERC725YCore(), Context {
     }
 
     function validate(bytes32 contentHash) external {
-        require( getData(contentHash).length == 0, 
+        require( getData(contentHash).length == 0,
             "Corresponding value for this hash is not null.");
         setData(contentHash, bytes(abi.encodePacked(address(_msgSender()), bytes12(uint96(block.timestamp)))));
     }

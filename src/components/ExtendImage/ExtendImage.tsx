@@ -1,25 +1,19 @@
-import React, { FC } from 'react';
-import { styled, Box } from "@mui/system";
+import React, { type FC } from 'react';
+import { styled } from '@mui/system';
+import { ModalUnstyled } from '@mui/base';
+import clsx from 'clsx';
+
 import styles from './ExtendImage.module.scss';
-import {ModalUnstyled} from "@mui/base";
-import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
-import {formatUrl} from "../../core/utils/url-formating";
+import { formatUrl } from '../../core/utils/url-formating';
 
 // eslint-disable-next-line react/display-name
-const BackdropUnstyled = React.forwardRef<
-    HTMLDivElement,
-    { open?: boolean; className: string }
-    >((props, ref) => {
+const BackdropUnstyled = React.forwardRef<HTMLDivElement, { open?: boolean; className: string }>(
+  (props, ref) => {
     const { open, className, ...other } = props;
-    return (
-        <div
-            className={clsx({ 'MuiBackdrop-open': open }, className)}
-            ref={ref}
-            {...other}
-        />
-    );
-});
+    return <div className={clsx({ 'MuiBackdrop-open': open }, className)} ref={ref} {...other} />;
+  }
+);
 
 const Modal = styled(ModalUnstyled)`
   position: fixed;
@@ -45,31 +39,36 @@ const Backdrop = styled(BackdropUnstyled)`
 `;
 
 interface ExtendImageProps extends React.PropsWithChildren {
-    open: boolean,
-    callback: () => any,
-    image: any
-    alt: string,
-    rounded: boolean
+  open: boolean;
+  callback: () => any;
+  image: any;
+  alt: string;
+  rounded: boolean;
 }
 
-const ExtendImage: FC<ExtendImageProps> = (props) => (
-    <Modal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
-        open={props.open}
-        onClose={props.callback}
-        slots={{ backdrop: Backdrop }}
-    >
-        <div className={styles.ExtendImage}>
-            <div className={styles.ExtendImageBackDrop} onClick={() => props.callback()}></div>
-            <div className={styles.ExtendImageCloseButton}><img src={crossIcon.src} alt="Close" onClick={() => props.callback()}/></div>
-            {
-                !props.rounded ?
-                    <img src={formatUrl(props.image)} alt={props.alt}/>
-                    : <div className={styles.ExtendImageRounded} style={{backgroundImage: props.image ? `url(${formatUrl(props.image)})` : ''}}></div>
-            }
-        </div>
-    </Modal>
+const ExtendImage: FC<ExtendImageProps> = props => (
+  <Modal
+    aria-labelledby="unstyled-modal-title"
+    aria-describedby="unstyled-modal-description"
+    open={props.open}
+    onClose={props.callback}
+    slots={{ backdrop: Backdrop }}
+  >
+    <div className={styles.ExtendImage}>
+      <div className={styles.ExtendImageBackDrop} onClick={() => props.callback()}></div>
+      <div className={styles.ExtendImageCloseButton}>
+        <img src={crossIcon.src} alt="Close" onClick={() => props.callback()} />
+      </div>
+      {!props.rounded ? (
+        <img src={formatUrl(props.image)} alt={props.alt} />
+      ) : (
+        <div
+          className={styles.ExtendImageRounded}
+          style={{ backgroundImage: props.image ? `url(${formatUrl(props.image)})` : '' }}
+        ></div>
+      )}
+    </div>
+  </Modal>
 );
 
 export default ExtendImage;

@@ -19,7 +19,8 @@
         margin-left: 55px;
         width: 1px;
         height: 92%;
-        background: repeating-linear-gradient(to bottom,transparent 0,white 4px) 80%/2px 100% no-repeat;
+        background: repeating-linear-gradient(to bottom, transparent 0, white 4px) 80%/2px 100%
+          no-repeat;
       }
 
       .PostBox {
@@ -34,7 +35,7 @@
           font-size: 0.9em;
           margin-left: 30px;
           cursor: pointer;
-          color: var(--color-highlight-lighter)
+          color: var(--color-highlight-lighter);
         }
       }
     }

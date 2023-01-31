@@ -10,7 +10,8 @@
   border-radius: 24px;
   padding: 24px;
   width: max-content;
-  & > div, & > a {
+  & > div,
+  & > a {
     display: flex;
     align-items: center;
     cursor: pointer;
