@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
-import FourOhFour from "../components/FourOhFour/FourOhFour";
+import React from 'react';
+
+import FourOhFour from '../components/FourOhFour/FourOhFour';
 
 const fourOhFour = () => {
-  return <FourOhFour/>
-}
+  return <FourOhFour />;
+};
 
 export default fourOhFour;

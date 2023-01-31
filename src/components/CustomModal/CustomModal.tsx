@@ -1,24 +1,18 @@
-import React, { FC } from 'react';
-import { styled, Box } from "@mui/system";
+import React, { type FC } from 'react';
+import { styled, Box } from '@mui/system';
+import { ModalUnstyled } from '@mui/base';
+import clsx from 'clsx';
+
 import styles from './CustomModal.module.scss';
-import {ModalUnstyled} from "@mui/base";
-import clsx from "clsx";
 import crossIcon from '../../assets/icons/cross.svg';
 
 // eslint-disable-next-line react/display-name
-const BackdropUnstyled = React.forwardRef<
-  HTMLDivElement,
-  { open?: boolean; className: string }
-  >((props, ref) => {
-  const { open, className, ...other } = props;
-  return (
-    <div
-      className={clsx({ 'MuiBackdrop-open': open }, className)}
-      ref={ref}
-      {...other}
-    />
-  );
-});
+const BackdropUnstyled = React.forwardRef<HTMLDivElement, { open?: boolean; className: string }>(
+  (props, ref) => {
+    const { open, className, ...other } = props;
+    return <div className={clsx({ 'MuiBackdrop-open': open }, className)} ref={ref} {...other} />;
+  }
+);
 
 const Modal = styled(ModalUnstyled)`
   position: fixed;
@@ -44,11 +38,11 @@ const Backdrop = styled(BackdropUnstyled)`
 `;
 
 interface CustomModalProps extends React.PropsWithChildren {
-  open: boolean,
-  onClose: () => any,
+  open: boolean;
+  onClose: () => any;
 }
 
-const CustomModal: FC<CustomModalProps> = (props) => (
+const CustomModal: FC<CustomModalProps> = props => (
   <Modal
     aria-labelledby="unstyled-modal-title"
     aria-describedby="unstyled-modal-description"
@@ -57,10 +51,10 @@ const CustomModal: FC<CustomModalProps> = (props) => (
     slots={{ backdrop: Backdrop }}
   >
     <Box className={styles.CustomModal}>
-      <div className={styles.Close}><img onClick={props.onClose} src={crossIcon.src} alt=""/></div>
-      <div className={styles.Content}>
-        {props.children}
+      <div className={styles.Close}>
+        <img onClick={props.onClose} src={crossIcon.src} alt="" />
       </div>
+      <div className={styles.Content}>{props.children}</div>
     </Box>
   </Modal>
 );

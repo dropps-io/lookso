@@ -93,14 +93,12 @@
       padding: 0 30px;
       vertical-align: middle;
 
-
-
       .ProfilePicSmall {
         border: 2px solid var(--color-border-light);
         width: 50px;
         height: 50px;
         border-radius: 50px;
-        background: url("https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg");
+        background: url('https://i.pinimg.com/736x/c9/e3/e8/c9e3e810a8066b885ca4e882460785fa.jpg');
         background-size: cover;
         background-position: center;
 
@@ -189,7 +187,6 @@
 
 @media only screen and (max-width: 1400px) {
   .Navbar {
-
     .Logo {
       height: 40px;
       margin-right: 60px;
@@ -206,7 +203,6 @@
       .Profile {
         width: 40px;
         height: 40px;
-
 
         .ProfilePicSmall {
           width: 40px;
@@ -225,9 +221,7 @@
   }
 }
 
-
 @media only screen and (max-width: 1000px) {
-
   .Buttons {
     display: none !important;
   }
@@ -235,7 +229,6 @@
   .BurgerMenu {
     display: flex !important;
   }
-
 }
 
 @media only screen and (max-width: 640px) {
@@ -269,7 +262,6 @@
 
 @media only screen and (max-width: 450px) {
   .BurgerMenu {
-
     .Menu {
       margin-right: -450px !important;
       max-width: 450px !important;
@@ -279,7 +271,6 @@
     }
 
     .Buttons {
-
       .ImportantBtn {
         margin: 0;
         box-sizing: border-box;

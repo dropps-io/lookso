@@ -1,6 +1,6 @@
 {
   "LSPXXProfilePost": {
-    "version":"0.0.1",
+    "version": "0.0.1",
     "validator": "0x049bAfA4bF69bCf6FcB7246409bc92a43f0a7264",
     "message": "This is the first Lookso post.",
     "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",

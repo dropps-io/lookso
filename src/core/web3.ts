@@ -1,5 +1,6 @@
-import Web3 from "web3";
-import {fetchProfileAuthJwtToken, fetchProfileAuthSiwe, fetchProfileInfo} from "./api/api";
+import Web3 from 'web3';
+
+import { fetchProfileAuthJwtToken, fetchProfileAuthSiwe, fetchProfileInfo } from './api/api';
 
 declare const window: any;
 
@@ -41,8 +42,8 @@ export async function getWeb3Info(account?: string) {
     account: address,
     balance,
     networkId,
-    profileInfo
-  }
+    profileInfo,
+  };
 }
 
 export async function connectWeb3() {
@@ -66,5 +67,5 @@ export async function signMessage(address: string, data: string, web3: Web3) {
   // TODO On mainnet, delete the oldversionsig
   // It's being used now as the signature was previously located in res.signature, now it's only res
   const oldVersionSig = JSON.parse(JSON.stringify(res)).signature;
-  return oldVersionSig ? oldVersionSig : res;
+  return oldVersionSig || res;
 }
