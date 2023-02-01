@@ -1,18 +1,18 @@
 export interface ProfileInfo {
-  name: string,
-  description: string,
-  tags: string[],
-  links: {url:string, title:string}[],
-  profileImage: string,
-  backgroundImage: string
+  name: string;
+  description: string;
+  tags: string[];
+  links: Array<{ url: string; title: string }>;
+  profileImage: string;
+  backgroundImage: string;
 }
 
 export interface ProfileDisplay {
-  address: string,
-  name: string,
-  image: string
+  address: string;
+  name: string;
+  image: string;
 }
 
 export interface ProfileFollowingDisplay extends ProfileDisplay {
-  following: boolean
+  following: boolean;
 }

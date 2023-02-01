@@ -1,7 +1,7 @@
 export const timer = async (ms: number) => {
-  return new Promise<void>((resolve) => {
+  await new Promise<void>(resolve => {
     setTimeout(() => {
       resolve();
     }, ms);
   });
-}
+};

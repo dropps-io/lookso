@@ -34,7 +34,7 @@
         margin-right: 10px;
         cursor: pointer;
       }
-      
+
       .UserTag {
         cursor: pointer;
       }
@@ -64,7 +64,7 @@
       .MoreOptions {
         width: 40px;
         padding-bottom: 5px;
-        border: none!important;
+        border: none !important;
         font-size: 30px;
         padding-right: 20px;
         cursor: pointer;
@@ -273,7 +273,6 @@
       width: 15px;
     }
   }
-
 }
 
 .Child {
@@ -289,7 +288,6 @@
         border-radius: 60px;
         margin-top: 0;
       }
-
     }
 
     .RightPart {
@@ -415,7 +413,8 @@
         }
         .RightPartButton {
           & > div {
-            a, span {
+            a,
+            span {
               font-size: 0.8em;
             }
           }
@@ -427,8 +426,9 @@
       }
       .RightPartButton {
         & > div {
-          a, span {
-            font-size: 0.8em!important;
+          a,
+          span {
+            font-size: 0.8em !important;
           }
         }
       }
@@ -485,7 +485,6 @@
       }
     }
   }
-
 
   .Container {
     .FeedPost {
@@ -550,7 +549,8 @@
             font-size: 1.2em;
           }
           & > div {
-            a, span {
+            a,
+            span {
               font-size: 0.6em;
             }
           }
@@ -575,7 +575,8 @@
     .PostContent {
       font-size: 0.7em;
       margin: 0;
-      .EventIcon, .EventImage {
+      .EventIcon,
+      .EventImage {
         width: 30px;
         height: 30px;
       }
@@ -640,12 +641,11 @@
   }
 }
 
-
-  .PermissionTag {
-    border-radius: 30px;
-    padding: 2px 8px;
-    background-color: #0066FF;
-    font-weight: lighter;
-    font-size: 0.6em;
-    width: max-content;
-  }
+.PermissionTag {
+  border-radius: 30px;
+  padding: 2px 8px;
+  background-color: #0066ff;
+  font-weight: lighter;
+  font-size: 0.6em;
+  width: max-content;
+}

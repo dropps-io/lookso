@@ -1,15 +1,16 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
+import Link from 'next/link';
+
 import styles from './FourOhFour.module.scss';
-import Navbar from "../Navbar/Navbar";
-import Footer from "../Footer/Footer";
-import Link from "next/link";
+import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
 
 interface FourOhFourProps {}
 
 const FourOhFour: FC<FourOhFourProps> = () => (
   <div className={styles.FourOhFour} data-testid="FourOhFour">
     <div className={styles.FourOhFourHeader}>
-      <Navbar/>
+      <Navbar />
     </div>
     <div className={styles.FourOhFourContent}>
       <div>
@@ -21,7 +22,7 @@ const FourOhFour: FC<FourOhFourProps> = () => (
       </div>
     </div>
     <div className={styles.FourOhFourFooter}>
-      <Footer/>
+      <Footer />
     </div>
   </div>
 );

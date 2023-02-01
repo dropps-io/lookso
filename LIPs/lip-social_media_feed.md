@@ -11,7 +11,7 @@ requires: ERC725Y, LSP2
 
 ## Simple Summary
 
-This standard describes a data model to store Social Media information such as posts, likes and follows. 
+This standard describes a data model to store Social Media information such as posts, likes and follows.
 
 ## Abstract
 
@@ -32,13 +32,13 @@ A Universal Profile's Social Media State will live under a record referenced by 
 The JSON Url stored inside points to a JSON file that lists all the social media actions of a profile, including posts, likes and follows.
 
 ```json
-  {
-      "name": "LSPXXSocialRegistry",
-      "key": "0x661d289e41fcd282d8f4b9c0af12c8506d995e5e9e685415517ab5bc8b908247",
-      "keyType": "Singleton",
-      "valueType": "bytes",
-      "valueContent": "JSONURL"
-  }
+{
+  "name": "LSPXXSocialRegistry",
+  "key": "0x661d289e41fcd282d8f4b9c0af12c8506d995e5e9e685415517ab5bc8b908247",
+  "keyType": "Singleton",
+  "valueType": "bytes",
+  "valueContent": "JSONURL"
+}
 ```
 
 This should be updated everytime a new post is added by the user.
@@ -87,7 +87,7 @@ A Profile Post can be an original message, a comment on another post or a repost
     "asset": { // Each post can have up to 1 media file attached
       "hashFunction": "keccak256(bytes)",
       "hash": "string",
-      "url": "string", 
+      "url": "string",
       "fileType": "string"
     },
     "parentHash": "string", // or null. A post with a parent is a comment
@@ -97,10 +97,11 @@ A Profile Post can be an original message, a comment on another post or a repost
   "LSPXXProfilePostHash": {// Hash of the LSPXXProfilePost object
     "hashFunction": 'keccak256(bytes)',
     "hash": "string",
-  }, 
+  },
   "LSPXXProfilePostEOASignature": "string"
 }
 ```
+
 Below is an example of a post object:
 
 ```JSON
@@ -132,20 +133,20 @@ Below is an example of a post object:
 }
 ```
 
-The post content and metadata is stored under  _LSPXXProfilePost_. The content and metadata are hashed and the hash is saved under _LSPXXProfilePostHash_. Finally, the controller address is requested to sign the _LSPXXProfilePost_ object. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
+The post content and metadata is stored under _LSPXXProfilePost_. The content and metadata are hashed and the hash is saved under _LSPXXProfilePostHash_. Finally, the controller address is requested to sign the _LSPXXProfilePost_ object. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
 
-Let's breakdown the _LSPXXProfilePost_ attributes: 
+Let's breakdown the _LSPXXProfilePost_ attributes:
 
-* **version** will allow clients that adhere to the protocol to display posts properly, even if some attributes change. 
-* **message** is the actual content of a post that will be displayed as text.
-* **author** is the address of the Universal Profile that submitted the post.
-* **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
-* **nonce** is what makes a post unique. Otherwise, posts written by the same author with the same message would generate the same hash and collide in the validator storage. The transaction would then revert when someone tried posting the same content twice. Even if on different dates! We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
-* **links** they can be used in the future to extend the standard.
-* **tags** they can be used in the future as hashtags.
-* **asset** A media file attached to the post. An image, video, or any other file type.
-* **parentHash** If this post is a comment, the hash of the original post should go in here.
-* **childHash** If this post is a repost, the hash of the original post should go in here. 
+- **version** will allow clients that adhere to the protocol to display posts properly, even if some attributes change.
+- **message** is the actual content of a post that will be displayed as text.
+- **author** is the address of the Universal Profile that submitted the post.
+- **validator** is the address of the contract that timestamped this particular post. Use it to retrieve the post data.
+- **nonce** is what makes a post unique. Otherwise, posts written by the same author with the same message would generate the same hash and collide in the validator storage. The transaction would then revert when someone tried posting the same content twice. Even if on different dates! We don't want that. Anyone has the right to just pass by and say "Goodmorning!" everyday.
+- **links** they can be used in the future to extend the standard.
+- **tags** they can be used in the future as hashtags.
+- **asset** A media file attached to the post. An image, video, or any other file type.
+- **parentHash** If this post is a comment, the hash of the original post should go in here.
+- **childHash** If this post is a repost, the hash of the original post should go in here.
 
 ## Copyright
 

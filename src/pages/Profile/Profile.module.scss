@@ -23,7 +23,6 @@
     z-index: 10;
   }
 
-
   .ProfilePageContent {
     padding: calc(#{$header-height} * 1) var(--padding-profile) 0 var(--padding-profile);
     flex: 1 0 auto;
@@ -181,6 +180,9 @@
 
     .Activity {
       padding: 0 30px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-sizing: content-box;
     }
   }
 
@@ -246,7 +248,6 @@
 
 @media only screen and (max-width: 800px) {
   .Profile {
-
     .ProfilePageContent {
       .BackgroundImage {
         height: 120px;
@@ -337,7 +338,6 @@
         }
       }
 
-
       .ProfileButtons {
         margin-top: 10px;
         button {
@@ -370,7 +370,8 @@
           margin-top: -35px;
           margin-left: 0;
         }
-        .UserTag, .ProfileAddress {
+        .UserTag,
+        .ProfileAddress {
           display: none;
         }
 
@@ -380,7 +381,8 @@
         }
       }
 
-      .UserTagMobile, .ProfileAddressMobile {
+      .UserTagMobile,
+      .ProfileAddressMobile {
         display: block;
         padding: 0 30px;
         font-size: 0.7em;
@@ -402,7 +404,6 @@
         }
       }
 
-
       .ProfileButtons {
         display: none;
 
@@ -411,22 +412,20 @@
         }
       }
       .ProfileExtraActions {
-          & > .ExtraActionsPopup {
-            width: 100px;
-            span {
-              font-size: 0.8em;
+        & > .ExtraActionsPopup {
+          width: 100px;
+          span {
+            font-size: 0.8em;
 
-              &:last-child {
-                margin-bottom: 0;
-              }
-              img {
-                height: 15px;
-                margin-right: 0.7rem;
-              }
+            &:last-child {
+              margin-bottom: 0;
+            }
+            img {
+              height: 15px;
+              margin-right: 0.7rem;
             }
           }
-
-
+        }
 
         & > button {
           width: 30px;
@@ -442,13 +441,13 @@
 @media only screen and (max-width: 400px) {
   .Profile {
     .ProfilePageContent {
-
-
-
-      .Activity, .ProfileAddressMobile, .UserTagMobile, .ProfileBasicInfo, .ProfileInfluence  {
+      .Activity,
+      .ProfileAddressMobile,
+      .UserTagMobile,
+      .ProfileBasicInfo,
+      .ProfileInfluence {
         padding: 0 10px;
       }
-
 
       .ProfileButtons {
         margin: 0;

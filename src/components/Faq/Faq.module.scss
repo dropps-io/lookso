@@ -37,7 +37,7 @@ $question-close-height: 50px;
   .FaqQuestion {
     position: relative;
     border-bottom: 1px solid var(--color-border-light);
-    transition: all .3s;
+    transition: all 0.3s;
     min-height: $question-close-height;
     max-height: $question-close-height;
     // Title
@@ -50,7 +50,7 @@ $question-close-height: 50px;
       font-weight: 500;
       font-size: 20px;
       letter-spacing: 1.5px;
-      transition: all .3s;
+      transition: all 0.3s;
       margin: 20px 0;
       &:hover {
         cursor: pointer;
@@ -75,9 +75,10 @@ $question-close-height: 50px;
       line-height: 29px;
       letter-spacing: 1px;
       display: block;
-      transition: all .3s;
+      transition: all 0.3s;
 
-      a, strong {
+      a,
+      strong {
         font-weight: 600;
       }
       a {
@@ -94,7 +95,7 @@ $question-close-height: 50px;
 @media only screen and (max-width: 1680px) {
   .FaqQuestion {
     &:nth-child(2) {
-      min-height: 80px!important;
+      min-height: 80px !important;
     }
   }
 }
@@ -102,15 +103,15 @@ $question-close-height: 50px;
 // For Tablet
 @media only screen and (max-width: 1400px) {
   .FaqWrapper {
-    padding: 0!important;
+    padding: 0 !important;
   }
   // reduce font size
   .FaqQuestionTitle {
-    font-size: 18px!important;
+    font-size: 18px !important;
   }
   .Faq {
     p {
-      font-size: 1em!important;
+      font-size: 1em !important;
     }
   }
   .FaqQuestion {
@@ -122,7 +123,7 @@ $question-close-height: 50px;
 @media only screen and (max-width: 1400px) {
   .Faq {
     p {
-      font-size: 1em!important;
+      font-size: 1em !important;
     }
   }
 }
@@ -131,7 +132,7 @@ $question-close-height: 50px;
   // reset fix for large question 4
   .FaqQuestion {
     &:nth-child(4) {
-      min-height: 80px!important;
+      min-height: 80px !important;
     }
   }
 }
@@ -139,56 +140,54 @@ $question-close-height: 50px;
 // For mobile
 @media only screen and (max-width: 910px) {
   .FaqWrapper {
-    display: flex!important;
-    flex-direction: column!important;
+    display: flex !important;
+    flex-direction: column !important;
     & > div:first-child {
       .FaqQuestion {
         &:nth-child(2),
         &:nth-child(4) {
-          min-height: 80px!important;
+          min-height: 80px !important;
         }
       }
     }
   }
   // reset fix for large question 2
   .FaqQuestion {
-    min-height: $question-close-height!important;
+    min-height: $question-close-height !important;
     &:nth-child(4),
     &:nth-child(2) {
-      min-height: $question-close-height!important;
+      min-height: $question-close-height !important;
     }
   }
-
 }
 @media only screen and (max-width: 500px) {
   .FaqQuestion {
     $question-close-height: 60px;
-    min-height: $question-close-height!important;
+    min-height: $question-close-height !important;
   }
   .FaqWrapper {
     & > div:first-child {
       .FaqQuestion {
         &:nth-child(2) {
-          min-height: 100px!important;
+          min-height: 100px !important;
         }
         &:nth-child(4) {
-          min-height: 90px!important;
+          min-height: 90px !important;
         }
       }
     }
   }
 }
 
-
 @media only screen and (max-width: 400px) {
   .FaqWrapper {
     & > div:first-child {
       .FaqQuestion {
         &:nth-child(2) {
-          min-height: 140px!important;
+          min-height: 140px !important;
         }
         &:nth-child(4) {
-          min-height: 120px!important;
+          min-height: 120px !important;
         }
       }
     }

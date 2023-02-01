@@ -3,7 +3,7 @@
   min-height: 100vh;
   .Content {
     position: relative;
-    overflow:hidden;
+    overflow: hidden;
     padding: 30px 150px 0 150px;
 
     max-width: 3000px;
@@ -25,10 +25,10 @@
         letter-spacing: 0.025em;
         margin-bottom: 20px;
 
-        img{
+        img {
           position: relative;
           left: -230px;
-          top: 40px
+          top: 40px;
         }
       }
 
@@ -66,7 +66,6 @@
             cursor: pointer;
           }
         }
-
 
         p {
           margin-top: 7px;
@@ -130,7 +129,11 @@
           margin: 0 auto 40px auto;
           border: solid 0.1px var(--color-border-semi-light);
 
-          background: linear-gradient(155.14deg, rgba(255, 255, 255, 0) -2.13%, rgba(255, 255, 255, 0.15) 136.58%);
+          background: linear-gradient(
+            155.14deg,
+            rgba(255, 255, 255, 0) -2.13%,
+            rgba(255, 255, 255, 0.15) 136.58%
+          );
           filter: drop-shadow(0px 4.28214px 52.4562px rgba(0, 7, 72, 0.12));
           backdrop-filter: blur(26.7634px);
 
@@ -167,9 +170,19 @@
         width: 100%;
         height: 100%;
         position: absolute;
-        background: linear-gradient(178.2deg, rgba(255, 255, 255, 0.11) -16.49%, rgba(255, 255, 255, 0.11) 45.32%, rgba(255, 255, 255, 0) 103.19%);
-        -webkit-mask-image: -webkit-gradient(linear, left top, left bottom,
-                from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0)));
+        background: linear-gradient(
+          178.2deg,
+          rgba(255, 255, 255, 0.11) -16.49%,
+          rgba(255, 255, 255, 0.11) 45.32%,
+          rgba(255, 255, 255, 0) 103.19%
+        );
+        -webkit-mask-image: -webkit-gradient(
+          linear,
+          left top,
+          left bottom,
+          from(rgba(0, 0, 0, 0.4)),
+          to(rgba(0, 0, 0, 0))
+        );
         box-shadow: 0 10px 250px rgba(0, 0, 0, 0.25);
         border-radius: 40px;
         border: solid 1.5px var(--color-border-light);
@@ -273,7 +286,6 @@
         }
 
         .ImpactImg {
-
         }
 
         .CallAction {
@@ -290,14 +302,13 @@
       padding: 20px 50px 0 50px;
 
       .MainSection {
-
         h1 {
           font-size: 3.3em;
 
           img {
             width: 190px;
             left: -190px;
-            top: 30px
+            top: 30px;
           }
         }
 
@@ -353,7 +364,7 @@
           img {
             width: 170px;
             left: -170px;
-            top: 27px
+            top: 27px;
           }
         }
 
@@ -418,7 +429,7 @@
             position: absolute;
             width: 210px;
             left: 390px;
-            top: 50px
+            top: 50px;
           }
         }
 
@@ -460,7 +471,6 @@
 @media only screen and (max-width: 900px) {
   .Home {
     .Content {
-
       .HeadlinesSection {
         flex-direction: column;
 
@@ -482,7 +492,7 @@
           img {
             width: 180px;
             left: 335px;
-            top: 44px
+            top: 44px;
           }
         }
 
@@ -499,7 +509,6 @@
         .ImpactImgPhoneSize {
           display: block;
         }
-
       }
     }
   }
@@ -508,7 +517,7 @@
 @media only screen and (max-width: 800px) {
   .Home {
     .Content {
-      .MainSection{
+      .MainSection {
         min-height: 750px;
       }
     }
@@ -543,7 +552,7 @@
             position: absolute;
             width: 155px;
             left: 245px;
-            top: 32px
+            top: 32px;
           }
         }
 
@@ -620,7 +629,7 @@
           img {
             width: 120px;
             left: 190px;
-            top: 25px
+            top: 25px;
           }
         }
 
@@ -655,7 +664,7 @@
           img {
             width: 100px;
             left: 175px;
-            top: 22px
+            top: 22px;
           }
         }
 
@@ -706,7 +715,6 @@
   }
 }
 
-
 @media only screen and (max-width: 370px) {
   .Home {
     .Content {
@@ -717,7 +725,7 @@
           img {
             width: 100px;
             left: 135px;
-            top: 20px
+            top: 20px;
           }
         }
 

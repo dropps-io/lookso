@@ -1,0 +1,12 @@
+# dependencies
+/node_modules/
+
+tsconfig.json
+/CHANGELOG.md
+
+/.next/
+
+.eslintrc.json
+.prettierrc
+
+generate-react-cli.json

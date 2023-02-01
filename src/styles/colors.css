@@ -1,36 +1,39 @@
 :root {
-    /* --Colors-- */
+  /* --Colors-- */
 
-    --color-background-main: #07091C;
-    --color-background-main-l2: #10132D;
-    --color-background-main-l3: #19205A;
-    --color-background-reverse: #ffffff;
-    --color-background-reverse-darker: #F0F0EE;
+  --color-background-main: #07091c;
+  --color-background-main-l2: #10132d;
+  --color-background-main-l3: #19205a;
+  --color-background-reverse: #ffffff;
+  --color-background-reverse-darker: #f0f0ee;
 
-    --color-border: #404040;
-    --color-border-semi-light: #dadada;
-    --color-border-light: #fff;
+  --color-border: #404040;
+  --color-border-semi-light: #dadada;
+  --color-border-light: #fff;
 
-    --color-text-placeholder: #D5D1CD;
-    --color-text-default: #fff;
-    --color-text-default-light: #CFCCC6;
-    --color-text-default-lighter: #8b8987;
+  --color-text-placeholder: #d5d1cd;
+  --color-text-default: #fff;
+  --color-text-default-light: #cfccc6;
+  --color-text-default-lighter: #8b8987;
 
-    --color-text-reverse: #101010;
-    --color-text-reverse-light: #9F9F9F;
+  --color-text-reverse: #101010;
+  --color-text-reverse-light: #9f9f9f;
 
-    --color-highlight: #0066FF;
-    --color-highlight-lighter: #2F80ED;
+  --color-highlight: #0066ff;
+  --color-highlight-lighter: #2f80ed;
 
-    --color-buttons: #4E4EFE;
-    --color-buttons-dark: #10132D;
+  --color-buttons: #4e4efe;
+  --color-buttons-dark: #10132d;
 
-    --color-asset: #5500ff;
+  --color-asset: #5500ff;
 
-    --color-keymanager: #ff004f;
-    --color-danger: #ff004f;
+  --color-keymanager: #ff004f;
+  --color-danger: #ff004f;
 
-    --color-dark: #000000;
+  --color-dark: #000000;
 
-    --color-tag: #34B6FF;
+  --color-tag: #34b6ff;
+
+  --color-asset-lukso: #eedde4;
+  --color-asset-legacy: #ffe0b3;
 }

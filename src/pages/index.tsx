@@ -1,11 +1,9 @@
-import type { NextPage } from 'next'
-import Home from "./Home/Home";
+import Home from './Home/Home';
+
+import type { NextPage } from 'next';
 
 const Index: NextPage = () => {
+  return <Home></Home>;
+};
 
-  return (
-    <Home></Home>
-  )
-}
-
-export default Index
+export default Index;
