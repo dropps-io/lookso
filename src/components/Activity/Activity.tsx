@@ -88,13 +88,6 @@ const Activity: FC<ActivityProps> = props => {
   return (
     <div className={styles.Feed}>
       <div className={styles.FeedHeader}>
-        <h5
-          onClick={() => {
-            console.log(currentPostRef);
-          }}
-        >
-          {props.headline}
-        </h5>
         <div className={styles.Filters}>
           {filters.map((f, index) => (
             <span

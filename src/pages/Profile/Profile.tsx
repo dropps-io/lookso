@@ -34,6 +34,8 @@ import SidebarButtons from '../../components/SidebarButtons/SidebarButtons';
 import FollowModal from '../../components/Modals/FollowModal/FollowModal';
 import ActionModal from '../../components/Modals/ActionModal/ActionModal';
 import useFetchFeed from '../../hooks/useFetchFeed';
+import TabSelector from '../../components/TabSelector/TabSelector';
+import ProfileAssets from '../../components/ProfileAssets/ProfileAssets';
 
 interface ProfileProps {
   address: string;
@@ -67,10 +69,12 @@ const Profile: FC<ProfileProps> = props => {
   const [isExtendProfileImage, setIsExtendProfileImage] = useState(false);
   const [isExtendBannerImage, setIsExtendBannerImage] = useState(false);
   const [isOpenFeatureSoonModal, setIsOpenFeatureSoonModal] = useState(false);
+  const [currentTab, setCurrentTab] = useState('Activity');
 
   useFetchFeed({ type: 'Profile', profile: props.address });
 
   useEffect(() => {
+    setCurrentTab('Activity');
     if (props.address) setBgColor(props.address.slice(2, 6));
     async function initPageData() {
       setFollowing(await fetchProfileFollowingCount(props.address));
@@ -472,7 +476,15 @@ const Profile: FC<ProfileProps> = props => {
               />
             )}
           <div className={styles.Activity}>
-            <Activity type={'Profile'} headline="Activity" profile={props.address}></Activity>
+            <TabSelector
+              tabs={['Activity', 'Assets']}
+              selectedTab={currentTab}
+              onSelect={setCurrentTab}
+            />
+            {currentTab === 'Activity' && (
+              <Activity type={'Profile'} headline="Activity" profile={props.address} />
+            )}
+            {currentTab === 'Assets' && <ProfileAssets address={props.address} />}
           </div>
         </div>
         <div className={styles.ProfilePageFooter}>

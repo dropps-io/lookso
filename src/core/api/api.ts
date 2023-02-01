@@ -7,6 +7,8 @@ import { type Notification } from '../../models/notification';
 import { type ProfileDisplay, type ProfileInfo } from '../../models/profile';
 import { type PaginationResponse } from '../../models/pagination-response';
 import { handleAxiosNonGetError } from './utils';
+import { SearchResults } from '../../models/search';
+import { AssetWithBalance } from '../../models/asset';
 
 import type Web3 from 'web3';
 
@@ -363,10 +365,10 @@ export async function fetchProfileNotifications(
   ).data;
 }
 
-export async function searchProfiles(
+export async function searchInDatabase(
   input: string,
   page?: number
-): Promise<Omit<PaginationResponse, 'results'> & { results: ProfileDisplay[] }> {
+): Promise<Omit<PaginationResponse, 'results | count'> & { search: SearchResults }> {
   return (
     await axios({
       method: 'GET',
@@ -463,4 +465,19 @@ export async function setNewRegistryPostedOnProfile(
 
   if (res.status === 200) return;
   else throw 'Request ended with status ' + res.status;
+}
+
+export function fetchProfileAssets(address: string): {
+  promise: AxiosPromise<AssetWithBalance[]>;
+  cancel: any;
+} {
+  let cancel;
+  return {
+    promise: axios({
+      method: 'GET',
+      url: API_URL + '/lookso/profile/' + address + '/assets',
+      cancelToken: new axios.CancelToken(c => (cancel = c)),
+    }),
+    cancel,
+  };
 }
