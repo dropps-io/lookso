@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostBox from '../PostBox/PostBox';
 import styles from './Activity.module.scss';
 import { getFeedActions, getReduxFeedState, type RootState } from '../../store/store';
-import TabSelector from '../TabSelector/TabSelector';
 
 interface ActivityProps {
   type: 'Profile' | 'Feed' | 'Explore';

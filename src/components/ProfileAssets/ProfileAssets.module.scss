@@ -1,0 +1,114 @@
+.ProfileAssets {
+  width: 100%;
+  height: max-content;
+  padding-bottom: 50px;
+
+  .AssetsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 16px;
+
+    .Asset {
+      position: relative;
+      height: 200px;
+      width: 200px;
+      border-radius: 10px;
+      background-position: center;
+      background-size: contain;
+
+      .Blurry {
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: cover;
+        border-radius: 0 0 10px 10px;
+        content: '';
+        height: 25%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        opacity: 0;
+        transition: all 0.3s;
+      }
+
+      .Blurry::after {
+        content: '';
+        position: absolute;
+        border-radius: 0 0 10px 10px;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(3px); /* apply the blur */
+        pointer-events: none; /* make the overlay click-through */
+      }
+
+      .Overlay {
+        border-radius: 0 0 10px 10px;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.4);
+        box-sizing: border-box;
+        color: var(--color-background-reverse);
+        display: flex;
+        font-size: 20px;
+        height: 25%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1;
+        opacity: 0;
+        transition: all 0.3s;
+
+        .AssetInfo {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 5px 10px;
+          font-size: 0.5em;
+          justify-content: space-between;
+
+          .Upper {
+            display: flex;
+            justify-content: space-between;
+
+            .AssetName {
+              font-size: 1em;
+            }
+
+            .AssetType {
+              color: var(--color-text-reverse);
+              font-weight: bold;
+              font-size: 0.8em;
+              padding: 2px 4px;
+              border-radius: 10px;
+              background-color: var(--color-asset-legacy);
+            }
+
+            .AssetLukso {
+              background-color: var(--color-asset-lukso);
+            }
+          }
+        }
+      }
+    }
+
+    .Asset:hover {
+      .AssetImage {
+        filter: blur(1px);
+      }
+
+      .Blurry,
+      .Overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  .Loading {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

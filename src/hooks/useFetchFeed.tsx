@@ -43,7 +43,6 @@ const useFetchFeed = (props: UseFetchFeedProps) => {
     dispatch(getFeedActions(props.type).setHasMore(true));
     dispatch(getFeedActions(props.type).setStoredFeed([]));
     setInitialized(false);
-    console.log('fetch');
 
     let fetch: { promise: AxiosPromise; cancel: any };
 
