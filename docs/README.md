@@ -80,7 +80,7 @@ contract Validator is ERC725YCore(), Context {
 
 This is a generic contract that provides a timestamping service for any kind of message. Because this contract cannot sign a message attesting the timestamp provided, instead it saves the message hash in its own storage, alongside the timestamp and the original sender. Anyone can use this registry to store their claims and attest their creation date. For more information, check [LIP-Claim_Registry](https://github.com/dropps-nft/Lookso/blob/main/LIPs/lip-claim_registry.md).
 
-For the LOOKSO project, we extended the timestamping service with the capability to write to the LSPXXSocialRegistry key on the Universal Profile. This was done for the convenience of bundling two tasks in a single transaction and avoiding extra costs for the user. The message hash is sent for validation alongside the social record that includes it. The message hash is timestamped and the social record URL written on the Universal Profile.
+For the LOOKSO project, we extended the timestamping service with the capability to write to the LSP19SocialRegistry key on the Universal Profile. This was done for the convenience of bundling two tasks in a single transaction and avoiding extra costs for the user. The message hash is sent for validation alongside the social record that includes it. The message hash is timestamped and the social record URL written on the Universal Profile.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -96,7 +96,7 @@ import { Validator } from "./Validator.sol";
 
 contract LooksoPostValidator is Validator {
 
-    bytes32 public constant REGISTRY_KEY = keccak256("LSPXXSocialRegistry");
+    bytes32 public constant REGISTRY_KEY = keccak256("LSP19SocialRegistry");
 
     constructor() Validator() {}
 
@@ -150,11 +150,11 @@ Event decoding and translation is also a big part of LOOKSO's backend work. Afte
 
 ### Social Media Record File
 
-This record is saved under the (provisory) Key name of "LSPXXSocialRegistry". Here is the schema according to [LSP2](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-2-ERC725YJSONSchema.md):
+This record is saved under the (provisory) Key name of "LSP19SocialRegistry". Here is the schema according to [LSP2](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-2-ERC725YJSONSchema.md):
 
 ```JSON
 {
-    "name": "LSPXXSocialRegistry",
+    "name": "LSP19SocialRegistry",
     "key": "0x661d289e41fcd282d8f4b9c0af12c8506d995e5e9e685415517ab5bc8b908247",
     "keyType":"Singleton",
     "valueType": "bytes",
@@ -167,7 +167,7 @@ And here is an example of the record file after decoding and fetching the JSONUR
 
 ```JSON
 {
-  "LSPXXSocialRegister": {
+  "LSP19SocialRegister": {
     "profile_posts": [
       {
         "url": "ipfs://bafkreicwro4hgt42c256ggdnsd5ovrw6g62barfhsfd2umxdye764hlar4",
@@ -191,7 +191,7 @@ And here is an example of the record file after decoding and fetching the JSONUR
 
 ```JSON
 {
-  "LSPXXProfilePost": {
+  "LSP19ProfilePost": {
     "version":"0.0.1",
     "message": "This is the first Lookso post.",
     "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
@@ -212,8 +212,8 @@ And here is an example of the record file after decoding and fetching the JSONUR
     "parentHash":"0xdc1812e317c6cf84760d59bda99517de5b5c5190fcf820713075430337805340",
     "childHash":""
   },
-  "LSPXXProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
-  "LSPXXProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
+  "LSP19ProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
+  "LSP19ProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
 }
 ```
 
@@ -224,5 +224,5 @@ This is an example of a post object. You can find more details about it in the [
 - Refactor following system so that universalReceiver can be called and a UP can decide what to do when it is being followed. Implement following like an nft transfer.
 - Add a relay service and improve the post flow. The user should sign the transaction to update the social record in his profile, but it should never go through unless the upload to decentralized storage is successful. On the other hand, we should not upload to decentralized storage first and then give the user the option to cancel the transaction. A relay service helps to manage this situation by postponing the signed transaction until the upload to decentralized storage is complete.
 - Improve event translation (for ex. Profile metadata updated can display the before and after values)
-- Narrow the permissions given to the validator contract for a specific key (LSPXXSocialRegistry).
+- Narrow the permissions given to the validator contract for a specific key (LSP19SocialRegistry).
 - Create a system that allows developers to submit translations to events in smart contracts created by them. This makes LOOKSO more complete and gives developers a chance to make their work stand out.

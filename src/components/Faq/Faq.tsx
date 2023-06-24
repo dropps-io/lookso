@@ -9,7 +9,7 @@ const questions = [
     title: 'What is LOOKSO?',
     response:
       'LOOKSO is a decentralized social media platform combining user generated content with blockchain events. An incredibly rich feed displaying on-chain Universal Profile activity, such as contract interactions and profile updates, side by side with user posts, comments and likes.<br><br>' +
-      'The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSPXX standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard.',
+      'The LOOKSO protocol leverages decentralized storage networks to minimize the data saved on Universal Profiles, based on the new LSP19 standard. A standard to promote complete interoperability and store social media data, ready to be consumed by any other project adhering to the standard.',
   },
   {
     title:

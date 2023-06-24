@@ -25,15 +25,15 @@ Using a standardized data model to store social media makes content platform-ind
 
 ## Specification
 
-### LSPXXSocialRegistry
+### LSP19SocialRegistry
 
-A Universal Profile's Social Media State will live under a record referenced by the "LSPXXSocialRegistry" data key of their ERC725Y store.
+A Universal Profile's Social Media State will live under a record referenced by the "LSP19SocialRegistry" data key of their ERC725Y store.
 
 The JSON Url stored inside points to a JSON file that lists all the social media actions of a profile, including posts, likes and follows.
 
 ```json
 {
-  "name": "LSPXXSocialRegistry",
+  "name": "LSP19SocialRegistry",
   "key": "0x661d289e41fcd282d8f4b9c0af12c8506d995e5e9e685415517ab5bc8b908247",
   "keyType": "Singleton",
   "valueType": "bytes",
@@ -47,7 +47,7 @@ The linked JSON file SHOULD have the following format:
 
 ```js
 {
-  "LSPXXSocialRegistry": {
+  "LSP19SocialRegistry": {
     "posts": [ // Messages authored by the profile. Includes original posts, comments and reposts.
       {
         "url": "string", // The url in decentralized storage with the post content and metadata
@@ -67,7 +67,7 @@ A Profile Post can be an original message, a comment on another post or a repost
 
 ```js
 {
-  "LSPXXProfilePost": {
+  "LSP19ProfilePost": {
     "version": "0.0.1",
     "author": "Address", // The Universal Profile who authored the post
     "validator": "Address", // Address of a validator smart contract which will authenticate a post and provide its publication date
@@ -94,11 +94,11 @@ A Profile Post can be an original message, a comment on another post or a repost
     "childHash": "string", // or null. A post with a child is a repost
     "nonce":"string",
   },
-  "LSPXXProfilePostHash": {// Hash of the LSPXXProfilePost object
+  "LSP19ProfilePostHash": {// Hash of the LSP19ProfilePost object
     "hashFunction": 'keccak256(bytes)',
     "hash": "string",
   },
-  "LSPXXProfilePostEOASignature": "string"
+  "LSP19ProfilePostEOASignature": "string"
 }
 ```
 
@@ -106,7 +106,7 @@ Below is an example of a post object:
 
 ```JSON
 {
-  "LSPXXProfilePost": {
+  "LSP19ProfilePost": {
     "version":"0.0.1",
     "message": "This is the first Lookso post.",
     "author": "0x742242E9572cEa7d3094352472d8463B0a488b80",
@@ -127,15 +127,15 @@ Below is an example of a post object:
     "parentHash":"0xdc1812e317c6cf84760d59bda99517de5b5c5190fcf820713075430337805340",
     "childHash":""
   },
-  "LSPXXProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
-  "LSPXXProfilePostHashFunction": "keccak256(utf-8)",
-  "LSPXXProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
+  "LSP19ProfilePostHash": "0x0017eb3f3b2c10c3387c710e849c64527ae331bfb2d42fb70fbe95588ff5d6cd",
+  "LSP19ProfilePostHashFunction": "keccak256(utf-8)",
+  "LSP19ProfilePostSignature": "0x2845551019619d59657b6e485d1cb2067479a5bc364270030d7c4143b4cc0ee5279432bee8425f17d091f067e6b8f987390900b1fd82bef52fcb4c8b2b06ab901b"
 }
 ```
 
-The post content and metadata is stored under _LSPXXProfilePost_. The content and metadata are hashed and the hash is saved under _LSPXXProfilePostHash_. Finally, the controller address is requested to sign the _LSPXXProfilePost_ object. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
+The post content and metadata is stored under _LSP19ProfilePost_. The content and metadata are hashed and the hash is saved under _LSP19ProfilePostHash_. Finally, the controller address is requested to sign the _LSP19ProfilePost_ object. This signature can be obtained, for example, using `web3.eth.accounts.sign(data, privateKey);`
 
-Let's breakdown the _LSPXXProfilePost_ attributes:
+Let's breakdown the _LSP19ProfilePost_ attributes:
 
 - **version** will allow clients that adhere to the protocol to display posts properly, even if some attributes change.
 - **message** is the actual content of a post that will be displayed as text.

@@ -2,7 +2,7 @@ import axios, { type AxiosPromise } from 'axios';
 
 import { API_URL } from '../../environment/endpoints';
 import { type FeedPost } from '../../components/PostBox/PostBox';
-import { type LSPXXProfilePost } from '../../models/profile-post';
+import { type LSP19ProfilePost } from '../../models/profile-post';
 import { type Notification } from '../../models/notification';
 import { type ProfileDisplay, type ProfileInfo } from '../../models/profile';
 import { type PaginationResponse } from '../../models/pagination-response';
@@ -283,18 +283,18 @@ export async function fetchPostComments(
 }
 
 export async function fetchPostObjectWithAsset(
-  post: LSPXXProfilePost,
+  post: LSP19ProfilePost,
   asset: File,
   currentPath: string,
   web3: Web3,
   recursive?: boolean
-): Promise<LSPXXProfilePost> {
+): Promise<LSP19ProfilePost> {
   const headersLocal = {
     Accept: 'application/json',
   };
 
   const formData = new FormData();
-  formData.append('lspXXProfilePost', JSON.stringify(post));
+  formData.append('lsp19ProfilePost', JSON.stringify(post));
   formData.append('fileType', asset.type);
   formData.append('asset', asset);
   let res;
@@ -314,17 +314,17 @@ export async function fetchPostObjectWithAsset(
     );
   }
 
-  if (res.status === 200) return res.data.LSPXXProfilePost;
+  if (res.status === 200) return res.data.LSP19ProfilePost;
   else throw 'Request ended with status ' + res.status;
 }
 
 export async function uploadPostObject(
-  post: LSPXXProfilePost,
+  post: LSP19ProfilePost,
   currentPath: string,
   web3: Web3,
   recursive?: boolean
 ): Promise<{ postHash: string; jsonUrl: string }> {
-  const data = { lspXXProfilePost: post };
+  const data = { lsp19ProfilePost: post };
   let res;
 
   try {

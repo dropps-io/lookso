@@ -64,9 +64,9 @@ export class UniversalProfile extends UniversalProfileReader {
 
     if (!(await this.fetchAddressPermissions()).includes(address)) {
       const permissionsArrayKey = this._web3.utils.keccak256('AddressPermissions[]');
-      const permissionsLength = this._web3.utils.hexToNumber(
+      const permissionsLength: number = this._web3.utils.hexToNumber(
         (await this.getDataUnverified([permissionsArrayKey]))[0]
-      );
+      ) as number;
 
       await this.setData(
         [
