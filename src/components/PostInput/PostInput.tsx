@@ -10,7 +10,7 @@ import { getFeedActions, type RootState } from '../../store/store';
 import imageIcon from '../../assets/icons/image.svg';
 import crossIcon from '../../assets/icons/cross.svg';
 import smileIcon from '../../assets/icons/smile.svg';
-import { type LSPXXProfilePost } from '../../models/profile-post';
+import { type LSP19ProfilePost } from '../../models/profile-post';
 import {
   fetchPostObjectWithAsset,
   searchInDatabase,
@@ -95,7 +95,7 @@ const PostInput: FC<PostInputProps> = props => {
         await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, { SETDATA: true });
       }
 
-      let post: LSPXXProfilePost = {
+      let post: LSP19ProfilePost = {
         version: '0.0.1',
         message: inputValue,
         author: account(),

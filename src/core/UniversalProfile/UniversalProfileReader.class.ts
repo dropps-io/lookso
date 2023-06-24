@@ -23,28 +23,52 @@ interface GetDataDynamicKey {
 
 export type Permission =
   | 'CHANGEOWNER'
+  | 'ADDCONTROLLER'
   | 'CHANGEPERMISSIONS'
-  | 'ADDPERMISSIONS'
-  | 'SETDATA'
+  | 'ADDEXTENSIONS'
+  | 'CHANGEEXTENSIONS'
+  | 'ADDUNIVERSALRECEIVERDELEGATE'
+  | 'CHANGEUNIVERSALRECEIVERDELEGATE'
+  | 'REENTRANCY'
+  | 'SUPER_TRANSFERVALUE'
+  | 'TRANSFERVALUE'
+  | 'SUPER_CALL'
   | 'CALL'
+  | 'SUPER_STATICCALL'
   | 'STATICCALL'
+  | 'SUPER_DELEGATECALL'
   | 'DELEGATECALL'
   | 'DEPLOY'
-  | 'TRANSFERVALUE'
+  | 'SUPER_SETDATA'
+  | 'SETDATA'
+  | 'ENCRYPT'
+  | 'DECRYPT'
   | 'SIGN';
 
 export type Permissions = { [day in Permission]: boolean };
 
 export const initialPermissions: Permissions = {
   CHANGEOWNER: false,
+  ADDCONTROLLER: false,
   CHANGEPERMISSIONS: false,
-  ADDPERMISSIONS: false,
-  SETDATA: false,
+  ADDEXTENSIONS: false,
+  CHANGEEXTENSIONS: false,
+  ADDUNIVERSALRECEIVERDELEGATE: false,
+  CHANGEUNIVERSALRECEIVERDELEGATE: false,
+  REENTRANCY: false,
+  SUPER_TRANSFERVALUE: false,
+  TRANSFERVALUE: false,
+  SUPER_CALL: false,
   CALL: false,
+  SUPER_STATICCALL: false,
   STATICCALL: false,
+  SUPER_DELEGATECALL: false,
   DELEGATECALL: false,
   DEPLOY: false,
-  TRANSFERVALUE: false,
+  SUPER_SETDATA: false,
+  SETDATA: false,
+  ENCRYPT: false,
+  DECRYPT: false,
   SIGN: false,
 };
 
@@ -98,10 +122,6 @@ export class UniversalProfileReader {
 
   public async getDataUnverified(keys: string[]): Promise<any[]> {
     return await this._contract.methods.getData(keys).call();
-  }
-
-  public async fetchData(keys?: Array<string | GetDataDynamicKey>): Promise<DecodeDataOutput[]> {
-    return await this._erc725.fetchData(keys);
   }
 
   public async fetchPermissionsOf(address: string): Promise<Permissions | false> {

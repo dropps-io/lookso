@@ -2,9 +2,9 @@ import LSP0ERC725Account from '@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Ac
 import { type AbiItem } from 'web3-utils';
 import { type TransactionReceipt } from 'web3-core';
 
-import PostValidator from '../assets/abi/TimestamperArtifact.json';
+import PostValidator from '../assets/abi/LSP19PostValidator.json';
 import { POST_VALIDATOR_ADDRESS } from '../environment/endpoints';
-import { LSPXX_SOCIAL_REGISTRY_KEY } from '../environment/constants';
+import { LSP19_SOCIAL_REGISTRY_KEY } from '../environment/constants';
 
 import type Web3 from 'web3';
 
@@ -18,7 +18,7 @@ export async function updateRegistryWithPost(
     PostValidator.abi as AbiItem[],
     POST_VALIDATOR_ADDRESS
   );
-  return await postValidator.methods.post(postHash, jsonUrl).send({ from: sender });
+  return await postValidator.methods.postWithJsonUrl(postHash, '', jsonUrl).send({ from: sender });
 }
 
 export async function updateRegistry(
@@ -27,5 +27,5 @@ export async function updateRegistry(
   web3: Web3
 ): Promise<TransactionReceipt> {
   const profile = new web3.eth.Contract(LSP0ERC725Account.abi as AbiItem[], sender);
-  return await profile.methods.setData(LSPXX_SOCIAL_REGISTRY_KEY, jsonUrl).send({ from: sender });
+  return await profile.methods.setData(LSP19_SOCIAL_REGISTRY_KEY, jsonUrl).send({ from: sender });
 }

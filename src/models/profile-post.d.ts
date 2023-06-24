@@ -1,6 +1,6 @@
 import { type Link } from '../../../../models/types/metadata-objects';
 
-export interface LSPXXProfilePost {
+export interface LSP19ProfilePost {
   version: string;
   author: string; // Address (UP)
   validator: string;
@@ -19,6 +19,6 @@ export interface LSPXXProfilePost {
 }
 
 export interface ProfilePost {
-  LSPXXProfilePost: LSPXXProfilePost;
-  LSPXXProfilePostHash: string;
+  LSP19ProfilePost: LSP19ProfilePost;
+  LSP19ProfilePostHash: string;
 }

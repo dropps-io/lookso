@@ -42,7 +42,7 @@ import { setAccount, setBalance, setNetworkId, setWeb3 } from '../../store/web3-
 import ExtendImage from '../ExtendImage/ExtendImage';
 import PopupButton from '../PopupButton/PopupButton';
 import { UniversalProfile } from '../../core/UniversalProfile/UniversalProfile.class';
-import { type LSPXXProfilePost } from '../../models/profile-post';
+import { type LSP19ProfilePost } from '../../models/profile-post';
 import { IPFS_GATEWAY } from '../../environment/constants';
 
 export interface FeedPost {
@@ -361,7 +361,7 @@ const PostBox = forwardRef(
           await author.setPermissionsTo(POST_VALIDATOR_ADDRESS, { SETDATA: true });
         }
 
-        const post: LSPXXProfilePost = {
+        const post: LSP19ProfilePost = {
           version: '0.0.1',
           message: '',
           author: account || '',
